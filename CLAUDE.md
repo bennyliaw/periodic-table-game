@@ -147,8 +147,8 @@ App (screen router + shared state)
 **Key state patterns:**
 - `scoreRef` (useRef) used inside async callbacks to avoid stale closure bugs
 - `key={gameKey}` on game components forces full remount between rounds
-- Scores persist across rounds in `App` state: `{ parent: 0, kid: 0 }`
-- No localStorage, no backend — everything is in-memory per session
+- `usePlayers()` hook manages player list + scores via localStorage (`eq_players`, `eq_scores`)
+- Player objects: `{ id, name, age, icon, color }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`
 
 **Data:**
 - 47 elements in `ELEMENTS[]`, each with `{ name, symbol, number, group, tier }`
@@ -161,8 +161,6 @@ App (screen router + shared state)
 
 - [ ] **CI/CD** — connect GitHub repo to Vercel for auto-deploy on every push (Vercel dashboard → Project Settings → Git)
 - [ ] **Custom domain** — `vercel domains add <domain>` once a domain is ready
-- [ ] **Persistent scores** — localStorage so scores survive page refresh
-- [ ] **Sound effects** — correct/wrong/streak audio via Web Audio API
 - [ ] **More elements** — extend to all 118 with tier 4
 - [ ] **Atomic number quiz** — third game axis beyond name↔symbol
 - [ ] **Progress tracking** — which elements each player has mastered
@@ -173,8 +171,8 @@ App (screen router + shared state)
 
 ## Common Claude Code Tasks
 
-**"Add localStorage to persist scores"**
-→ In `App`, replace `useState({ parent: 0, kid: 0 })` with a custom hook that reads/writes localStorage.
+**"Add a new player field (e.g. avatar)"**
+→ Extend the player object in `usePlayers()` and the `AddPlayerModal` form. Player data lives in `eq_players` in localStorage.
 
 **"Add a new game mode"**
 → Add a new component (follow the pattern of QuizMode), add it to the mode list in HomeScreen, and route it in the App render block.

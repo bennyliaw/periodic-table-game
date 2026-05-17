@@ -70,15 +70,17 @@ netlify deploy --dir=dist --prod
 | ⭐⭐⭐ Expert | Tricky transition metals etc. |
 | 🔥 Legend | All 47 elements |
 
+## Players
+
+Multiple players are supported. Each player has a name, optional age, and one of 10 preset icons. Scores persist across sessions via localStorage.
+
 ## Roadmap
 
 - [ ] CI/CD — connect GitHub to Vercel for auto-deploy on push
 - [ ] Custom domain
-- [ ] Persistent scores via localStorage
-- [ ] Sound effects (Web Audio API)
 - [ ] All 118 elements (tier 4)
 - [ ] Atomic number quiz mode
-- [ ] Per-player progress tracking
+- [ ] Per-player element mastery tracking
 - [ ] Mobile PWA (installable)
 
 ## Tech

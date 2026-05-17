@@ -66,6 +66,10 @@ const GC = {
   "actinide":         "#f87171",
 };
 
+const PLAYER_ICONS  = ["🧒","👦","👧","🧑","👨","👩","🦸","🧙","🤖","🦄"];
+const PLAYER_COLORS = ["#4ade80","#22d3ee","#a78bfa","#fb923c","#f472b6",
+                       "#fbbf24","#34d399","#60a5fa","#f87171","#e879f9"];
+
 // ═══════════════════════════════════════════
 // SOUND
 // ═══════════════════════════════════════════
@@ -156,6 +160,37 @@ function useSound() {
   }
 
   return { play, toggleMute, muted };
+}
+
+// ═══════════════════════════════════════════
+// PLAYERS
+// ═══════════════════════════════════════════
+function usePlayers() {
+  const [players, setPlayers] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("eq_players")) || []; } catch { return []; }
+  });
+  const [scores, setScores] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("eq_scores")) || {}; } catch { return {}; }
+  });
+  const [activeId, setActiveId] = useState(null);
+
+  useEffect(() => { localStorage.setItem("eq_players", JSON.stringify(players)); }, [players]);
+  useEffect(() => { localStorage.setItem("eq_scores",  JSON.stringify(scores));  }, [scores]);
+
+  function addPlayer({ name, age, icon, color }) {
+    const id = Date.now().toString();
+    const p  = { id, name, age: age || null, icon, color };
+    setPlayers(prev => [...prev, p]);
+    setActiveId(id);
+    return p;
+  }
+
+  function updateScore(id, earned) {
+    setScores(prev => ({ ...prev, [id]: (prev[id] || 0) + earned }));
+  }
+
+  const activePlayer = players.find(p => p.id === activeId) || null;
+  return { players, scores, activePlayer, setActiveId, addPlayer, updateScore };
 }
 
 // ═══════════════════════════════════════════
@@ -276,11 +311,82 @@ function QuitStrip({ onHome }) {
 }
 
 // ═══════════════════════════════════════════
+// ADD PLAYER MODAL
+// ═══════════════════════════════════════════
+function AddPlayerModal({ players, onAdd, onCancel }) {
+  const [name, setName]     = useState("");
+  const [age, setAge]       = useState("");
+  const [iconIdx, setIconIdx] = useState(0);
+  const color   = PLAYER_COLORS[players.length % PLAYER_COLORS.length];
+  const canAdd  = name.trim().length > 0;
+
+  function handleAdd() {
+    if (!canAdd) return;
+    onAdd({ name: name.trim(), age: age ? parseInt(age) : null, icon: PLAYER_ICONS[iconIdx], color });
+  }
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "#070b14ee", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div style={{ background: "#0a0f1a", border: "2px solid #1e293b", borderRadius: 28, padding: "28px 24px", width: "100%", maxWidth: 340, fontFamily: "'Nunito'" }}>
+        <div style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20, marginBottom: 22, textAlign: "center" }}>
+          Add Player
+        </div>
+
+        {/* Icon picker */}
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10, fontFamily: "'Exo 2'" }}>Choose Icon</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8 }}>
+            {PLAYER_ICONS.map((icon, i) => (
+              <button key={i} onClick={() => setIconIdx(i)} style={{
+                padding: 10, fontSize: 26, background: iconIdx === i ? `${color}20` : "#111827",
+                border: `2px solid ${iconIdx === i ? color : "#1e293b"}`,
+                borderRadius: 12, cursor: "pointer",
+              }}>{icon}</button>
+            ))}
+          </div>
+        </div>
+
+        {/* Name */}
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Name</div>
+          <input
+            value={name} onChange={e => setName(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && handleAdd()}
+            placeholder="Enter name…" autoFocus
+            style={{ width: "100%", padding: "13px 16px", background: "#111827", border: `2px solid ${name.trim() ? color : "#1e293b"}`, borderRadius: 14, color: "#e2e8f0", fontSize: 16, outline: "none", transition: "border-color 0.2s" }}
+          />
+        </div>
+
+        {/* Age */}
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Age <span style={{ textTransform: "none", letterSpacing: 0 }}>(optional)</span></div>
+          <input
+            value={age} onChange={e => setAge(e.target.value.replace(/\D/g, "").slice(0, 2))}
+            placeholder="e.g. 8"
+            style={{ width: "100%", padding: "13px 16px", background: "#111827", border: "2px solid #1e293b", borderRadius: 14, color: "#e2e8f0", fontSize: 16, outline: "none" }}
+          />
+        </div>
+
+        {/* Buttons */}
+        <div style={{ display: "flex", gap: 10 }}>
+          {players.length > 0 && (
+            <button onClick={onCancel} style={{ flex: 1, padding: 14, background: "none", border: "2px solid #1e293b", borderRadius: 14, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Cancel</button>
+          )}
+          <button onClick={handleAdd} disabled={!canAdd} style={{ flex: 2, padding: 14, background: canAdd ? `${color}18` : "#111827", border: `2px solid ${canAdd ? color : "#1e293b"}`, borderRadius: 14, color: canAdd ? color : "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15, cursor: canAdd ? "pointer" : "not-allowed", transition: "all 0.2s" }}>
+            {PLAYER_ICONS[iconIdx]} Add Player
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════
 // HOME SCREEN
 // ═══════════════════════════════════════════
 const BG_SYMBOLS = ["Au", "Ne", "Fe", "Hg", "Pb"];
 
-function HomeScreen({ activePlayer, setActivePlayer, scores, difficulty, setDifficulty, onStart }) {
+function HomeScreen({ players, scores, activeId, setActiveId, onAddPlayer, difficulty, setDifficulty, onStart }) {
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", fontFamily: "'Nunito'", padding: "22px 18px", overflowY: "auto" }}>
 
@@ -310,23 +416,34 @@ function HomeScreen({ activePlayer, setActivePlayer, scores, difficulty, setDiff
 
       {/* Player Select */}
       <Section label="Who's Playing?">
-        <div style={{ display: "flex", gap: 12 }}>
-          {[{ id: "kid", icon: "🧒", label: "Kid", color: "#4ade80" }, { id: "parent", icon: "🧑", label: "Parent", color: "#22d3ee" }].map(p => (
-            <button key={p.id} onClick={() => setActivePlayer(p.id)} style={{
-              flex: 1, padding: "16px 10px", textAlign: "center",
-              background: activePlayer === p.id ? `${p.color}14` : "#0a0f1a",
-              border: `2px solid ${activePlayer === p.id ? p.color : "#1e293b"}`,
+        <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" }}>
+          {players.map(p => (
+            <button key={p.id} onClick={() => setActiveId(p.id)} style={{
+              flex: "0 0 auto", minWidth: 88, padding: "14px 10px", textAlign: "center",
+              background: activeId === p.id ? `${p.color}14` : "#0a0f1a",
+              border: `2px solid ${activeId === p.id ? p.color : "#1e293b"}`,
               borderRadius: 18, transition: "all 0.2s",
-              boxShadow: activePlayer === p.id ? `0 0 28px ${p.color}28` : "none",
+              boxShadow: activeId === p.id ? `0 0 28px ${p.color}28` : "none",
             }}>
-              <div style={{ fontSize: 28, marginBottom: 4 }}>{p.icon}</div>
-              <div style={{ color: activePlayer === p.id ? p.color : "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15 }}>{p.label}</div>
-              <div style={{ color: activePlayer === p.id ? "#fbbf24" : "#1e293b", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 24, marginTop: 2 }}>
-                {scores[p.id]}<span style={{ fontSize: 12, opacity: 0.6, marginLeft: 2 }}>pts</span>
+              <div style={{ fontSize: 26, marginBottom: 3 }}>{p.icon}</div>
+              <div style={{ color: activeId === p.id ? p.color : "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 72 }}>{p.name}</div>
+              <div style={{ color: activeId === p.id ? "#fbbf24" : "#1e293b", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20, marginTop: 2 }}>
+                {scores[p.id] || 0}<span style={{ fontSize: 11, opacity: 0.6, marginLeft: 2 }}>pts</span>
               </div>
             </button>
           ))}
+          <button onClick={onAddPlayer} style={{
+            flex: "0 0 auto", minWidth: 80, padding: "14px 10px", textAlign: "center",
+            background: "#0a0f1a", border: "2px dashed #1e293b",
+            borderRadius: 18, cursor: "pointer", transition: "all 0.2s",
+          }}>
+            <div style={{ fontSize: 26, marginBottom: 3, color: "#334155" }}>＋</div>
+            <div style={{ color: "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 12 }}>Add Player</div>
+          </button>
         </div>
+        {!activeId && players.length > 0 && (
+          <div style={{ color: "#334155", fontSize: 12, textAlign: "center", marginTop: 8 }}>Select a player to start</div>
+        )}
       </Section>
 
       {/* Difficulty */}
@@ -792,15 +909,16 @@ function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
 // ═══════════════════════════════════════════
 // RESULTS SCREEN
 // ═══════════════════════════════════════════
-function ResultsScreen({ activePlayer, scores, lastRoundScore, onHome, onPlayAgain }) {
+function ResultsScreen({ activePlayer, players, scores, lastRoundScore, onHome, onPlayAgain }) {
   const stars = lastRoundScore >= 70 ? 3 : lastRoundScore >= 30 ? 2 : 1;
   const msgs  = [
     ["Keep at it! 💪", "Practice makes perfect! 🔬", "Every scientist starts somewhere! 🧪"],
     ["Nice work! 👏", "Getting the hang of it! ⚗️", "Solid chemistry! 🧫"],
     ["Element Master! 🌟", "Periodic genius! 🏆", "Absolutely brilliant! ✨"],
   ];
-  const msg    = msgs[stars - 1][Math.floor(Math.random() * 3)];
-  const leader = scores.kid > scores.parent ? "kid" : scores.parent > scores.kid ? "parent" : null;
+  const msg     = msgs[stars - 1][Math.floor(Math.random() * 3)];
+  const sorted  = [...players].sort((a, b) => (scores[b.id] || 0) - (scores[a.id] || 0));
+  const topScore = scores[sorted[0]?.id] || 0;
 
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: "'Nunito'", textAlign: "center" }}>
@@ -815,16 +933,19 @@ function ResultsScreen({ activePlayer, scores, lastRoundScore, onHome, onPlayAga
       {/* Scoreboard */}
       <div style={{ background: "#0a0f1a", border: "2px solid #1e293b", borderRadius: 24, padding: "20px", width: "100%", maxWidth: 300, marginBottom: 24 }}>
         <div style={{ color: "#1e293b", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 14, fontFamily: "'Exo 2'" }}>Total Scores</div>
-        {[{ id: "kid", icon: "🧒", label: "Kid", color: "#4ade80" }, { id: "parent", icon: "🧑", label: "Parent", color: "#22d3ee" }].map(p => (
-          <div key={p.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 8px", borderBottom: "1px solid #0d131f", background: p.id === activePlayer ? `${p.color}0a` : "transparent", borderRadius: 8 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ fontSize: 20 }}>{p.icon}</span>
-              <span style={{ color: p.id === activePlayer ? p.color : "#334155", fontFamily: "'Exo 2'", fontWeight: 700 }}>{p.label}</span>
-              {leader === p.id && <span style={{ color: "#fbbf24", fontSize: 12 }}>👑</span>}
+        {sorted.map((p, i) => {
+          const isLeader = i === 0 && topScore > 0;
+          return (
+            <div key={p.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 8px", borderBottom: "1px solid #0d131f", background: p.id === activePlayer?.id ? `${p.color}0a` : "transparent", borderRadius: 8 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ fontSize: 20 }}>{p.icon}</span>
+                <span style={{ color: p.id === activePlayer?.id ? p.color : "#334155", fontFamily: "'Exo 2'", fontWeight: 700 }}>{p.name}</span>
+                {isLeader && <span style={{ color: "#fbbf24", fontSize: 12 }}>👑</span>}
+              </div>
+              <div style={{ color: p.color, fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 26 }}>{scores[p.id] || 0}</div>
             </div>
-            <div style={{ color: p.color, fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 26 }}>{scores[p.id]}</div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div style={{ display: "flex", gap: 12, width: "100%", maxWidth: 300 }}>
@@ -846,17 +967,22 @@ export default function ElementQuest() {
   const [screen, setScreen]   = useState("home");
   const [mode, setMode]       = useState(null);
   const [difficulty, setDifficulty] = useState("easy");
-  const [activePlayer, setActivePlayer] = useState("kid");
-  const [scores, setScores]   = useState({ parent: 0, kid: 0 });
   const [lastScore, setLastScore] = useState(0);
   const [gameKey, setGameKey] = useState(0);
+  const [showAddPlayer, setShowAddPlayer] = useState(false);
   const { play, toggleMute, muted } = useSound();
+  const { players, scores, activePlayer, setActiveId, addPlayer, updateScore } = usePlayers();
 
-  function startGame(m) { setMode(m); setGameKey(k => k + 1); setScreen("game"); }
+  useEffect(() => { if (players.length === 0) setShowAddPlayer(true); }, []);
+
+  function startGame(m) {
+    if (!activePlayer) return;
+    setMode(m); setGameKey(k => k + 1); setScreen("game");
+  }
 
   function endRound(earned, perfect = false) {
     setLastScore(earned);
-    setScores(prev => ({ ...prev, [activePlayer]: prev[activePlayer] + earned }));
+    if (activePlayer) updateScore(activePlayer.id, earned);
     play(perfect ? "perfect" : "roundEnd");
     setScreen("results");
   }
@@ -866,6 +992,13 @@ export default function ElementQuest() {
   return (
     <>
       <GlobalStyles />
+      {showAddPlayer && (
+        <AddPlayerModal
+          players={players}
+          onAdd={p => { addPlayer(p); setShowAddPlayer(false); }}
+          onCancel={() => setShowAddPlayer(false)}
+        />
+      )}
       {/* Mute toggle — fixed top-right, always visible */}
       <button onClick={toggleMute} style={{
         position: "fixed", top: 14, right: 14, zIndex: 200,
@@ -875,16 +1008,25 @@ export default function ElementQuest() {
         {muted ? "🔇" : "🔊"}
       </button>
       {screen === "home" && (
-        <HomeScreen activePlayer={activePlayer} setActivePlayer={setActivePlayer}
-          scores={scores} difficulty={difficulty} setDifficulty={setDifficulty} onStart={startGame} />
+        <HomeScreen
+          players={players} scores={scores}
+          activeId={activePlayer?.id} setActiveId={setActiveId}
+          onAddPlayer={() => setShowAddPlayer(true)}
+          difficulty={difficulty} setDifficulty={setDifficulty}
+          onStart={startGame}
+        />
       )}
       {screen === "game" && mode === "flashcard" && <FlashcardMode key={gameKey} {...gp} />}
       {screen === "game" && mode === "quiz"      && <QuizMode      key={gameKey} {...gp} />}
       {screen === "game" && mode === "scramble"  && <ScrambleMode  key={gameKey} {...gp} />}
       {screen === "game" && mode === "speed"     && <SpeedMode     key={gameKey} {...gp} />}
       {screen === "results" && (
-        <ResultsScreen activePlayer={activePlayer} scores={scores} lastRoundScore={lastScore}
-          onHome={() => setScreen("home")} onPlayAgain={() => { setGameKey(k => k + 1); setScreen("game"); }} />
+        <ResultsScreen
+          activePlayer={activePlayer} players={players} scores={scores}
+          lastRoundScore={lastScore}
+          onHome={() => setScreen("home")}
+          onPlayAgain={() => { setGameKey(k => k + 1); setScreen("game"); }}
+        />
       )}
     </>
   );
