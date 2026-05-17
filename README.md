@@ -2,6 +2,8 @@
 
 A periodic table memory game for kids and parents — built with React + Vite.
 
+**Live:** https://periodic-table-game-murex.vercel.app
+
 ## Quick Start (Local)
 
 ```bash
@@ -67,6 +69,17 @@ netlify deploy --dir=dist --prod
 | ⭐⭐ Explorer | 31 elements |
 | ⭐⭐⭐ Expert | Tricky transition metals etc. |
 | 🔥 Legend | All 47 elements |
+
+## Roadmap
+
+- [ ] CI/CD — connect GitHub to Vercel for auto-deploy on push
+- [ ] Custom domain
+- [ ] Persistent scores via localStorage
+- [ ] Sound effects (Web Audio API)
+- [ ] All 118 elements (tier 4)
+- [ ] Atomic number quiz mode
+- [ ] Per-player progress tracking
+- [ ] Mobile PWA (installable)
 
 ## Tech
 

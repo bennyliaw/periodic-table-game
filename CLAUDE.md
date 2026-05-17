@@ -10,8 +10,8 @@
 | Phase | Status |
 |-------|--------|
 | Core game (React artifact) | ✅ Done |
-| Local dev setup (Vite)     | 🔲 Next |
-| Deploy (Vercel)            | 🔲 After local |
+| Local dev setup (Vite)     | ✅ Done |
+| Deploy (Vercel)            | ✅ Live — https://periodic-table-game-murex.vercel.app |
 
 ---
 
@@ -159,6 +159,8 @@ App (screen router + shared state)
 
 ## Planned Improvements (tackle in order)
 
+- [ ] **CI/CD** — connect GitHub repo to Vercel for auto-deploy on every push (Vercel dashboard → Project Settings → Git)
+- [ ] **Custom domain** — `vercel domains add <domain>` once a domain is ready
 - [ ] **Persistent scores** — localStorage so scores survive page refresh
 - [ ] **Sound effects** — correct/wrong/streak audio via Web Audio API
 - [ ] **More elements** — extend to all 118 with tier 4
@@ -184,7 +186,7 @@ App (screen router + shared state)
 → Append to the `ELEMENTS` array. Set `tier: 4` for the hardest ones and add a "tier 4" option to the difficulty selector in HomeScreen.
 
 **"Deploy to Vercel"**
-→ Run `vercel --prod` from the project root. That's it.
+→ Run `vercel --prod` from the project root. For auto-deploy on push, connect the GitHub repo in Vercel dashboard → Project Settings → Git.
 
 ---
 
