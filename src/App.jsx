@@ -67,6 +67,67 @@ const GC = {
 };
 
 // ═══════════════════════════════════════════
+// SOUND
+// ═══════════════════════════════════════════
+function useSound() {
+  const ctxRef = useRef(null);
+  const mutedRef = useRef(false);
+  const [muted, setMuted] = useState(false);
+
+  function getCtx() {
+    if (!ctxRef.current)
+      ctxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    return ctxRef.current;
+  }
+
+  function tone(freq, type, duration, start, vol = 0.25) {
+    const ctx = getCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, start);
+    gain.gain.setValueAtTime(vol, start);
+    gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+    osc.start(start);
+    osc.stop(start + duration + 0.05);
+  }
+
+  function play(type) {
+    if (mutedRef.current) return;
+    const ctx = getCtx();
+    if (ctx.state === "suspended") ctx.resume();
+    const t = ctx.currentTime;
+    switch (type) {
+      case "correct":
+        tone(523, "sine", 0.12, t, 0.25);
+        tone(659, "sine", 0.18, t + 0.1, 0.3);
+        break;
+      case "wrong":
+        tone(180, "sawtooth", 0.25, t, 0.18);
+        break;
+      case "streak":
+        [523, 659, 784, 1047].forEach((f, i) => tone(f, "sine", 0.1, t + i * 0.075, 0.22));
+        break;
+      case "flip":
+        tone(880, "sine", 0.06, t, 0.12);
+        break;
+      case "roundEnd":
+        [523, 659, 784, 1047].forEach((f, i) => tone(f, "sine", 0.18, t + i * 0.13, 0.28));
+        break;
+    }
+  }
+
+  function toggleMute() {
+    mutedRef.current = !mutedRef.current;
+    setMuted(mutedRef.current);
+  }
+
+  return { play, toggleMute, muted };
+}
+
+// ═══════════════════════════════════════════
 // UTILS
 // ═══════════════════════════════════════════
 function shuffle(arr) {
@@ -274,7 +335,7 @@ function ModeCard({ icon, label, desc, onClick }) {
 // ═══════════════════════════════════════════
 // FLASH CARD MODE
 // ═══════════════════════════════════════════
-function FlashcardMode({ difficulty, onEnd, onHome }) {
+function FlashcardMode({ difficulty, onEnd, onHome, playSound }) {
   const [deck]    = useState(() => getDeck(difficulty));
   const [idx, setIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -286,8 +347,9 @@ function FlashcardMode({ difficulty, onEnd, onHome }) {
   const color = GC[el.group] || "#60a5fa";
 
   function next(gotIt) {
-    if (gotIt) { scoreRef.current += 10; setScore(scoreRef.current); }
-    if (idx + 1 >= deck.length) { onEnd(scoreRef.current); return; }
+    if (gotIt) { scoreRef.current += 10; setScore(scoreRef.current); playSound("correct"); }
+    else { playSound("wrong"); }
+    if (idx + 1 >= deck.length) { playSound("roundEnd"); onEnd(scoreRef.current); return; }
     setIdx(i => i + 1);
     setFlipped(false);
   }
@@ -298,7 +360,7 @@ function FlashcardMode({ difficulty, onEnd, onHome }) {
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", maxWidth: 380 }}>
         {/* The Card */}
-        <div onClick={() => setFlipped(f => !f)} style={{
+        <div onClick={() => { setFlipped(f => !f); playSound("flip"); }} style={{
           width: "100%", height: 270,
           background: "#0a0f1a",
           border: `3px solid ${color}`,
@@ -341,7 +403,7 @@ function FlashcardMode({ difficulty, onEnd, onHome }) {
 // ═══════════════════════════════════════════
 // QUIZ MODE
 // ═══════════════════════════════════════════
-function QuizMode({ difficulty, onEnd, onHome }) {
+function QuizMode({ difficulty, onEnd, onHome, playSound }) {
   const TOTAL = 10;
   const [deck]   = useState(() => getDeck(difficulty).slice(0, TOTAL));
   const [idx, setIdx]     = useState(0);
@@ -373,15 +435,17 @@ function QuizMode({ difficulty, onEnd, onHome }) {
       setScore(scoreRef.current);
       setStreak(streakRef.current);
       setPop("✅");
+      playSound(streakRef.current >= 3 ? "streak" : "correct");
     } else {
       streakRef.current = 0;
       setStreak(0);
       setPop("❌");
+      playSound("wrong");
     }
     setTimeout(() => {
       setPop(null);
       setSelected(null);
-      if (idx + 1 >= TOTAL) { onEnd(scoreRef.current); return; }
+      if (idx + 1 >= TOTAL) { playSound("roundEnd"); onEnd(scoreRef.current); return; }
       setIdx(i => i + 1);
     }, 1100);
   }
@@ -438,7 +502,7 @@ function QuizMode({ difficulty, onEnd, onHome }) {
 // ═══════════════════════════════════════════
 // SCRAMBLE MODE
 // ═══════════════════════════════════════════
-function ScrambleMode({ difficulty, onEnd, onHome }) {
+function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
   const TOTAL = 8;
   const [deck] = useState(() => getDeck(difficulty).filter(e => e.name.length >= 4).slice(0, TOTAL));
   const [idx, setIdx]   = useState(0);
@@ -472,12 +536,14 @@ function ScrambleMode({ difficulty, onEnd, onHome }) {
       scoreRef.current += earned;
       setScore(scoreRef.current);
       setFeedback("correct");
+      playSound("correct");
       setTimeout(() => {
-        if (idx + 1 >= TOTAL) { onEnd(scoreRef.current); return; }
+        if (idx + 1 >= TOTAL) { playSound("roundEnd"); onEnd(scoreRef.current); return; }
         setIdx(i => i + 1);
       }, 900);
     } else {
       setFeedback("wrong");
+      playSound("wrong");
       setTimeout(() => setFeedback(null), 600);
     }
   }
@@ -548,7 +614,7 @@ function ScrambleMode({ difficulty, onEnd, onHome }) {
 // ═══════════════════════════════════════════
 // SPEED BLAST MODE
 // ═══════════════════════════════════════════
-function SpeedMode({ difficulty, onEnd, onHome }) {
+function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
   const pool     = getDeck(difficulty);
   const longPool = shuffle([...pool, ...pool, ...pool]);
   const [deck]   = useState(longPool);
@@ -572,6 +638,7 @@ function SpeedMode({ difficulty, onEnd, onHome }) {
   useEffect(() => {
     if (started && timeLeft === 0 && !endedRef.current) {
       endedRef.current = true;
+      playSound("roundEnd");
       onEnd(scoreRef.current);
     }
   }, [timeLeft, started]);
@@ -587,8 +654,10 @@ function SpeedMode({ difficulty, onEnd, onHome }) {
       scoreRef.current += 10; correctRef.current += 1;
       setScore(scoreRef.current); setCorrect(correctRef.current);
       setFlash("correct");
+      playSound("correct");
     } else {
       setFlash("wrong");
+      playSound("wrong");
     }
     setTimeout(() => setFlash(null), 200);
     setIdx(i => i + 1);
@@ -712,6 +781,7 @@ export default function ElementQuest() {
   const [scores, setScores]   = useState({ parent: 0, kid: 0 });
   const [lastScore, setLastScore] = useState(0);
   const [gameKey, setGameKey] = useState(0);
+  const { play, toggleMute, muted } = useSound();
 
   function startGame(m) { setMode(m); setGameKey(k => k + 1); setScreen("game"); }
 
@@ -721,11 +791,19 @@ export default function ElementQuest() {
     setScreen("results");
   }
 
-  const gp = { difficulty, onEnd: endRound, onHome: () => setScreen("home") };
+  const gp = { difficulty, onEnd: endRound, onHome: () => setScreen("home"), playSound: play };
 
   return (
     <>
       <GlobalStyles />
+      {/* Mute toggle — fixed top-right, always visible */}
+      <button onClick={toggleMute} style={{
+        position: "fixed", top: 14, right: 14, zIndex: 200,
+        background: "none", border: "none", fontSize: 20, cursor: "pointer",
+        opacity: 0.5, transition: "opacity 0.2s",
+      }} onMouseEnter={e => e.target.style.opacity = 1} onMouseLeave={e => e.target.style.opacity = 0.5}>
+        {muted ? "🔇" : "🔊"}
+      </button>
       {screen === "home" && (
         <HomeScreen activePlayer={activePlayer} setActivePlayer={setActivePlayer}
           scores={scores} difficulty={difficulty} setDifficulty={setDifficulty} onStart={startGame} />
