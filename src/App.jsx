@@ -67,7 +67,11 @@ const GC = {
   "actinide":         "#f87171",
 };
 
-const PLAYER_ICONS  = ["🧒","👦","👧","🧑","👨","👩","🦸","🧙","🤖","🦄"];
+const PLAYER_ICONS  = [
+  "🧒","🦸","🧙","🧝","🤖",
+  "🦄","🐱","🐶","🦊","🐼",
+  "🚀","🔬","🏆","🎮","🌟",
+];
 const PLAYER_COLORS = ["#4ade80","#22d3ee","#a78bfa","#fb923c","#f472b6",
                        "#fbbf24","#34d399","#60a5fa","#f87171","#e879f9"];
 
@@ -208,10 +212,11 @@ function usePlayers() {
     setActiveId(null);
   }
 
-  async function addPlayer({ name, age, icon, color }) {
-    const id = Date.now().toString();
+  async function addPlayer({ name, age, icon, color }, roomIdOverride) {
+    const id         = Date.now().toString();
+    const targetRoom = roomIdOverride || roomId;
     setActiveId(id);
-    await supabase.from("eq_players").insert({ id, room_id: roomId, name, age: age || null, icon, color, score: 0 });
+    await supabase.from("eq_players").insert({ id, room_id: targetRoom, name, age: age || null, icon, color, score: 0 });
   }
 
   async function updateScore(id, earned) {
@@ -345,37 +350,88 @@ function QuitStrip({ onHome }) {
 // ═══════════════════════════════════════════
 // ADD PLAYER MODAL
 // ═══════════════════════════════════════════
-function AddPlayerModal({ players, onAdd, onCancel }) {
-  const [name, setName]     = useState("");
-  const [age, setAge]       = useState("");
-  const [iconIdx, setIconIdx] = useState(0);
-  const color   = PLAYER_COLORS[players.length % PLAYER_COLORS.length];
-  const canAdd  = name.trim().length > 0;
+function AddPlayerModal({ players, roomId, onAdd, onCancel }) {
+  const [name, setName]           = useState("");
+  const [age, setAge]             = useState("");
+  const [iconIdx, setIconIdx]     = useState(0);
+  const [isCustom, setIsCustom]   = useState(false);
+  const [customIcon, setCustomIcon] = useState("");
+  const [localRoomId, setLocalRoomId] = useState(roomId);
+  const isFirst      = players.length === 0;
+  const color        = PLAYER_COLORS[players.length % PLAYER_COLORS.length];
+  const selectedIcon = isCustom ? customIcon : PLAYER_ICONS[iconIdx];
+  const canAdd       = name.trim().length > 0 && selectedIcon.trim().length > 0 &&
+                       localRoomId.trim().length > 0;
 
   function handleAdd() {
     if (!canAdd) return;
-    onAdd({ name: name.trim(), age: age ? parseInt(age) : null, icon: PLAYER_ICONS[iconIdx], color });
+    onAdd({ name: name.trim(), age: age ? parseInt(age) : null, icon: selectedIcon, color, customRoomId: localRoomId.trim() });
+  }
+
+  function handleCustomChange(e) {
+    const segs = Intl.Segmenter
+      ? [...new Intl.Segmenter().segment(e.target.value)].map(s => s.segment)
+      : [...e.target.value];
+    setCustomIcon(segs[0] || "");
   }
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "#070b14ee", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
-      <div style={{ background: "#0a0f1a", border: "2px solid #1e293b", borderRadius: 28, padding: "28px 24px", width: "100%", maxWidth: 340, fontFamily: "'Nunito'" }}>
+    <div style={{ position: "fixed", inset: 0, background: "#070b14ee", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, overflowY: "auto" }}>
+      <div style={{ background: "#0a0f1a", border: "2px solid #1e293b", borderRadius: 28, padding: "28px 24px", width: "100%", maxWidth: 360, fontFamily: "'Nunito'" }}>
         <div style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20, marginBottom: 22, textAlign: "center" }}>
           Add Player
         </div>
+
+        {/* Room code — first player only */}
+        {isFirst && (
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 4, fontFamily: "'Exo 2'" }}>Room Code</div>
+            <div style={{ color: "#1e293b", fontSize: 11, marginBottom: 8 }}>Share this with family, or enter theirs to join</div>
+            <input
+              value={localRoomId}
+              onChange={e => setLocalRoomId(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6))}
+              placeholder="e.g. XK9F2A"
+              style={{ width: "100%", padding: "13px 16px", background: "#111827", border: `2px solid ${localRoomId !== roomId ? color : "#1e293b"}`, borderRadius: 14, color: "#22d3ee", fontSize: 18, fontFamily: "'Exo 2'", fontWeight: 700, letterSpacing: 4, outline: "none", textAlign: "center", transition: "border-color 0.2s" }}
+            />
+          </div>
+        )}
 
         {/* Icon picker */}
         <div style={{ marginBottom: 20 }}>
           <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10, fontFamily: "'Exo 2'" }}>Choose Icon</div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8 }}>
             {PLAYER_ICONS.map((icon, i) => (
-              <button key={i} onClick={() => setIconIdx(i)} style={{
-                padding: 10, fontSize: 26, background: iconIdx === i ? `${color}20` : "#111827",
-                border: `2px solid ${iconIdx === i ? color : "#1e293b"}`,
+              <button key={i} onClick={() => { setIconIdx(i); setIsCustom(false); }} style={{
+                padding: 10, fontSize: 24, background: !isCustom && iconIdx === i ? `${color}20` : "#111827",
+                border: `2px solid ${!isCustom && iconIdx === i ? color : "#1e293b"}`,
                 borderRadius: 12, cursor: "pointer",
               }}>{icon}</button>
             ))}
           </div>
+          <button onClick={() => { setIsCustom(true); setCustomIcon(""); }} style={{
+            width: "100%", marginTop: 8, padding: "11px 16px",
+            background: isCustom ? `${color}18` : "#111827",
+            border: `2px solid ${isCustom ? color : "#1e293b"}`,
+            borderRadius: 12, cursor: "pointer",
+            color: isCustom ? color : "#475569",
+            fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 13,
+          }}>✏️  Choose Custom Icon</button>
+
+          {/* Custom emoji input */}
+          {isCustom && (
+            <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 12 }}>
+              <input
+                value={customIcon}
+                onChange={handleCustomChange}
+                placeholder="Paste or type any emoji"
+                autoFocus
+                style={{ flex: 1, padding: "10px 14px", background: "#111827", border: `2px solid ${color}`, borderRadius: 12, color: "#e2e8f0", fontSize: 28, outline: "none", textAlign: "center" }}
+              />
+              {customIcon && (
+                <div style={{ fontSize: 44, lineHeight: 1 }}>{customIcon}</div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Name */}
@@ -384,7 +440,7 @@ function AddPlayerModal({ players, onAdd, onCancel }) {
           <input
             value={name} onChange={e => setName(e.target.value)}
             onKeyDown={e => e.key === "Enter" && handleAdd()}
-            placeholder="Enter name…" autoFocus
+            placeholder="Enter name…" autoFocus={!isCustom}
             style={{ width: "100%", padding: "13px 16px", background: "#111827", border: `2px solid ${name.trim() ? color : "#1e293b"}`, borderRadius: 14, color: "#e2e8f0", fontSize: 16, outline: "none", transition: "border-color 0.2s" }}
           />
         </div>
@@ -405,7 +461,7 @@ function AddPlayerModal({ players, onAdd, onCancel }) {
             <button onClick={onCancel} style={{ flex: 1, padding: 14, background: "none", border: "2px solid #1e293b", borderRadius: 14, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Cancel</button>
           )}
           <button onClick={handleAdd} disabled={!canAdd} style={{ flex: 2, padding: 14, background: canAdd ? `${color}18` : "#111827", border: `2px solid ${canAdd ? color : "#1e293b"}`, borderRadius: 14, color: canAdd ? color : "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15, cursor: canAdd ? "pointer" : "not-allowed", transition: "all 0.2s" }}>
-            {PLAYER_ICONS[iconIdx]} Add Player
+            {selectedIcon || "?"} Add Player
           </button>
         </div>
       </div>
@@ -1078,7 +1134,12 @@ export default function ElementQuest() {
       {showAddPlayer && (
         <AddPlayerModal
           players={players}
-          onAdd={p => { addPlayer(p); setShowAddPlayer(false); }}
+          roomId={roomId}
+          onAdd={async ({ customRoomId, ...playerData }) => {
+            if (customRoomId && customRoomId !== roomId) joinRoom(customRoomId);
+            await addPlayer(playerData, customRoomId);
+            setShowAddPlayer(false);
+          }}
           onCancel={() => setShowAddPlayer(false)}
         />
       )}
