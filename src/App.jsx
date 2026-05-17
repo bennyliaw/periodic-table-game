@@ -229,9 +229,13 @@ function usePlayers() {
     await supabase.from("eq_players").update({ score: player.score + earned }).eq("id", id);
   }
 
+  async function updateMastery(id, symbols) {
+    await supabase.from("eq_players").update({ mastered_elements: symbols }).eq("id", id);
+  }
+
   const scores = Object.fromEntries(players.map(p => [p.id, p.score]));
   const activePlayer = players.find(p => p.id === activeId) || null;
-  return { players, scores, activePlayer, setActiveId, addPlayer, updateScore, roomId, joinRoom, loaded };
+  return { players, scores, activePlayer, setActiveId, addPlayer, updateScore, updateMastery, roomId, joinRoom, loaded };
 }
 
 // ═══════════════════════════════════════════
@@ -246,12 +250,24 @@ function shuffle(arr) {
   return a;
 }
 
+function getPool(difficulty) {
+  return difficulty === "easy"   ? ELEMENTS.filter(e => e.tier === 1)
+       : difficulty === "medium" ? ELEMENTS.filter(e => e.tier <= 2)
+       : difficulty === "hard"   ? ELEMENTS.filter(e => e.tier === 3)
+       : ELEMENTS;
+}
+
 function getDeck(difficulty) {
-  const pool = difficulty === "easy"   ? ELEMENTS.filter(e => e.tier === 1)
-             : difficulty === "medium" ? ELEMENTS.filter(e => e.tier <= 2)
-             : difficulty === "hard"   ? ELEMENTS.filter(e => e.tier === 3)
-             : ELEMENTS;
-  return shuffle(pool);
+  return shuffle(getPool(difficulty));
+}
+
+const SESSION_SIZE = 15;
+
+function getFlashDeck(difficulty, masteredSymbols) {
+  const pool       = getDeck(difficulty);
+  const unmastered = pool.filter(el => !masteredSymbols.includes(el.symbol));
+  const mastered   = pool.filter(el =>  masteredSymbols.includes(el.symbol));
+  return [...unmastered, ...mastered].slice(0, SESSION_SIZE);
 }
 
 function getChoices(correct) {
@@ -530,7 +546,7 @@ function RoomCodeBar({ roomId, onJoin }) {
 // ═══════════════════════════════════════════
 const BG_SYMBOLS = ["Au", "Ne", "Fe", "Hg", "Pb"];
 
-function HomeScreen({ players, scores, activeId, setActiveId, onAddPlayer, roomId, joinRoom, difficulty, setDifficulty, onStart }) {
+function HomeScreen({ players, scores, activeId, setActiveId, onAddPlayer, roomId, joinRoom, difficulty, setDifficulty, onStart, activePlayer }) {
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", fontFamily: "'Nunito'", padding: "22px 18px", overflowY: "auto" }}>
 
@@ -620,12 +636,25 @@ function HomeScreen({ players, scores, activeId, setActiveId, onAddPlayer, roomI
       {/* Modes */}
       <Section label="Choose Your Mode">
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-          {[
-            { id: "flashcard", icon: "🃏", label: "Flash Cards",   desc: "Flip to learn symbols" },
-            { id: "quiz",      icon: "⚡", label: "Symbol Quiz",   desc: "Pick the right symbol" },
-            { id: "scramble",  icon: "🔤", label: "Name Scramble", desc: "Spell from the symbol" },
-            { id: "speed",     icon: "🚀", label: "Speed Blast",   desc: "60-second frenzy!" },
-          ].map(m => <ModeCard key={m.id} {...m} onClick={() => onStart(m.id)} />)}
+          {(() => {
+            const pool           = getPool(difficulty);
+            const mastered       = activePlayer ? (activePlayer.mastered_elements || []).filter(sym => pool.some(el => el.symbol === sym)) : [];
+            const pct            = pool.length > 0 ? Math.min(100, Math.round((mastered.length / pool.length) * 100)) : 0;
+            const flashcardExtra = activePlayer ? (
+              <div style={{ marginTop: 6 }}>
+                <div style={{ fontSize: 10, color: "#475569" }}>{mastered.length}/{pool.length} mastered</div>
+                <div style={{ height: 3, background: "#1e293b", borderRadius: 2, marginTop: 3 }}>
+                  <div style={{ height: "100%", width: `${pct}%`, background: "#4ade80", borderRadius: 2, transition: "width 0.4s" }} />
+                </div>
+              </div>
+            ) : null;
+            return [
+              { id: "flashcard", icon: "🃏", label: "Flash Cards",   desc: "Flip to learn symbols", extra: flashcardExtra },
+              { id: "quiz",      icon: "⚡", label: "Symbol Quiz",   desc: "Pick the right symbol" },
+              { id: "scramble",  icon: "🔤", label: "Name Scramble", desc: "Spell from the symbol" },
+              { id: "speed",     icon: "🚀", label: "Speed Blast",   desc: "60-second frenzy!" },
+            ].map(m => <ModeCard key={m.id} {...m} onClick={() => onStart(m.id)} />);
+          })()}
         </div>
       </Section>
     </div>
@@ -641,7 +670,7 @@ function Section({ label, children }) {
   );
 }
 
-function ModeCard({ icon, label, desc, onClick }) {
+function ModeCard({ icon, label, desc, onClick, extra }) {
   const [h, setH] = useState(false);
   return (
     <button onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} style={{
@@ -654,6 +683,7 @@ function ModeCard({ icon, label, desc, onClick }) {
       <div style={{ fontSize: 30, marginBottom: 8 }}>{icon}</div>
       <div style={{ color: h ? "#e2e8f0" : "#94a3b8", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14 }}>{label}</div>
       <div style={{ color: "#1e293b", fontSize: 11, marginTop: 4 }}>{desc}</div>
+      {extra}
     </button>
   );
 }
@@ -661,23 +691,68 @@ function ModeCard({ icon, label, desc, onClick }) {
 // ═══════════════════════════════════════════
 // FLASH CARD MODE
 // ═══════════════════════════════════════════
-function FlashcardMode({ difficulty, onEnd, onHome, playSound }) {
-  const [deck]    = useState(() => getDeck(difficulty));
-  const [idx, setIdx] = useState(0);
+function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onHome, playSound }) {
+  const masteredRef           = useRef([...masteredElements]);
+  const [deck, setDeck]       = useState(() => getFlashDeck(difficulty, masteredElements));
+  const [idx, setIdx]         = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const scoreRef  = useRef(0);
-  const [score, setScore] = useState(0);
+  const [sessionDone, setSessionDone] = useState(false);
+  const scoreRef              = useRef(0);
+  const [score, setScore]     = useState(0);
 
-  if (idx >= deck.length) return null;
   const el    = deck[idx];
-  const color = GC[el.group] || "#60a5fa";
+  const color = el ? (GC[el.group] || "#60a5fa") : "#22d3ee";
 
-  function next(gotIt) {
-    if (gotIt) { scoreRef.current += 10; setScore(scoreRef.current); playSound("correct"); }
-    else { playSound("wrong"); }
-    if (idx + 1 >= deck.length) { onEnd(scoreRef.current); return; }
+  function next(action) {
+    if (action === "done") {
+      if (!masteredRef.current.includes(el.symbol)) {
+        masteredRef.current = [...masteredRef.current, el.symbol];
+        onMastery(masteredRef.current);
+      }
+      scoreRef.current += 5;
+      setScore(scoreRef.current);
+      playSound("correct");
+      if (idx + 1 >= deck.length) { setSessionDone(true); return; }
+    } else {
+      scoreRef.current += 1;
+      setScore(scoreRef.current);
+      playSound("flip");
+      setDeck(prev => [...prev, el]);
+    }
     setIdx(i => i + 1);
     setFlipped(false);
+  }
+
+  if (sessionDone) {
+    const pool          = getPool(difficulty);
+    const masteredInPool = masteredRef.current.filter(sym => pool.some(e => e.symbol === sym));
+    const pct           = Math.min(100, Math.round((masteredInPool.length / pool.length) * 100));
+    const allMastered   = masteredInPool.length >= pool.length;
+    return (
+      <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", fontFamily: "'Nunito'" }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
+        <div style={{ color: "#e2e8f0", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 22, marginBottom: 8 }}>Session complete!</div>
+        <div style={{ color: "#94a3b8", fontSize: 14, marginBottom: 20 }}>{masteredInPool.length} / {pool.length} mastered ({pct}%)</div>
+        <div style={{ height: 8, background: "#111827", borderRadius: 99, width: "100%", maxWidth: 300, marginBottom: 28 }}>
+          <div style={{ height: "100%", width: `${pct}%`, background: "#4ade80", borderRadius: 99, transition: "width 0.4s" }} />
+        </div>
+        {allMastered && (
+          <div style={{ color: "#4ade80", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14, marginBottom: 20 }}>🏆 All cards mastered!</div>
+        )}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%", maxWidth: 300 }}>
+          {!allMastered && (
+            <button
+              onClick={() => { setDeck(getFlashDeck(difficulty, masteredRef.current)); setIdx(0); setFlipped(false); setSessionDone(false); }}
+              style={{ padding: 16, background: "#081a2a", border: "2px solid #22d3ee", borderRadius: 18, color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15 }}
+            >Continue (next 15 cards)</button>
+          )}
+          <button
+            onClick={() => onEnd(scoreRef.current)}
+            style={{ padding: 16, background: "#111827", border: "2px solid #1e293b", borderRadius: 18, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14 }}
+          >🏠 Back to menu</button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -711,11 +786,11 @@ function FlashcardMode({ difficulty, onEnd, onHome, playSound }) {
 
         {flipped ? (
           <div style={{ display: "flex", gap: 14, width: "100%" }}>
-            <button onClick={() => next(false)} style={{ flex: 1, padding: 16, background: "#160a0a", border: "2px solid #ef4444", borderRadius: 18, color: "#ef4444", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14 }}>
-              📚 Study More
+            <button onClick={() => next("again")} style={{ flex: 1, padding: 16, background: "#160a0a", border: "2px solid #ef4444", borderRadius: 18, color: "#ef4444", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13 }}>
+              📖 Show again later +1
             </button>
-            <button onClick={() => next(true)} style={{ flex: 1, padding: 16, background: "#091508", border: "2px solid #4ade80", borderRadius: 18, color: "#4ade80", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14, boxShadow: "0 0 22px rgba(74,222,128,0.22)" }}>
-              ✅ Got it! +10
+            <button onClick={() => next("done")} style={{ flex: 1, padding: 16, background: "#091508", border: "2px solid #4ade80", borderRadius: 18, color: "#4ade80", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13, boxShadow: "0 0 22px rgba(74,222,128,0.22)" }}>
+              ✅ Mark done +5
             </button>
           </div>
         ) : (
@@ -1164,7 +1239,7 @@ export default function ElementQuest() {
   const [gameKey, setGameKey] = useState(0);
   const [showAddPlayer, setShowAddPlayer] = useState(false);
   const { play, toggleMute, muted } = useSound();
-  const { players, scores, activePlayer, setActiveId, addPlayer, updateScore, roomId, joinRoom, loaded } = usePlayers();
+  const { players, scores, activePlayer, setActiveId, addPlayer, updateScore, updateMastery, roomId, joinRoom, loaded } = usePlayers();
 
   useEffect(() => { if (loaded && players.length === 0) setShowAddPlayer(true); }, [loaded]);
 
@@ -1209,13 +1284,20 @@ export default function ElementQuest() {
         <HomeScreen
           players={players} scores={scores}
           activeId={activePlayer?.id} setActiveId={setActiveId}
+          activePlayer={activePlayer}
           onAddPlayer={() => setShowAddPlayer(true)}
           roomId={roomId} joinRoom={joinRoom}
           difficulty={difficulty} setDifficulty={setDifficulty}
           onStart={startGame}
         />
       )}
-      {screen === "game" && mode === "flashcard" && <FlashcardMode key={gameKey} {...gp} />}
+      {screen === "game" && mode === "flashcard" && (
+        <FlashcardMode
+          key={gameKey} {...gp}
+          masteredElements={activePlayer?.mastered_elements || []}
+          onMastery={symbols => updateMastery(activePlayer.id, symbols)}
+        />
+      )}
       {screen === "game" && mode === "quiz"      && <QuizMode      key={gameKey} {...gp} />}
       {screen === "game" && mode === "scramble"  && <ScrambleMode  key={gameKey} {...gp} />}
       {screen === "game" && mode === "speed"     && <SpeedMode     key={gameKey} {...gp} />}

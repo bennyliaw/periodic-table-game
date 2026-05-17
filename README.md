@@ -26,6 +26,9 @@ alter table eq_players enable row level security;
 create policy "Public access" on eq_players for all using (true) with check (true);
 
 alter publication supabase_realtime add table eq_players;
+
+-- Flashcard mastery tracking (run after the table above)
+alter table eq_players add column mastered_elements jsonb default '[]'::jsonb;
 ```
 
 Then go to **Project Settings → API** and copy your Project URL and `anon public` key into a `.env.local` file in the project root:
@@ -91,7 +94,7 @@ Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in **Netlify → Site Setti
 
 | Mode | Description |
 |------|-------------|
-| 🃏 Flash Cards | Flip card to reveal symbol. Self-grade. |
+| 🃏 Flash Cards | Flip card to reveal symbol. 15-card sessions, mastery tracked per player. |
 | ⚡ Symbol Quiz | 4-choice quiz with streak bonuses |
 | 🔤 Name Scramble | Given the symbol, drag tiles to unscramble (or type) the element name |
 | 🚀 Speed Blast | 60-second rapid-fire quiz |

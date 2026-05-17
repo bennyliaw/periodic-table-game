@@ -142,7 +142,7 @@ element-quest/
 ```
 App (screen router + shared state)
 ├── HomeScreen       — player select, difficulty, mode select
-├── FlashcardMode    — flip cards, self-grade Got it / Study More
+├── FlashcardMode    — 15-card sessions, "Mark done" / "Show again later", mastery tracked per player
 ├── QuizMode         — 10 questions, 4-choice symbol pick, streak bonus
 ├── ScrambleMode     — 8 questions, type element name given symbol
 ├── SpeedMode        — 60s timer, rapid 4-choice quiz
@@ -152,8 +152,16 @@ App (screen router + shared state)
 **Key state patterns:**
 - `scoreRef` (useRef) used inside async callbacks to avoid stale closure bugs
 - `key={gameKey}` on game components forces full remount between rounds
-- `usePlayers()` hook manages player list + scores via localStorage (`eq_players`, `eq_scores`)
-- Player objects: `{ id, name, age, icon, color }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`
+- `usePlayers()` hook manages player list + scores via Supabase (`eq_players` table)
+- Player objects: `{ id, name, age, icon, color, score, mastered_elements }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`
+- `mastered_elements` is a `jsonb` array of element symbols (e.g. `["H","O","Fe"]`) stored on the player row
+
+**Flashcard mastery:**
+- `getPool(difficulty)` returns the unshuffled element pool for a difficulty level
+- `getFlashDeck(difficulty, masteredSymbols)` deals 15 cards — unmastered first, topped up with mastered for review
+- "Mark done" adds the symbol to `mastered_elements` via `updateMastery()` and persists to Supabase
+- "Show again later" re-queues the card to the end of the current session deck (+1 pt)
+- Mastery is global (by symbol), not per-difficulty — mastering H in Starter carries over to Explorer
 
 **Data:**
 - 47 elements in `ELEMENTS[]`, each with `{ name, symbol, number, group, tier }`
@@ -167,7 +175,6 @@ App (screen router + shared state)
 - [ ] **Custom domain** — `vercel domains add <domain>` once a domain is ready
 - [ ] **More elements** — extend to all 118 with tier 4
 - [ ] **Atomic number quiz** — third game axis beyond name↔symbol
-- [ ] **Progress tracking** — which elements each player has mastered
 - [ ] **Mobile PWA** — add manifest + service worker so it installs on phone
 - [ ] **Multiplayer** — real-time head-to-head via a simple WebSocket server
 
