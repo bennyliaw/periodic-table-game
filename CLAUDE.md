@@ -12,6 +12,7 @@
 | Core game (React artifact) | ✅ Done |
 | Local dev setup (Vite)     | ✅ Done |
 | Deploy (Vercel)            | ✅ Live — https://periodic-table-game-murex.vercel.app |
+| CI/CD (GitHub Actions)     | ✅ Auto-deploys to Vercel on every push to `main` |
 
 ---
 
@@ -122,12 +123,16 @@ Add `netlify.toml` in project root:
 element-quest/
 ├── CLAUDE.md          ← you are here
 ├── README.md          ← human-readable docs
-├── package.json
+├── package.json       ← version field = major.minor (e.g. 0.5.0)
 ├── vite.config.js
 ├── index.html
+├── .github/
+│   └── workflows/
+│       └── deploy.yml ← CI/CD: auto-deploy to Vercel on push to main
 └── src/
     ├── main.jsx       ← React entry point
-    └── App.jsx        ← entire game lives here (ElementQuest.jsx)
+    ├── supabase.js    ← Supabase client (reads VITE_ env vars)
+    └── App.jsx        ← entire game lives here
 ```
 
 ---
@@ -159,7 +164,6 @@ App (screen router + shared state)
 
 ## Planned Improvements (tackle in order)
 
-- [ ] **CI/CD** — connect GitHub repo to Vercel for auto-deploy on every push (Vercel dashboard → Project Settings → Git)
 - [ ] **Custom domain** — `vercel domains add <domain>` once a domain is ready
 - [ ] **More elements** — extend to all 118 with tier 4
 - [ ] **Atomic number quiz** — third game axis beyond name↔symbol

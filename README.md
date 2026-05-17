@@ -45,13 +45,29 @@ npm run dev
 
 ## Deploy to Vercel (recommended)
 
+### Auto-deploy via CI/CD (recommended)
+
+Every push to `main` automatically deploys to Vercel via GitHub Actions (`.github/workflows/deploy.yml`).
+
+One-time setup — add these three repository secrets in **GitHub → Settings → Secrets and variables → Actions**:
+
+| Secret | Value |
+|--------|-------|
+| `VERCEL_TOKEN` | Create at vercel.com → Account Settings → Tokens |
+| `VERCEL_ORG_ID` | Your Vercel team/org ID (from `.vercel/project.json`) |
+| `VERCEL_PROJECT_ID` | Your Vercel project ID (from `.vercel/project.json`) |
+
+The workflow also injects `VITE_APP_VERSION` as `<major.minor>.<run-number>` (e.g. `0.5.42`), sourced from `package.json`. Bump the `version` field there to change the major/minor.
+
+### Manual deploy
+
 ```bash
 npm install -g vercel
 vercel login
 vercel --prod
 ```
 
-Add the two Supabase env vars in **Vercel → Project Settings → Environment Variables** before deploying, or via CLI:
+Add the two Supabase env vars in **Vercel → Project Settings → Environment Variables** before deploying:
 
 ```bash
 echo "https://your-project.supabase.co" | vercel env add VITE_SUPABASE_URL production
@@ -112,7 +128,7 @@ Any INSERT (new player) or UPDATE (score change) in that room is broadcast to al
 
 ## Roadmap
 
-- [ ] CI/CD — connect GitHub to Vercel for auto-deploy on push
+- [x] CI/CD — GitHub Actions auto-deploys to Vercel on every push to `main`
 - [ ] Custom domain
 - [ ] All 118 elements (tier 4)
 - [ ] Atomic number quiz mode
