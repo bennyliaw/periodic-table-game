@@ -859,6 +859,15 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
 
       {/* Title */}
       <div style={{ textAlign: "center", marginBottom: 26, position: "relative", zIndex: 1 }}>
+        {activePlayer?.is_admin && (
+          <button onClick={handlePadlockClick} style={{
+            position: "absolute", top: 0, right: 0, zIndex: 200,
+            background: "none", border: "none", fontSize: 20, cursor: "pointer",
+            opacity: isAdminUnlocked ? 0.9 : 0.5, transition: "opacity 0.2s",
+          }} title={isAdminUnlocked ? "Admin unlocked — click to lock" : "Unlock admin"}>
+            {isAdminUnlocked ? "🔓" : "🔒"}
+          </button>
+        )}
         <div style={{ color: "#1e293b", fontSize: 11, letterSpacing: 4, textTransform: "uppercase", fontFamily: "'Exo 2'", marginBottom: 6 }}>
           Periodic Table Challenge
           <span style={{ letterSpacing: 1, color: "#164e63", marginLeft: 8 }}>· v{APP_VERSION}</span>
@@ -872,17 +881,6 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
           <RoomCodeBar roomId={roomId} onJoin={joinRoom} />
         </div>
       </div>
-
-      {/* Padlock for admin */}
-      {activePlayer?.is_admin && (
-        <button onClick={handlePadlockClick} style={{
-          position: "fixed", top: 14, right: 44, zIndex: 200,
-          background: "none", border: "none", fontSize: 20, cursor: "pointer",
-          opacity: isAdminUnlocked ? 0.9 : 0.5, transition: "opacity 0.2s",
-        }} title={isAdminUnlocked ? "Admin unlocked — click to lock" : "Unlock admin"}>
-          {isAdminUnlocked ? "🔓" : "🔒"}
-        </button>
-      )}
 
       {/* Player Select */}
       <Section label="Who's Playing?">
