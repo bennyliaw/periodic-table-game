@@ -69,6 +69,18 @@ const GC = {
 // ═══════════════════════════════════════════
 // SOUND
 // ═══════════════════════════════════════════
+const PHRASES = {
+  correct:  ["Great job!", "You got it!", "That's right!", "Spot on!", "Excellent work!", "Wonderful!", "You're a star!", "Nailed it!", "Brilliant thinking!", "Amazing!"],
+  wrong:    ["Wrong!", "Oops!", "So close! Have another go!", "Not that, try again!", "Don't give up!", "Almost! Try again!", "Not quite, but keep going!"],
+  streak3:  ["You're on a roll!", "Getting warm here!", "Keep it going!"],
+  streak5:  ["You're on fire!", "Incredible! Keep it up!", "You cannot be stopped!"],
+  streak7:  ["Unstoppable! This is legendary!", "You are absolutely incredible!", "Is there anything you don't know?!"],
+  perfect:  ["Perfect round! Every single answer correct! You are absolutely brilliant!", "Flawless! Not a single mistake! You're a true element master!", "One hundred percent! Perfect score! Extraordinary!"],
+  roundEnd: ["Well done!", "Round complete! Great effort!", "Fantastic work!"],
+};
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
 function useSound() {
   const ctxRef = useRef(null);
   const mutedRef = useRef(false);
@@ -94,27 +106,45 @@ function useSound() {
     osc.stop(start + duration + 0.05);
   }
 
-  function play(type) {
+  function speak(text, { rate = 1, pitch = 1 } = {}) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = rate;
+    u.pitch = pitch;
+    window.speechSynthesis.speak(u);
+  }
+
+  function play(type, level = 0) {
     if (mutedRef.current) return;
     const ctx = getCtx();
     if (ctx.state === "suspended") ctx.resume();
     const t = ctx.currentTime;
     switch (type) {
       case "correct":
-        tone(523, "sine", 0.12, t, 0.25);
-        tone(659, "sine", 0.18, t + 0.1, 0.3);
+        speak(pick(PHRASES.correct), { rate: 1.0, pitch: 1.35 });
         break;
       case "wrong":
-        tone(180, "sawtooth", 0.25, t, 0.18);
+        speak(pick(PHRASES.wrong), { rate: 1.05, pitch: 1.35 });
         break;
-      case "streak":
-        [523, 659, 784, 1047].forEach((f, i) => tone(f, "sine", 0.1, t + i * 0.075, 0.22));
+      case "streak": {
+        const milestone = level === 3 ? "Three in a row! "
+                        : level === 5 ? "Five in a row! "
+                        : "";
+        if (level >= 7)      speak(milestone + pick(PHRASES.streak7), { rate: 1.1,  pitch: 1.65 });
+        else if (level >= 5) speak(milestone + pick(PHRASES.streak5), { rate: 1.1,  pitch: 1.55 });
+        else                 speak(milestone + pick(PHRASES.streak3), { rate: 1.05, pitch: 1.5  });
+        break;
+      }
+      case "perfect":
+        speak(pick(PHRASES.perfect), { rate: 1.1, pitch: 1.3 });
+        [523, 659, 784, 1047].forEach((f, i) => tone(f, "sine", 0.18, t + i * 0.13, 0.2));
+        break;
+      case "roundEnd":
+        speak(pick(PHRASES.roundEnd), { rate: 1.1, pitch: 1.3 });
+        [523, 659, 784, 1047].forEach((f, i) => tone(f, "sine", 0.18, t + i * 0.13, 0.2));
         break;
       case "flip":
         tone(880, "sine", 0.06, t, 0.12);
-        break;
-      case "roundEnd":
-        [523, 659, 784, 1047].forEach((f, i) => tone(f, "sine", 0.18, t + i * 0.13, 0.28));
         break;
     }
   }
@@ -122,6 +152,7 @@ function useSound() {
   function toggleMute() {
     mutedRef.current = !mutedRef.current;
     setMuted(mutedRef.current);
+    if (mutedRef.current) window.speechSynthesis.cancel();
   }
 
   return { play, toggleMute, muted };
@@ -189,13 +220,10 @@ function GlobalStyles() {
 // ═══════════════════════════════════════════
 // SHARED: PROGRESS HEADER
 // ═══════════════════════════════════════════
-function Header({ title, score, streak = 0, onHome, idx, total }) {
+function Header({ title, score, streak = 0, idx, total }) {
   return (
     <div style={{ width: "100%", maxWidth: "420px", marginBottom: "14px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-        <button onClick={onHome} style={{
-          background: "none", border: "none", color: "#334155", fontSize: "22px", padding: "4px 8px", transition: "color 0.2s",
-        }}>←</button>
         <span style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: "14px" }}>{title}</span>
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
           {streak >= 2 && <span style={{ color: "#fb923c", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: "13px" }}>🔥{streak}x</span>}
@@ -210,6 +238,39 @@ function Header({ title, score, streak = 0, onHome, idx, total }) {
           <div style={{ color: "#1e293b", fontSize: 11, textAlign: "center", marginTop: 4 }}>{idx + 1} / {total}</div>
         </>
       )}
+    </div>
+  );
+}
+
+function QuitStrip({ onHome }) {
+  const [confirming, setConfirming] = useState(false);
+  return (
+    <div style={{ marginTop: "auto", paddingTop: 16, width: "100%", maxWidth: 380 }}>
+      <div style={{ borderTop: "1px solid #111827", paddingTop: 12 }}>
+        {!confirming ? (
+          <button onClick={() => setConfirming(true)} style={{
+            width: "100%", padding: 13, background: "none",
+            border: "1px solid #1e293b", borderRadius: 14,
+            color: "#475569", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 14,
+            cursor: "pointer",
+          }}>🏠  Quit to Menu</button>
+        ) : (
+          <div style={{ display: "flex", gap: 10 }}>
+            <button onClick={() => setConfirming(false)} style={{
+              flex: 1, padding: 13, background: "none",
+              border: "1px solid #334155", borderRadius: 14,
+              color: "#64748b", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 14,
+              cursor: "pointer",
+            }}>Cancel</button>
+            <button onClick={onHome} style={{
+              flex: 1, padding: 13, background: "#160a0a",
+              border: "1px solid #ef4444", borderRadius: 14,
+              color: "#ef4444", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14,
+              cursor: "pointer",
+            }}>Yes, Quit</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -349,14 +410,14 @@ function FlashcardMode({ difficulty, onEnd, onHome, playSound }) {
   function next(gotIt) {
     if (gotIt) { scoreRef.current += 10; setScore(scoreRef.current); playSound("correct"); }
     else { playSound("wrong"); }
-    if (idx + 1 >= deck.length) { playSound("roundEnd"); onEnd(scoreRef.current); return; }
+    if (idx + 1 >= deck.length) { onEnd(scoreRef.current); return; }
     setIdx(i => i + 1);
     setFlipped(false);
   }
 
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px", fontFamily: "'Nunito'" }}>
-      <Header title="🃏 Flash Cards" score={score} onHome={onHome} idx={idx} total={deck.length} />
+      <Header title="🃏 Flash Cards" score={score} idx={idx} total={deck.length} />
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", maxWidth: 380 }}>
         {/* The Card */}
@@ -396,6 +457,7 @@ function FlashcardMode({ difficulty, onEnd, onHome, playSound }) {
           <div style={{ color: "#1e293b", fontSize: 14 }}>Tap the card to flip</div>
         )}
       </div>
+      <QuitStrip onHome={onHome} />
     </div>
   );
 }
@@ -412,6 +474,7 @@ function QuizMode({ difficulty, onEnd, onHome, playSound }) {
   const [pop, setPop]     = useState(null);
   const scoreRef  = useRef(0);
   const streakRef = useRef(0);
+  const wrongRef  = useRef(0);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
 
@@ -435,9 +498,11 @@ function QuizMode({ difficulty, onEnd, onHome, playSound }) {
       setScore(scoreRef.current);
       setStreak(streakRef.current);
       setPop("✅");
-      playSound(streakRef.current >= 3 ? "streak" : "correct");
+      if (streakRef.current >= 3) playSound("streak", streakRef.current);
+      else playSound("correct");
     } else {
       streakRef.current = 0;
+      wrongRef.current += 1;
       setStreak(0);
       setPop("❌");
       playSound("wrong");
@@ -445,14 +510,14 @@ function QuizMode({ difficulty, onEnd, onHome, playSound }) {
     setTimeout(() => {
       setPop(null);
       setSelected(null);
-      if (idx + 1 >= TOTAL) { playSound("roundEnd"); onEnd(scoreRef.current); return; }
+      if (idx + 1 >= TOTAL) { onEnd(scoreRef.current, wrongRef.current === 0); return; }
       setIdx(i => i + 1);
     }, 1100);
   }
 
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px", fontFamily: "'Nunito'" }}>
-      <Header title="⚡ Symbol Quiz" score={score} streak={streak} onHome={onHome} idx={idx} total={TOTAL} />
+      <Header title="⚡ Symbol Quiz" score={score} streak={streak} idx={idx} total={TOTAL} />
 
       {pop && (
         <div style={{ position: "fixed", top: "42%", left: "50%", fontSize: 72, zIndex: 100, animation: "pop 0.85s ease forwards", pointerEvents: "none" }}>
@@ -495,6 +560,7 @@ function QuizMode({ difficulty, onEnd, onHome, playSound }) {
           );
         })}
       </div>
+      <QuitStrip onHome={onHome} />
     </div>
   );
 }
@@ -511,6 +577,7 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
   const [hint, setHint]     = useState(false);
   const [feedback, setFeedback] = useState(null);
   const scoreRef = useRef(0);
+  const wrongRef = useRef(0);
   const [score, setScore] = useState(0);
   const inputRef = useRef(null);
 
@@ -538,11 +605,12 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
       setFeedback("correct");
       playSound("correct");
       setTimeout(() => {
-        if (idx + 1 >= TOTAL) { playSound("roundEnd"); onEnd(scoreRef.current); return; }
+        if (idx + 1 >= TOTAL) { onEnd(scoreRef.current, wrongRef.current === 0); return; }
         setIdx(i => i + 1);
       }, 900);
     } else {
       setFeedback("wrong");
+      wrongRef.current += 1;
       playSound("wrong");
       setTimeout(() => setFeedback(null), 600);
     }
@@ -550,7 +618,7 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
 
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px", fontFamily: "'Nunito'" }}>
-      <Header title="🔤 Name Scramble" score={score} onHome={onHome} idx={idx} total={TOTAL} />
+      <Header title="🔤 Name Scramble" score={score} idx={idx} total={TOTAL} />
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", maxWidth: 380, gap: 22 }}>
 
@@ -607,6 +675,7 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
           </button>
         </div>
       </div>
+      <QuitStrip onHome={onHome} />
     </div>
   );
 }
@@ -638,7 +707,6 @@ function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
   useEffect(() => {
     if (started && timeLeft === 0 && !endedRef.current) {
       endedRef.current = true;
-      playSound("roundEnd");
       onEnd(scoreRef.current);
     }
   }, [timeLeft, started]);
@@ -668,7 +736,7 @@ function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
   if (!started) {
     return (
       <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, textAlign: "center", fontFamily: "'Nunito'" }}>
-        <button onClick={onHome} style={{ position: "absolute", top: 20, left: 20, background: "none", border: "none", color: "#1e293b", fontSize: 24 }}>←</button>
+        <button onClick={onHome} style={{ position: "absolute", top: 20, left: 20, background: "none", border: "none", color: "#64748b", fontSize: 24, cursor: "pointer" }}>←</button>
         <div style={{ fontSize: 72, marginBottom: 18 }}>🚀</div>
         <div style={{ color: "#f1f5f9", fontSize: 30, fontFamily: "'Exo 2'", fontWeight: 900, marginBottom: 8 }}>Speed Blast!</div>
         <div style={{ color: "#1e293b", fontSize: 14, marginBottom: 40 }}>60 seconds · No stopping · Max score wins!</div>
@@ -716,6 +784,7 @@ function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
           </div>
         </>
       )}
+      <QuitStrip onHome={onHome} />
     </div>
   );
 }
@@ -785,9 +854,10 @@ export default function ElementQuest() {
 
   function startGame(m) { setMode(m); setGameKey(k => k + 1); setScreen("game"); }
 
-  function endRound(earned) {
+  function endRound(earned, perfect = false) {
     setLastScore(earned);
     setScores(prev => ({ ...prev, [activePlayer]: prev[activePlayer] + earned }));
+    play(perfect ? "perfect" : "roundEnd");
     setScreen("results");
   }
 
