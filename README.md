@@ -77,7 +77,7 @@ Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in **Netlify → Site Setti
 |------|-------------|
 | 🃏 Flash Cards | Flip card to reveal symbol. Self-grade. |
 | ⚡ Symbol Quiz | 4-choice quiz with streak bonuses |
-| 🔤 Name Scramble | Given the symbol, unscramble the element name |
+| 🔤 Name Scramble | Given the symbol, drag tiles to unscramble (or type) the element name |
 | 🚀 Speed Blast | 60-second rapid-fire quiz |
 
 ## Difficulty Levels

@@ -280,6 +280,10 @@ function GlobalStyles() {
         60%     { transform: translateX(-5px); }
         80%     { transform: translateX(5px); }
       }
+      @keyframes wiggle {
+        0%,100% { transform: rotate(-8deg) scale(1.15); }
+        50%      { transform: rotate(8deg)  scale(1.15); }
+      }
       @keyframes float0 { 0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(6deg)} }
       @keyframes float1 { 0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-12px) rotate(-4deg)} }
       @keyframes float2 { 0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-20px) rotate(3deg)} }
@@ -829,15 +833,19 @@ function QuizMode({ difficulty, onEnd, onHome, playSound }) {
 function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
   const TOTAL = 8;
   const [deck] = useState(() => getDeck(difficulty).filter(e => e.name.length >= 4).slice(0, TOTAL));
-  const [idx, setIdx]   = useState(0);
-  const [scrambled, setScrambled] = useState("");
+  const [idx, setIdx]       = useState(0);
+  const [tiles, setTiles]   = useState([]);
+  const [dragIdx, setDragIdx] = useState(null);
   const [typed, setTyped]   = useState("");
   const [hint, setHint]     = useState(false);
   const [feedback, setFeedback] = useState(null);
-  const scoreRef = useRef(0);
-  const wrongRef = useRef(0);
+  const scoreRef  = useRef(0);
+  const wrongRef  = useRef(0);
+  const tilesRef  = useRef([]);
   const [score, setScore] = useState(0);
-  const inputRef = useRef(null);
+  const inputRef  = useRef(null);
+
+  useEffect(() => { tilesRef.current = tiles; }, [tiles]);
 
   if (idx >= deck.length) return null;
   const el    = deck[idx];
@@ -848,12 +856,36 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
     let s = el.name.toUpperCase();
     let tries = 0;
     while (s === el.name.toUpperCase() && tries < 40) { s = shuffle(letters).join(""); tries++; }
-    setScrambled(s);
+    setTiles(s.split("").map((l, i) => ({ id: i, letter: l })));
+    setDragIdx(null);
     setTyped("");
     setHint(false);
     setFeedback(null);
     setTimeout(() => inputRef.current?.focus(), 80);
   }, [idx]);
+
+  function handlePointerDown(e, i) {
+    e.preventDefault();
+    setDragIdx(i);
+  }
+
+  function handlePointerEnter(i) {
+    if (dragIdx === null || dragIdx === i) return;
+    setTiles(prev => {
+      const next = [...prev];
+      const [moved] = next.splice(dragIdx, 1);
+      next.splice(i, 0, moved);
+      return next;
+    });
+    setDragIdx(i);
+  }
+
+  function handlePointerUp() {
+    if (dragIdx !== null) {
+      setTyped(tilesRef.current.map(t => t.letter).join("").toLowerCase());
+    }
+    setDragIdx(null);
+  }
 
   function submit() {
     if (typed.trim().toLowerCase() === el.name.toLowerCase()) {
@@ -891,12 +923,29 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
 
         {/* Letter tiles */}
         <div style={{ textAlign: "center" }}>
-          <div style={{ color: "#1e293b", fontSize: 11, letterSpacing: 3, marginBottom: 12, fontFamily: "'Exo 2'" }}>UNSCRAMBLE THE NAME</div>
-          <div style={{ display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "center" }}>
-            {scrambled.split("").map((l, i) => (
-              <div key={i} style={{ width: 34, height: 40, background: "#111827", border: "2px solid #1e293b", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", color, fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 16 }}>
-                {l}
-              </div>
+          <div style={{ color: "#1e293b", fontSize: 11, letterSpacing: 3, marginBottom: 12, fontFamily: "'Exo 2'" }}>DRAG TO UNSCRAMBLE</div>
+          <div
+            style={{ display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "center", touchAction: "none", userSelect: "none" }}
+            onPointerUp={handlePointerUp}
+            onPointerLeave={handlePointerUp}
+          >
+            {tiles.map((t, i) => (
+              <div
+                key={t.id}
+                onPointerDown={e => handlePointerDown(e, i)}
+                onPointerEnter={() => handlePointerEnter(i)}
+                style={{
+                  width: 34, height: 40, borderRadius: 8,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color, fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 16,
+                  cursor: dragIdx === i ? "grabbing" : "grab",
+                  background: dragIdx === i ? `${color}25` : "#111827",
+                  border: `2px solid ${dragIdx === i ? color : "#1e293b"}`,
+                  boxShadow: dragIdx === i ? `0 0 12px ${color}40` : "none",
+                  animation: dragIdx === i ? "wiggle 0.25s ease-in-out infinite" : "none",
+                  transition: dragIdx === i ? "none" : "background 0.12s, border-color 0.12s",
+                }}
+              >{t.letter}</div>
             ))}
           </div>
         </div>
