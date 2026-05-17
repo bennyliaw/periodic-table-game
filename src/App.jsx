@@ -756,10 +756,20 @@ function LandingScreen({ onJoinRoom, onStartFresh }) {
   const [view, setView]           = useState("main");
   const [roomInput, setRoomInput] = useState("");
   const [inputError, setInputError] = useState(false);
+  const [errorMsg, setErrorMsg]   = useState("");
+  const [checking, setChecking]   = useState(false);
 
-  function handleJoin() {
+  async function handleJoin() {
     const code = roomInput.trim().toUpperCase();
-    if (code.length < 3) { setInputError(true); return; }
+    if (code.length < 3) { setErrorMsg("Room code must be at least 3 characters"); setInputError(true); return; }
+    setChecking(true);
+    const { data } = await supabase.from("eq_players").select("id").eq("room_id", code).limit(1);
+    setChecking(false);
+    if (!data || data.length === 0) {
+      setErrorMsg("Room not found — check the code and try again");
+      setInputError(true);
+      return;
+    }
     onJoinRoom(code);
   }
 
@@ -831,22 +841,22 @@ function LandingScreen({ onJoinRoom, onStartFresh }) {
                      fontWeight: 700, letterSpacing: 6, outline: "none", textAlign: "center",
                      transition: "border-color 0.2s", boxSizing: "border-box" }} />
           {inputError && <div style={{ color: "#ef4444", fontSize: 12, textAlign: "center", marginBottom: 8 }}>
-            Room code must be at least 3 characters
+            {errorMsg}
           </div>}
           <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={() => { setView("main"); setInputError(false); }}
+            <button onClick={() => { setView("main"); setInputError(false); setErrorMsg(""); }}
               style={{ flex: 1, padding: 14, background: "none", border: "2px solid #1e293b",
                        borderRadius: 14, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>
               Cancel
             </button>
-            <button onClick={handleJoin} disabled={roomInput.length < 3}
+            <button onClick={handleJoin} disabled={roomInput.length < 3 || checking}
               style={{ flex: 2, padding: 14,
-                       background: roomInput.length >= 3 ? "#081a2a" : "#111827",
-                       border: `2px solid ${roomInput.length >= 3 ? "#22d3ee" : "#1e293b"}`,
-                       borderRadius: 14, color: roomInput.length >= 3 ? "#22d3ee" : "#334155",
+                       background: roomInput.length >= 3 && !checking ? "#081a2a" : "#111827",
+                       border: `2px solid ${roomInput.length >= 3 && !checking ? "#22d3ee" : "#1e293b"}`,
+                       borderRadius: 14, color: roomInput.length >= 3 && !checking ? "#22d3ee" : "#334155",
                        fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15,
-                       cursor: roomInput.length >= 3 ? "pointer" : "not-allowed", transition: "all 0.2s" }}>
-              Join →
+                       cursor: roomInput.length >= 3 && !checking ? "pointer" : "not-allowed", transition: "all 0.2s" }}>
+              {checking ? "Checking…" : "Join →"}
             </button>
           </div>
         </>)}
