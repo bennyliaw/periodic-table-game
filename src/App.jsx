@@ -1440,9 +1440,11 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
   const [typed, setTyped]   = useState("");
   const [hint, setHint]     = useState(false);
   const [feedback, setFeedback] = useState(null);
-  const scoreRef  = useRef(0);
-  const wrongRef  = useRef(0);
-  const tilesRef  = useRef([]);
+  const scoreRef     = useRef(0);
+  const wrongRef     = useRef(0);
+  const tilesRef     = useRef([]);
+  const dragIdxRef   = useRef(null);
+  const containerRef = useRef(null);
   const [score, setScore] = useState(0);
   const inputRef  = useRef(null);
 
@@ -1467,24 +1469,36 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
 
   function handlePointerDown(e, i) {
     e.preventDefault();
+    dragIdxRef.current = i;
     setDragIdx(i);
+    containerRef.current?.setPointerCapture(e.pointerId);
   }
 
   function handlePointerEnter(i) {
-    if (dragIdx === null || dragIdx === i) return;
+    if (dragIdxRef.current === null || dragIdxRef.current === i) return;
     setTiles(prev => {
       const next = [...prev];
-      const [moved] = next.splice(dragIdx, 1);
+      const [moved] = next.splice(dragIdxRef.current, 1);
       next.splice(i, 0, moved);
       return next;
     });
+    dragIdxRef.current = i;
     setDragIdx(i);
   }
 
+  function handlePointerMove(e) {
+    if (dragIdxRef.current === null) return;
+    const target = document.elementFromPoint(e.clientX, e.clientY);
+    const idxStr = target?.dataset?.tileIdx;
+    if (idxStr === undefined) return;
+    handlePointerEnter(Number(idxStr));
+  }
+
   function handlePointerUp() {
-    if (dragIdx !== null) {
+    if (dragIdxRef.current !== null) {
       setTyped(tilesRef.current.map(t => t.letter).join("").toLowerCase());
     }
+    dragIdxRef.current = null;
     setDragIdx(null);
   }
 
@@ -1526,13 +1540,16 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
         <div style={{ textAlign: "center" }}>
           <div style={{ color: "#1e293b", fontSize: 11, letterSpacing: 3, marginBottom: 12, fontFamily: "'Exo 2'" }}>DRAG TO UNSCRAMBLE</div>
           <div
+            ref={containerRef}
             style={{ display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "center", touchAction: "none", userSelect: "none" }}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
+            onPointerMove={handlePointerMove}
           >
             {tiles.map((t, i) => (
               <div
                 key={t.id}
+                data-tile-idx={i}
                 onPointerDown={e => handlePointerDown(e, i)}
                 onPointerEnter={() => handlePointerEnter(i)}
                 style={{
