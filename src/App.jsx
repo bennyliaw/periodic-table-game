@@ -869,9 +869,12 @@ function LandingScreen({ onJoinRoom, onStartFresh }) {
 // ROOM CODE BAR
 // ═══════════════════════════════════════════
 function RoomCodeBar({ roomId, onJoin }) {
-  const [joining, setJoining] = useState(false);
-  const [input, setInput]     = useState("");
-  const [copied, setCopied]   = useState(false);
+  const [joining, setJoining]     = useState(false);
+  const [input, setInput]         = useState("");
+  const [copied, setCopied]       = useState(false);
+  const [checking, setChecking]   = useState(false);
+  const [inputError, setInputError] = useState(false);
+  const [errorMsg, setErrorMsg]   = useState("");
 
   function copy() {
     navigator.clipboard.writeText(roomId);
@@ -879,11 +882,25 @@ function RoomCodeBar({ roomId, onJoin }) {
     setTimeout(() => setCopied(false), 1500);
   }
 
-  function handleJoin() {
-    if (input.trim().length < 1) return;
-    onJoin(input);
+  async function handleJoin() {
+    const code = input.trim().toUpperCase();
+    if (code.length < 3) {
+      setErrorMsg("At least 3 characters");
+      setInputError(true);
+      return;
+    }
+    setChecking(true);
+    const { data } = await supabase.from("eq_players").select("id").eq("room_id", code).limit(1);
+    setChecking(false);
+    if (!data || data.length === 0) {
+      setErrorMsg("Room not found");
+      setInputError(true);
+      return;
+    }
+    onJoin(code);
     setJoining(false);
     setInput("");
+    setInputError(false);
   }
 
   return (
@@ -894,20 +911,27 @@ function RoomCodeBar({ roomId, onJoin }) {
         <button onClick={copy} title="Copy room code" style={{ background: "none", border: "none", color: copied ? "#4ade80" : "#334155", cursor: "pointer", fontSize: 13, padding: 0, lineHeight: 1 }}>
           {copied ? "✓" : "⎘"}
         </button>
-        <button onClick={() => setJoining(j => !j)} style={{ background: "none", border: "none", color: "#1e293b", cursor: "pointer", fontSize: 11, fontFamily: "'Exo 2'", padding: 0, textDecoration: "underline" }}>
+        <button onClick={() => { setJoining(j => !j); setInputError(false); setInput(""); }} style={{ background: "none", border: "none", color: "#1e293b", cursor: "pointer", fontSize: 11, fontFamily: "'Exo 2'", padding: 0, textDecoration: "underline" }}>
           {joining ? "cancel" : "join room"}
         </button>
       </div>
       {joining && (
-        <div style={{ display: "flex", gap: 6 }}>
-          <input
-            value={input} onChange={e => setInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6))}
-            onKeyDown={e => e.key === "Enter" && handleJoin()}
-            placeholder="XXXXXX" autoFocus
-            style={{ width: 110, padding: "8px 12px", background: "#111827", border: "2px solid #1e293b", borderRadius: 10, color: "#22d3ee", fontSize: 15, fontFamily: "'Exo 2'", fontWeight: 700, outline: "none", letterSpacing: 4, textAlign: "center" }}
-          />
-          <button onClick={handleJoin} style={{ padding: "8px 14px", background: "#081a2a", border: "2px solid #22d3ee", borderRadius: 10, color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>Join</button>
-        </div>
+        <>
+          <div style={{ display: "flex", gap: 6 }}>
+            <input
+              value={input}
+              onChange={e => { setInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6)); setInputError(false); }}
+              onKeyDown={e => e.key === "Enter" && handleJoin()}
+              placeholder="XXXXXX" autoFocus
+              style={{ width: 110, padding: "8px 12px", background: "#111827", border: `2px solid ${inputError ? "#ef4444" : input.length >= 3 ? "#22d3ee" : "#1e293b"}`, borderRadius: 10, color: "#22d3ee", fontSize: 15, fontFamily: "'Exo 2'", fontWeight: 700, outline: "none", letterSpacing: 4, textAlign: "center" }}
+            />
+            <button onClick={handleJoin} disabled={input.length < 3 || checking}
+              style={{ padding: "8px 14px", background: "#081a2a", border: `2px solid ${input.length >= 3 && !checking ? "#22d3ee" : "#1e293b"}`, borderRadius: 10, color: input.length >= 3 && !checking ? "#22d3ee" : "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13, cursor: input.length >= 3 && !checking ? "pointer" : "not-allowed" }}>
+              {checking ? "…" : "Join"}
+            </button>
+          </div>
+          {inputError && <div style={{ color: "#ef4444", fontSize: 11, textAlign: "center" }}>{errorMsg}</div>}
+        </>
       )}
     </div>
   );
