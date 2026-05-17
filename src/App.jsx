@@ -959,7 +959,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   }, [adminUnlocked, adminUnlockTime]);
 
   function handlePlayerTap(p) {
-    if (p.id === activeId) return;
+    if (p.id === activeId) { setActiveId(null); return; }
     if (!p.constellation_hash || p.auth_reset) {
       onSetActiveId(p.id);
       setConstellationModal({ mode: "setup", player: p, purpose: "login" });
