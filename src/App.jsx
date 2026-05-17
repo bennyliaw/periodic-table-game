@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "./supabase.js";
 
+const APP_VERSION = import.meta.env.VITE_APP_VERSION || "dev";
+
 // ═══════════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════════
@@ -548,6 +550,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onAddPlayer, roomI
       <div style={{ textAlign: "center", marginBottom: 26, position: "relative", zIndex: 1 }}>
         <div style={{ color: "#1e293b", fontSize: 11, letterSpacing: 4, textTransform: "uppercase", fontFamily: "'Exo 2'", marginBottom: 6 }}>
           Periodic Table Challenge
+          <span style={{ letterSpacing: 1, color: "#164e63", marginLeft: 8 }}>· v{APP_VERSION}</span>
         </div>
         <div style={{ fontSize: 36, fontFamily: "'Exo 2'", fontWeight: 900,
           background: "linear-gradient(135deg, #22d3ee 0%, #a78bfa 55%, #f472b6 100%)",
