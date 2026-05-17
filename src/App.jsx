@@ -181,16 +181,18 @@ function usePlayers() {
     return id;
   });
   const [players, setPlayers] = useState([]);
+  const [loaded, setLoaded]   = useState(false);
   const [activeId, setActiveId] = useState(null);
 
   useEffect(() => {
     setPlayers([]);
+    setLoaded(false);
     supabase
       .from("eq_players")
       .select("*")
       .eq("room_id", roomId)
       .order("created_at")
-      .then(({ data }) => { if (data) setPlayers(data); });
+      .then(({ data }) => { if (data) setPlayers(data); setLoaded(true); });
 
     const channel = supabase
       .channel(`room:${roomId}`)
@@ -227,7 +229,7 @@ function usePlayers() {
 
   const scores = Object.fromEntries(players.map(p => [p.id, p.score]));
   const activePlayer = players.find(p => p.id === activeId) || null;
-  return { players, scores, activePlayer, setActiveId, addPlayer, updateScore, roomId, joinRoom };
+  return { players, scores, activePlayer, setActiveId, addPlayer, updateScore, roomId, joinRoom, loaded };
 }
 
 // ═══════════════════════════════════════════
@@ -1110,9 +1112,9 @@ export default function ElementQuest() {
   const [gameKey, setGameKey] = useState(0);
   const [showAddPlayer, setShowAddPlayer] = useState(false);
   const { play, toggleMute, muted } = useSound();
-  const { players, scores, activePlayer, setActiveId, addPlayer, updateScore, roomId, joinRoom } = usePlayers();
+  const { players, scores, activePlayer, setActiveId, addPlayer, updateScore, roomId, joinRoom, loaded } = usePlayers();
 
-  useEffect(() => { if (players.length === 0) setShowAddPlayer(true); }, []);
+  useEffect(() => { if (loaded && players.length === 0) setShowAddPlayer(true); }, [loaded]);
 
   function startGame(m) {
     if (!activePlayer) return;
