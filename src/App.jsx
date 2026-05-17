@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { supabase } from "./supabase.js";
 
 // ═══════════════════════════════════════════
 // DATA
@@ -165,32 +166,63 @@ function useSound() {
 // ═══════════════════════════════════════════
 // PLAYERS
 // ═══════════════════════════════════════════
+function genRoomId() {
+  return Math.random().toString(36).slice(2, 8).toUpperCase();
+}
+
 function usePlayers() {
-  const [players, setPlayers] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("eq_players")) || []; } catch { return []; }
+  const [roomId, setRoomIdState] = useState(() => {
+    let id = localStorage.getItem("eq_room_id");
+    if (!id) { id = genRoomId(); localStorage.setItem("eq_room_id", id); }
+    return id;
   });
-  const [scores, setScores] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("eq_scores")) || {}; } catch { return {}; }
-  });
+  const [players, setPlayers] = useState([]);
   const [activeId, setActiveId] = useState(null);
 
-  useEffect(() => { localStorage.setItem("eq_players", JSON.stringify(players)); }, [players]);
-  useEffect(() => { localStorage.setItem("eq_scores",  JSON.stringify(scores));  }, [scores]);
+  useEffect(() => {
+    setPlayers([]);
+    supabase
+      .from("eq_players")
+      .select("*")
+      .eq("room_id", roomId)
+      .order("created_at")
+      .then(({ data }) => { if (data) setPlayers(data); });
 
-  function addPlayer({ name, age, icon, color }) {
+    const channel = supabase
+      .channel(`room:${roomId}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "eq_players", filter: `room_id=eq.${roomId}` },
+        ({ eventType, new: next, old }) => {
+          if (eventType === "INSERT")      setPlayers(prev => [...prev, next]);
+          else if (eventType === "UPDATE") setPlayers(prev => prev.map(p => p.id === next.id ? next : p));
+          else if (eventType === "DELETE") setPlayers(prev => prev.filter(p => p.id !== old.id));
+        })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [roomId]);
+
+  function joinRoom(code) {
+    const id = code.trim().toUpperCase().slice(0, 6);
+    localStorage.setItem("eq_room_id", id);
+    setRoomIdState(id);
+    setActiveId(null);
+  }
+
+  async function addPlayer({ name, age, icon, color }) {
     const id = Date.now().toString();
-    const p  = { id, name, age: age || null, icon, color };
-    setPlayers(prev => [...prev, p]);
     setActiveId(id);
-    return p;
+    await supabase.from("eq_players").insert({ id, room_id: roomId, name, age: age || null, icon, color, score: 0 });
   }
 
-  function updateScore(id, earned) {
-    setScores(prev => ({ ...prev, [id]: (prev[id] || 0) + earned }));
+  async function updateScore(id, earned) {
+    const player = players.find(p => p.id === id);
+    if (!player) return;
+    await supabase.from("eq_players").update({ score: player.score + earned }).eq("id", id);
   }
 
+  const scores = Object.fromEntries(players.map(p => [p.id, p.score]));
   const activePlayer = players.find(p => p.id === activeId) || null;
-  return { players, scores, activePlayer, setActiveId, addPlayer, updateScore };
+  return { players, scores, activePlayer, setActiveId, addPlayer, updateScore, roomId, joinRoom };
 }
 
 // ═══════════════════════════════════════════
@@ -382,11 +414,59 @@ function AddPlayerModal({ players, onAdd, onCancel }) {
 }
 
 // ═══════════════════════════════════════════
+// ROOM CODE BAR
+// ═══════════════════════════════════════════
+function RoomCodeBar({ roomId, onJoin }) {
+  const [joining, setJoining] = useState(false);
+  const [input, setInput]     = useState("");
+  const [copied, setCopied]   = useState(false);
+
+  function copy() {
+    navigator.clipboard.writeText(roomId);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  }
+
+  function handleJoin() {
+    if (input.trim().length < 1) return;
+    onJoin(input);
+    setJoining(false);
+    setInput("");
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ color: "#1e293b", fontSize: 11, fontFamily: "'Exo 2'", letterSpacing: 2 }}>ROOM</span>
+        <span style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 15, letterSpacing: 4 }}>{roomId}</span>
+        <button onClick={copy} title="Copy room code" style={{ background: "none", border: "none", color: copied ? "#4ade80" : "#334155", cursor: "pointer", fontSize: 13, padding: 0, lineHeight: 1 }}>
+          {copied ? "✓" : "⎘"}
+        </button>
+        <button onClick={() => setJoining(j => !j)} style={{ background: "none", border: "none", color: "#1e293b", cursor: "pointer", fontSize: 11, fontFamily: "'Exo 2'", padding: 0, textDecoration: "underline" }}>
+          {joining ? "cancel" : "join room"}
+        </button>
+      </div>
+      {joining && (
+        <div style={{ display: "flex", gap: 6 }}>
+          <input
+            value={input} onChange={e => setInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6))}
+            onKeyDown={e => e.key === "Enter" && handleJoin()}
+            placeholder="XXXXXX" autoFocus
+            style={{ width: 110, padding: "8px 12px", background: "#111827", border: "2px solid #1e293b", borderRadius: 10, color: "#22d3ee", fontSize: 15, fontFamily: "'Exo 2'", fontWeight: 700, outline: "none", letterSpacing: 4, textAlign: "center" }}
+          />
+          <button onClick={handleJoin} style={{ padding: "8px 14px", background: "#081a2a", border: "2px solid #22d3ee", borderRadius: 10, color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>Join</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════
 // HOME SCREEN
 // ═══════════════════════════════════════════
 const BG_SYMBOLS = ["Au", "Ne", "Fe", "Hg", "Pb"];
 
-function HomeScreen({ players, scores, activeId, setActiveId, onAddPlayer, difficulty, setDifficulty, onStart }) {
+function HomeScreen({ players, scores, activeId, setActiveId, onAddPlayer, roomId, joinRoom, difficulty, setDifficulty, onStart }) {
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", fontFamily: "'Nunito'", padding: "22px 18px", overflowY: "auto" }}>
 
@@ -411,6 +491,9 @@ function HomeScreen({ players, scores, activeId, setActiveId, onAddPlayer, diffi
           background: "linear-gradient(135deg, #22d3ee 0%, #a78bfa 55%, #f472b6 100%)",
           WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 1.1 }}>
           ⚗️ Element Quest
+        </div>
+        <div style={{ marginTop: 12 }}>
+          <RoomCodeBar roomId={roomId} onJoin={joinRoom} />
         </div>
       </div>
 
@@ -971,7 +1054,7 @@ export default function ElementQuest() {
   const [gameKey, setGameKey] = useState(0);
   const [showAddPlayer, setShowAddPlayer] = useState(false);
   const { play, toggleMute, muted } = useSound();
-  const { players, scores, activePlayer, setActiveId, addPlayer, updateScore } = usePlayers();
+  const { players, scores, activePlayer, setActiveId, addPlayer, updateScore, roomId, joinRoom } = usePlayers();
 
   useEffect(() => { if (players.length === 0) setShowAddPlayer(true); }, []);
 
@@ -1012,6 +1095,7 @@ export default function ElementQuest() {
           players={players} scores={scores}
           activeId={activePlayer?.id} setActiveId={setActiveId}
           onAddPlayer={() => setShowAddPlayer(true)}
+          roomId={roomId} joinRoom={joinRoom}
           difficulty={difficulty} setDifficulty={setDifficulty}
           onStart={startGame}
         />
