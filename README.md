@@ -2,7 +2,8 @@
 
 A periodic table memory game for kids and parents — built with React + Vite.
 
-**Live:** https://periodic-table-game-murex.vercel.app
+**Live:** https://elements.demo.agentic-blueprint.com  
+*(also available at https://periodic-table-game-murex.vercel.app)*
 
 ## Quick Start (Local)
 

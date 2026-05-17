@@ -11,7 +11,7 @@
 |-------|--------|
 | Core game (React artifact) | ✅ Done |
 | Local dev setup (Vite)     | ✅ Done |
-| Deploy (Vercel)            | ✅ Live — https://periodic-table-game-murex.vercel.app |
+| Deploy (Vercel)            | ✅ Live — https://elements.demo.agentic-blueprint.com |
 | CI/CD (GitHub Actions)     | ✅ Auto-deploys to Vercel on every push to `main` |
 
 ---
