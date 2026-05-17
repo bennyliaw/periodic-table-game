@@ -153,8 +153,17 @@ App (screen router + shared state)
 - `scoreRef` (useRef) used inside async callbacks to avoid stale closure bugs
 - `key={gameKey}` on game components forces full remount between rounds
 - `usePlayers()` hook manages player list + scores via Supabase (`eq_players` table)
-- Player objects: `{ id, name, age, icon, color, score, mastered_elements }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`
+- Player objects: `{ id, name, age, icon, color, score, mastered_elements, is_admin, constellation_hash, auth_reset }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`
 - `mastered_elements` is a `jsonb` array of element symbols (e.g. `["H","O","Fe"]`) stored on the player row
+
+**Constellation auth:**
+- `DOTS` — 12 fixed star positions (% coordinates) shared by all players; security comes from sequence, not position
+- `hashConstellation(indices)` — SHA-256 of `JSON.stringify(indices)` via Web Crypto API; stored in `constellation_hash`
+- `ConstellationPad` — drag-based SVG component; pointer events hit-test dot proximity (26px radius); trailing dashed line follows cursor while dragging
+- `auth_reset: true` means the player skips verification on next tap and is prompted to set a new pattern
+- `is_admin` — first player in room gets `true`; admin can grant/revoke for others; last admin cannot remove themselves
+- Admin actions require `adminUnlocked` state (set by re-verifying constellation via padlock button, auto-locks after 5 min)
+- Orphaned room (no admins): any active player can long-press their own chip to claim admin without padlock
 
 **Flashcard mastery:**
 - `getPool(difficulty)` returns the unshuffled element pool for a difficulty level
@@ -202,6 +211,5 @@ App (screen router + shared state)
 ## Environment
 
 - Node.js: 18+ recommended
-- No API keys required
-- No backend / database
-- Works fully offline after first load (fonts require network on first visit)
+- Supabase env vars required: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
+- Works fully offline after first load (fonts + Supabase require network)

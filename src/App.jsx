@@ -3,6 +3,18 @@ import { supabase } from "./supabase.js";
 
 const APP_VERSION = import.meta.env.VITE_APP_VERSION || "dev";
 
+async function hashConstellation(indices) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(indices)));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+const DOTS = [
+  { x: 18, y: 15 }, { x: 52, y:  8 }, { x: 80, y: 20 },
+  { x: 12, y: 40 }, { x: 38, y: 35 }, { x: 68, y: 30 }, { x: 88, y: 45 },
+  { x: 25, y: 62 }, { x: 55, y: 58 }, { x: 78, y: 68 },
+  { x: 15, y: 82 }, { x: 48, y: 80 },
+];
+
 // ═══════════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════════
@@ -216,11 +228,17 @@ function usePlayers() {
     setActiveId(null);
   }
 
-  async function addPlayer({ name, age, icon, color }, roomIdOverride) {
+  async function addPlayer({ name, age, icon, color, constellationHash }, roomIdOverride) {
     const id         = Date.now().toString();
     const targetRoom = roomIdOverride || roomId;
+    const isFirst    = players.filter(p => p.room_id === targetRoom).length === 0;
     setActiveId(id);
-    await supabase.from("eq_players").insert({ id, room_id: targetRoom, name, age: age || null, icon, color, score: 0 });
+    await supabase.from("eq_players").insert({
+      id, room_id: targetRoom, name, age: age || null, icon, color, score: 0,
+      is_admin: isFirst,
+      constellation_hash: constellationHash || null,
+      auth_reset: !constellationHash,
+    });
   }
 
   async function updateScore(id, earned) {
@@ -233,9 +251,28 @@ function usePlayers() {
     await supabase.from("eq_players").update({ mastered_elements: symbols }).eq("id", id);
   }
 
+  async function setAdminStatus(id, isAdmin) {
+    await supabase.from("eq_players").update({ is_admin: isAdmin }).eq("id", id);
+  }
+
+  async function deletePlayer(id) {
+    if (id === activeId) setActiveId(null);
+    setPlayers(prev => prev.filter(p => p.id !== id));
+    await supabase.from("eq_players").delete().eq("id", id);
+  }
+
+  async function resetPlayerAuth(id) {
+    await supabase.from("eq_players").update({ constellation_hash: null, auth_reset: true }).eq("id", id);
+  }
+
+  async function saveConstellation(id, hash) {
+    await supabase.from("eq_players").update({ constellation_hash: hash, auth_reset: false }).eq("id", id);
+  }
+
   const scores = Object.fromEntries(players.map(p => [p.id, p.score]));
   const activePlayer = players.find(p => p.id === activeId) || null;
-  return { players, scores, activePlayer, setActiveId, addPlayer, updateScore, updateMastery, roomId, joinRoom, loaded };
+  return { players, scores, activePlayer, setActiveId, addPlayer, updateScore, updateMastery,
+           setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation, roomId, joinRoom, loaded };
 }
 
 // ═══════════════════════════════════════════
@@ -374,22 +411,228 @@ function QuitStrip({ onHome }) {
 // ═══════════════════════════════════════════
 // ADD PLAYER MODAL
 // ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
+// CONSTELLATION AUTH
+// ═══════════════════════════════════════════
+function ConstellationPad({ mode, storedHash, color, onSuccess, onCancel }) {
+  const [selected, setSelected]   = useState([]);
+  const [error, setError]         = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [trailPos, setTrailPos]   = useState(null); // { x, y } in % units
+  const svgRef                    = useRef(null);
+  const selectedRef               = useRef([]);
+  useEffect(() => { selectedRef.current = selected; }, [selected]);
+  const MAX = 8, MIN = 3;
+
+  function getDotAt(clientX, clientY) {
+    const rect = svgRef.current.getBoundingClientRect();
+    const px = (clientX - rect.left) / rect.width * 100;
+    const py = (clientY - rect.top)  / rect.height * 100;
+    return DOTS.findIndex(d => {
+      const dx = (d.x - px) / 100 * rect.width;
+      const dy = (d.y - py) / 100 * rect.height;
+      return Math.sqrt(dx * dx + dy * dy) < 26;
+    });
+  }
+
+  function getPointerPct(clientX, clientY) {
+    const rect = svgRef.current.getBoundingClientRect();
+    return {
+      x: Math.max(0, Math.min(100, (clientX - rect.left) / rect.width * 100)),
+      y: Math.max(0, Math.min(100, (clientY - rect.top)  / rect.height * 100)),
+    };
+  }
+
+  function addDot(i) {
+    if (selectedRef.current.includes(i) || selectedRef.current.length >= MAX) return;
+    setSelected(prev => { const n = [...prev, i]; selectedRef.current = n; return n; });
+    setError(false);
+  }
+
+  function handlePointerDown(e) {
+    e.preventDefault();
+    setIsDragging(true);
+    setError(false);
+    const i = getDotAt(e.clientX, e.clientY);
+    if (i >= 0) addDot(i);
+    setTrailPos(getPointerPct(e.clientX, e.clientY));
+  }
+
+  function handlePointerMove(e) {
+    if (!isDragging) return;
+    const i = getDotAt(e.clientX, e.clientY);
+    if (i >= 0) addDot(i);
+    setTrailPos(getPointerPct(e.clientX, e.clientY));
+  }
+
+  function handlePointerUp() {
+    setIsDragging(false);
+    setTrailPos(null);
+  }
+
+  async function confirm() {
+    const hash = await hashConstellation(selected);
+    if (mode === "setup") {
+      onSuccess(hash);
+    } else {
+      if (hash === storedHash) { onSuccess(); }
+      else { setError(true); setSelected([]); selectedRef.current = []; }
+    }
+  }
+
+  const canConfirm = selected.length >= MIN;
+  const lineColor  = error ? "#ef4444" : color;
+  const lastDot    = selected.length > 0 ? DOTS[selected[selected.length - 1]] : null;
+
+  return (
+    <div>
+      <div style={{ position: "relative", width: "100%", paddingBottom: "75%",
+                    border: `1px solid ${error ? "#ef4444" : "#1e293b"}`, borderRadius: 16,
+                    marginBottom: 12, background: "#070b14", transition: "border-color 0.2s",
+                    touchAction: "none", userSelect: "none" }}>
+        <svg ref={svgRef}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", cursor: isDragging ? "crosshair" : "default" }}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerLeave={handlePointerUp}>
+
+          {/* Confirmed lines */}
+          {selected.slice(1).map((dotIdx, i) => {
+            const a = DOTS[selected[i]], b = DOTS[dotIdx];
+            return <line key={i} x1={`${a.x}%`} y1={`${a.y}%`} x2={`${b.x}%`} y2={`${b.y}%`}
+              stroke={lineColor} strokeWidth={2} opacity={0.8} />;
+          })}
+
+          {/* Trailing dashed line from last dot to finger */}
+          {isDragging && lastDot && trailPos && (
+            <line x1={`${lastDot.x}%`} y1={`${lastDot.y}%`}
+              x2={`${trailPos.x}%`} y2={`${trailPos.y}%`}
+              stroke={lineColor} strokeWidth={1.5} opacity={0.4}
+              strokeDasharray="5,4" />
+          )}
+
+          {/* Dots */}
+          {DOTS.map((d, i) => {
+            const isSel = selected.includes(i);
+            const order = selected.indexOf(i) + 1;
+            return (
+              <g key={i}>
+                <circle cx={`${d.x}%`} cy={`${d.y}%`} r={isSel ? 11 : 7}
+                  fill={isSel ? lineColor : "#1e293b"}
+                  stroke={isSel ? lineColor : "#334155"} strokeWidth={2} />
+                {isSel
+                  ? <text x={`${d.x}%`} y={`${d.y}%`} textAnchor="middle"
+                      dominantBaseline="central" fontSize={8} fill="#070b14" fontWeight="bold">{order}</text>
+                  : <circle cx={`${d.x}%`} cy={`${d.y}%`} r={3} fill="#334155" />}
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {error && <div style={{ color: "#ef4444", textAlign: "center", fontSize: 12, marginBottom: 8 }}>
+        Pattern doesn't match — try again
+      </div>}
+      <div style={{ color: "#334155", fontSize: 11, textAlign: "center", marginBottom: 10 }}>
+        {selected.length === 0
+          ? "Press and drag across stars to draw your pattern"
+          : selected.length < MIN
+            ? `Keep going… (${selected.length}/${MAX})`
+            : `${selected.length} stars connected`}
+      </div>
+
+      <div style={{ display: "flex", gap: 8 }}>
+        <button onClick={() => { setSelected([]); selectedRef.current = []; setError(false); }}
+          style={{ flex: 1, padding: 11, background: "#111827", border: "2px solid #1e293b",
+                   borderRadius: 12, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+          Clear
+        </button>
+        <button onClick={confirm} disabled={!canConfirm}
+          style={{ flex: 2, padding: 11, background: canConfirm ? `${color}18` : "#111827",
+                   border: `2px solid ${canConfirm ? color : "#1e293b"}`, borderRadius: 12,
+                   color: canConfirm ? color : "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14,
+                   cursor: canConfirm ? "pointer" : "not-allowed" }}>
+          {mode === "setup" ? "Set Pattern ✓" : "Confirm →"}
+        </button>
+      </div>
+      {onCancel && <button onClick={onCancel}
+        style={{ width: "100%", marginTop: 8, padding: 8, background: "none", border: "none",
+                 color: "#334155", fontFamily: "'Exo 2'", fontSize: 12, cursor: "pointer" }}>
+        Cancel
+      </button>}
+    </div>
+  );
+}
+
+function ConstellationModal({ title, subtitle, mode, storedHash, color, onSuccess, onCancel }) {
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "#070b14ee", zIndex: 400,
+                  display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div style={{ background: "#0a0f1a", border: `2px solid ${color}`, borderRadius: 28,
+                    padding: "24px 20px", width: "100%", maxWidth: 340, fontFamily: "'Nunito'" }}>
+        <div style={{ color: "#e2e8f0", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 18,
+                      textAlign: "center", marginBottom: 4 }}>{title}</div>
+        <div style={{ color: "#475569", fontSize: 12, textAlign: "center", marginBottom: 16 }}>{subtitle}</div>
+        <ConstellationPad mode={mode} storedHash={storedHash} color={color}
+          onSuccess={onSuccess} onCancel={onCancel} />
+      </div>
+    </div>
+  );
+}
+
+function PlayerChip({ p, isActive, score, onTap, onLongPress }) {
+  const pressTimer = useRef(null);
+  return (
+    <button
+      onPointerDown={() => {
+        pressTimer.current = setTimeout(() => { pressTimer.current = null; onLongPress(p); }, 500);
+      }}
+      onPointerUp={() => {
+        if (pressTimer.current) { clearTimeout(pressTimer.current); pressTimer.current = null; onTap(p); }
+      }}
+      onPointerLeave={() => { if (pressTimer.current) { clearTimeout(pressTimer.current); pressTimer.current = null; } }}
+      style={{
+        position: "relative",
+        flex: "0 0 auto", minWidth: 88, padding: "14px 10px", textAlign: "center",
+        background: isActive ? `${p.color}14` : "#0a0f1a",
+        border: `2px solid ${isActive ? p.color : "#1e293b"}`,
+        borderRadius: 18, transition: "all 0.2s", cursor: "pointer",
+        boxShadow: isActive ? `0 0 28px ${p.color}28` : "none",
+      }}>
+      {p.is_admin && (
+        <span style={{ position: "absolute", top: 6, right: 6, fontSize: 12, lineHeight: 1, pointerEvents: "none" }}>👮</span>
+      )}
+      <div style={{ fontSize: 26, marginBottom: 3 }}>{p.icon}</div>
+      <div style={{ color: isActive ? p.color : "#475569", fontFamily: "'Exo 2'", fontWeight: 700,
+                    fontSize: 13, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 72 }}>
+        {p.name}
+      </div>
+      <div style={{ color: isActive ? "#fbbf24" : "#1e293b", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20, marginTop: 2 }}>
+        {score}<span style={{ fontSize: 11, opacity: 0.6, marginLeft: 2 }}>pts</span>
+      </div>
+    </button>
+  );
+}
+
 function AddPlayerModal({ players, roomId, onAdd, onCancel }) {
-  const [name, setName]           = useState("");
-  const [age, setAge]             = useState("");
-  const [iconIdx, setIconIdx]     = useState(0);
-  const [isCustom, setIsCustom]   = useState(false);
-  const [customIcon, setCustomIcon] = useState("");
-  const [localRoomId, setLocalRoomId] = useState(roomId);
+  const [name, setName]                   = useState("");
+  const [age, setAge]                     = useState("");
+  const [iconIdx, setIconIdx]             = useState(0);
+  const [isCustom, setIsCustom]           = useState(false);
+  const [customIcon, setCustomIcon]       = useState("");
+  const [localRoomId, setLocalRoomId]     = useState(roomId);
+  const [constellationHash, setConstellationHash] = useState(null);
   const isFirst      = players.length === 0;
   const color        = PLAYER_COLORS[players.length % PLAYER_COLORS.length];
   const selectedIcon = isCustom ? customIcon : PLAYER_ICONS[iconIdx];
   const canAdd       = name.trim().length > 0 && selectedIcon.trim().length > 0 &&
-                       localRoomId.trim().length > 0;
+                       localRoomId.trim().length > 0 && constellationHash !== null;
 
   function handleAdd() {
     if (!canAdd) return;
-    onAdd({ name: name.trim(), age: age ? parseInt(age) : null, icon: selectedIcon, color, customRoomId: localRoomId.trim() });
+    onAdd({ name: name.trim(), age: age ? parseInt(age) : null, icon: selectedIcon, color,
+            constellationHash, customRoomId: localRoomId.trim() });
   }
 
   function handleCustomChange(e) {
@@ -470,13 +713,32 @@ function AddPlayerModal({ players, roomId, onAdd, onCancel }) {
         </div>
 
         {/* Age */}
-        <div style={{ marginBottom: 24 }}>
+        <div style={{ marginBottom: 20 }}>
           <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Age <span style={{ textTransform: "none", letterSpacing: 0 }}>(optional)</span></div>
           <input
             value={age} onChange={e => setAge(e.target.value.replace(/\D/g, "").slice(0, 2))}
             placeholder="e.g. 8"
             style={{ width: "100%", padding: "13px 16px", background: "#111827", border: "2px solid #1e293b", borderRadius: 14, color: "#e2e8f0", fontSize: 16, outline: "none" }}
           />
+        </div>
+
+        {/* Secret Constellation */}
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span>Secret Constellation</span>
+            {constellationHash && <span style={{ color: "#4ade80", letterSpacing: 0, textTransform: "none", fontSize: 12 }}>✓ Set</span>}
+          </div>
+          {!constellationHash ? (
+            <ConstellationPad mode="setup" color={color} onSuccess={hash => setConstellationHash(hash)} onCancel={null} />
+          ) : (
+            <div style={{ textAlign: "center" }}>
+              <div style={{ color: "#475569", fontSize: 12, marginBottom: 6 }}>Your constellation is set</div>
+              <button onClick={() => setConstellationHash(null)}
+                style={{ color: "#475569", fontSize: 12, background: "none", border: "none", cursor: "pointer", fontFamily: "'Nunito'", textDecoration: "underline" }}>
+                ↺ Reset pattern
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Buttons */}
@@ -546,7 +808,40 @@ function RoomCodeBar({ roomId, onJoin }) {
 // ═══════════════════════════════════════════
 const BG_SYMBOLS = ["Au", "Ne", "Fe", "Hg", "Pb"];
 
-function HomeScreen({ players, scores, activeId, setActiveId, onAddPlayer, roomId, joinRoom, difficulty, setDifficulty, onStart, activePlayer }) {
+function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onAddPlayer, roomId, joinRoom,
+                      difficulty, setDifficulty, onStart, activePlayer,
+                      setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation }) {
+  const [adminUnlocked, setAdminUnlocked]     = useState(false);
+  const [adminUnlockTime, setAdminUnlockTime] = useState(0);
+  const [constellationModal, setConstellationModal] = useState(null);
+  const [actionTarget, setActionTarget]       = useState(null);
+
+  useEffect(() => {
+    if (!adminUnlocked) return;
+    const t = setInterval(() => {
+      if (Date.now() - adminUnlockTime > 5 * 60 * 1000) setAdminUnlocked(false);
+    }, 10_000);
+    return () => clearInterval(t);
+  }, [adminUnlocked, adminUnlockTime]);
+
+  function handlePlayerTap(p) {
+    if (p.id === activeId) return;
+    if (!p.constellation_hash || p.auth_reset) {
+      onSetActiveId(p.id);
+      setConstellationModal({ mode: "setup", player: p, purpose: "login" });
+    } else {
+      setConstellationModal({ mode: "verify", player: p, purpose: "login" });
+    }
+  }
+
+  function handlePadlockClick() {
+    if (adminUnlocked) { setAdminUnlocked(false); return; }
+    setConstellationModal({ mode: "verify", player: activePlayer, purpose: "admin-unlock" });
+  }
+
+  const isAdminUnlocked = adminUnlocked && (Date.now() - adminUnlockTime < 5 * 60 * 1000);
+  const adminCount = players.filter(p => p.is_admin).length;
+
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", fontFamily: "'Nunito'", padding: "22px 18px", overflowY: "auto" }}>
 
@@ -578,23 +873,27 @@ function HomeScreen({ players, scores, activeId, setActiveId, onAddPlayer, roomI
         </div>
       </div>
 
+      {/* Padlock for admin */}
+      {activePlayer?.is_admin && (
+        <button onClick={handlePadlockClick} style={{
+          position: "fixed", top: 14, right: 44, zIndex: 200,
+          background: "none", border: "none", fontSize: 20, cursor: "pointer",
+          opacity: isAdminUnlocked ? 0.9 : 0.5, transition: "opacity 0.2s",
+        }} title={isAdminUnlocked ? "Admin unlocked — click to lock" : "Unlock admin"}>
+          {isAdminUnlocked ? "🔓" : "🔒"}
+        </button>
+      )}
+
       {/* Player Select */}
       <Section label="Who's Playing?">
         <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" }}>
           {players.map(p => (
-            <button key={p.id} onClick={() => setActiveId(p.id)} style={{
-              flex: "0 0 auto", minWidth: 88, padding: "14px 10px", textAlign: "center",
-              background: activeId === p.id ? `${p.color}14` : "#0a0f1a",
-              border: `2px solid ${activeId === p.id ? p.color : "#1e293b"}`,
-              borderRadius: 18, transition: "all 0.2s",
-              boxShadow: activeId === p.id ? `0 0 28px ${p.color}28` : "none",
-            }}>
-              <div style={{ fontSize: 26, marginBottom: 3 }}>{p.icon}</div>
-              <div style={{ color: activeId === p.id ? p.color : "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 72 }}>{p.name}</div>
-              <div style={{ color: activeId === p.id ? "#fbbf24" : "#1e293b", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20, marginTop: 2 }}>
-                {scores[p.id] || 0}<span style={{ fontSize: 11, opacity: 0.6, marginLeft: 2 }}>pts</span>
-              </div>
-            </button>
+            <PlayerChip key={p.id} p={p} isActive={activeId === p.id} score={scores[p.id] || 0}
+              onTap={handlePlayerTap}
+              onLongPress={p => {
+                if (activePlayer?.is_admin) setActionTarget(p);
+                else if (adminCount === 0 && p.id === activeId) setActionTarget(p);
+              }} />
           ))}
           <button onClick={onAddPlayer} style={{
             flex: "0 0 auto", minWidth: 80, padding: "14px 10px", textAlign: "center",
@@ -657,6 +956,98 @@ function HomeScreen({ players, scores, activeId, setActiveId, onAddPlayer, roomI
           })()}
         </div>
       </Section>
+
+      {/* Constellation auth modal */}
+      {constellationModal && (
+        <ConstellationModal
+          title={constellationModal.mode === "setup" ? "Set your constellation" : constellationModal.player.name}
+          subtitle={constellationModal.mode === "setup"
+            ? "Connect at least 3 stars — this becomes your secret pattern"
+            : "Draw your constellation to continue"}
+          mode={constellationModal.mode}
+          storedHash={constellationModal.player?.constellation_hash}
+          color={constellationModal.player?.color || "#22d3ee"}
+          onSuccess={hash => {
+            if (constellationModal.purpose === "login") {
+              if (constellationModal.mode === "setup") saveConstellation(constellationModal.player.id, hash);
+              onSetActiveId(constellationModal.player.id);
+            } else {
+              setAdminUnlocked(true);
+              setAdminUnlockTime(Date.now());
+            }
+            setConstellationModal(null);
+          }}
+          onCancel={() => setConstellationModal(null)}
+        />
+      )}
+
+      {/* Admin action menu */}
+      {actionTarget && (
+        <div style={{ position: "fixed", inset: 0, background: "#070b14cc", zIndex: 400,
+                      display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+          <div style={{ background: "#0a0f1a", border: `2px solid ${actionTarget.color}`, borderRadius: 24,
+                        padding: "24px 20px", width: "100%", maxWidth: 300, fontFamily: "'Nunito'" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+              <span style={{ fontSize: 30 }}>{actionTarget.icon}</span>
+              <div>
+                <div style={{ color: "#e2e8f0", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 16 }}>{actionTarget.name}</div>
+                {!isAdminUnlocked && <div style={{ color: "#ef4444", fontSize: 11, marginTop: 2 }}>🔒 Unlock admin to manage</div>}
+              </div>
+            </div>
+            {adminCount === 0 && actionTarget.id === activeId ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <div style={{ color: "#475569", fontSize: 12, textAlign: "center", marginBottom: 4 }}>
+                  No admin in this room — claim the role?
+                </div>
+                <button
+                  onClick={() => { setAdminStatus(actionTarget.id, true); setActionTarget(null); }}
+                  style={{ padding: 12, background: "#0a1a2e", border: "2px solid #22d3ee",
+                           borderRadius: 12, color: "#22d3ee",
+                           fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                  ⭐ Claim admin
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <button
+                  disabled={!isAdminUnlocked}
+                  onClick={() => { resetPlayerAuth(actionTarget.id); setActionTarget(null); }}
+                  style={{ padding: 12, background: isAdminUnlocked ? "#1a1a2e" : "#111827",
+                           border: `2px solid ${isAdminUnlocked ? "#a78bfa" : "#1e293b"}`,
+                           borderRadius: 12, color: isAdminUnlocked ? "#a78bfa" : "#334155",
+                           fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13, cursor: isAdminUnlocked ? "pointer" : "not-allowed" }}>
+                  ↺ Reset constellation
+                </button>
+                <button
+                  disabled={!isAdminUnlocked || (actionTarget.is_admin && adminCount <= 1)}
+                  onClick={() => { setAdminStatus(actionTarget.id, !actionTarget.is_admin); setActionTarget(null); }}
+                  style={{ padding: 12, background: isAdminUnlocked && !(actionTarget.is_admin && adminCount <= 1) ? "#0a1a2e" : "#111827",
+                           border: `2px solid ${isAdminUnlocked && !(actionTarget.is_admin && adminCount <= 1) ? "#22d3ee" : "#1e293b"}`,
+                           borderRadius: 12, color: isAdminUnlocked && !(actionTarget.is_admin && adminCount <= 1) ? "#22d3ee" : "#334155",
+                           fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13, cursor: isAdminUnlocked && !(actionTarget.is_admin && adminCount <= 1) ? "pointer" : "not-allowed" }}>
+                  {actionTarget.is_admin ? "★ Remove admin" : "⭐ Make admin"}
+                </button>
+                <button
+                  disabled={!isAdminUnlocked || actionTarget.id === activeId || (actionTarget.is_admin && adminCount <= 1)}
+                  onClick={() => { deletePlayer(actionTarget.id); setActionTarget(null); }}
+                  style={{ padding: 12, background: "#111827",
+                           border: `2px solid ${isAdminUnlocked && actionTarget.id !== activeId && !(actionTarget.is_admin && adminCount <= 1) ? "#ef4444" : "#1e293b"}`,
+                           borderRadius: 12,
+                           color: isAdminUnlocked && actionTarget.id !== activeId && !(actionTarget.is_admin && adminCount <= 1) ? "#ef4444" : "#334155",
+                           fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13,
+                           cursor: isAdminUnlocked && actionTarget.id !== activeId && !(actionTarget.is_admin && adminCount <= 1) ? "pointer" : "not-allowed" }}>
+                  🗑 Delete player
+                </button>
+              </div>
+            )}
+            <button onClick={() => setActionTarget(null)}
+              style={{ width: "100%", marginTop: 12, padding: 10, background: "none", border: "none",
+                       color: "#334155", fontFamily: "'Exo 2'", fontSize: 13, cursor: "pointer" }}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1239,7 +1630,9 @@ export default function ElementQuest() {
   const [gameKey, setGameKey] = useState(0);
   const [showAddPlayer, setShowAddPlayer] = useState(false);
   const { play, toggleMute, muted } = useSound();
-  const { players, scores, activePlayer, setActiveId, addPlayer, updateScore, updateMastery, roomId, joinRoom, loaded } = usePlayers();
+  const { players, scores, activePlayer, setActiveId, addPlayer, updateScore, updateMastery,
+          setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
+          roomId, joinRoom, loaded } = usePlayers();
 
   useEffect(() => { if (loaded && players.length === 0) setShowAddPlayer(true); }, [loaded]);
 
@@ -1264,9 +1657,9 @@ export default function ElementQuest() {
         <AddPlayerModal
           players={players}
           roomId={roomId}
-          onAdd={async ({ customRoomId, ...playerData }) => {
+          onAdd={async ({ customRoomId, constellationHash, ...playerData }) => {
             if (customRoomId && customRoomId !== roomId) joinRoom(customRoomId);
-            await addPlayer(playerData, customRoomId);
+            await addPlayer({ ...playerData, constellationHash }, customRoomId);
             setShowAddPlayer(false);
           }}
           onCancel={() => setShowAddPlayer(false)}
@@ -1283,12 +1676,16 @@ export default function ElementQuest() {
       {screen === "home" && (
         <HomeScreen
           players={players} scores={scores}
-          activeId={activePlayer?.id} setActiveId={setActiveId}
+          activeId={activePlayer?.id} setActiveId={setActiveId} onSetActiveId={setActiveId}
           activePlayer={activePlayer}
           onAddPlayer={() => setShowAddPlayer(true)}
           roomId={roomId} joinRoom={joinRoom}
           difficulty={difficulty} setDifficulty={setDifficulty}
           onStart={startGame}
+          setAdminStatus={setAdminStatus}
+          deletePlayer={deletePlayer}
+          resetPlayerAuth={resetPlayerAuth}
+          saveConstellation={saveConstellation}
         />
       )}
       {screen === "game" && mode === "flashcard" && (

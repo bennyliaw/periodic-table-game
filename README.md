@@ -27,8 +27,13 @@ create policy "Public access" on eq_players for all using (true) with check (tru
 
 alter publication supabase_realtime add table eq_players;
 
--- Flashcard mastery tracking (run after the table above)
+-- Flashcard mastery tracking
 alter table eq_players add column mastered_elements jsonb default '[]'::jsonb;
+
+-- Constellation auth + admin role
+alter table eq_players add column is_admin boolean default false;
+alter table eq_players add column constellation_hash text;
+alter table eq_players add column auth_reset boolean default true;
 ```
 
 Then go to **Project Settings → API** and copy your Project URL and `anon public` key into a `.env.local` file in the project root:
@@ -111,6 +116,21 @@ Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in **Netlify → Site Setti
 ## Players
 
 Multiple players are supported. Each player has a name, optional age, and a custom or preset icon. Players are grouped by a 6-character **room code** — anyone who opens the app with the same room code sees the same player list and scores.
+
+### Constellation Auth
+
+Switching to another player requires drawing their **constellation pattern** — a drag-across-stars gesture on a 12-dot star field, using 3–8 dots in sequence. The pattern is hashed with SHA-256 before being stored, so the raw sequence is never persisted.
+
+### Admin Role
+
+The **first player** added to a room is automatically assigned admin. Admins get a 👮 badge on their chip and a 🔒 padlock button in the top-right corner. Clicking the padlock requires re-drawing their constellation; once unlocked (5-minute window), they can:
+
+- **Long-press any player chip** to open the management menu
+- Reset another player's constellation (e.g. a kid forgot their pattern)
+- Grant or revoke admin status (at least one admin must always remain)
+- Delete a player from the room
+
+If a room ends up with no admins, any active player can long-press their own chip to **claim admin**.
 
 ## Real-time Sync
 
