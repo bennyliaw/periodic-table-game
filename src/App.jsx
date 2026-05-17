@@ -861,7 +861,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
       <div style={{ textAlign: "center", marginBottom: 26, position: "relative", zIndex: 1 }}>
         {activePlayer?.is_admin && (
           <button onClick={handlePadlockClick} style={{
-            position: "absolute", top: 0, right: 0, zIndex: 200,
+            position: "fixed", top: 46, right: 14, zIndex: 200,
             background: "none", border: "none", fontSize: 20, cursor: "pointer",
             opacity: isAdminUnlocked ? 0.9 : 0.5, transition: "opacity 0.2s",
           }} title={isAdminUnlocked ? "Admin unlocked — click to lock" : "Unlock admin"}>
