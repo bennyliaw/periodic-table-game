@@ -114,9 +114,17 @@ Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in **Netlify → Site Setti
 | ⭐⭐⭐ Expert | Tricky transition metals etc. |
 | 🔥 Legend | All 47 elements |
 
+## First Visit
+
+New visitors land on a welcome screen explaining the app with two options:
+- **Join a Room** — enter an existing room code (3–6 characters) to join family/friends
+- **Start Fresh** — creates a new room with an auto-generated 6-character code
+
+Returning visitors (with a prior room code in localStorage) skip straight to the game screen.
+
 ## Players
 
-Multiple players are supported. Each player has a name, optional age, and a custom or preset icon. Players are grouped by a 6-character **room code** — anyone who opens the app with the same room code sees the same player list and scores.
+Multiple players are supported. Each player has a name, optional age, and a custom or preset icon. Players are grouped by a **room code** — anyone who opens the app with the same room code sees the same player list and scores.
 
 ### Constellation Auth
 

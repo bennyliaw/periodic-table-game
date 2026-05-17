@@ -141,6 +141,7 @@ element-quest/
 
 ```
 App (screen router + shared state)
+├── LandingScreen    — first-visit only (eq_visited localStorage flag); "Join a Room" or "Start Fresh"
 ├── HomeScreen       — player select, difficulty, mode select
 ├── FlashcardMode    — 15-card sessions, "Mark done" / "Show again later", mastery tracked per player
 ├── QuizMode         — 10 questions, 4-choice symbol pick, streak bonus
@@ -155,6 +156,12 @@ App (screen router + shared state)
 - `usePlayers()` hook manages player list + scores via Supabase (`eq_players` table)
 - Player objects: `{ id, name, age, icon, color, score, mastered_elements, is_admin, constellation_hash, auth_reset }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`
 - `mastered_elements` is a `jsonb` array of element symbols (e.g. `["H","O","Fe"]`) stored on the player row
+
+**Onboarding:**
+- `eq_visited` localStorage key gates the `LandingScreen` — absent = first visit, present = skip to HomeScreen
+- `AddPlayerModal` is now 2-step: step 1 (icon + name + age), step 2 (constellation pad)
+- Room code field removed from modal — handled by LandingScreen ("Join a Room" sets room before entering)
+- Room codes are 3–6 chars; new auto-generated codes are always 6 chars
 
 **Constellation auth:**
 - `DOTS` — 12 fixed star positions (% coordinates) shared by all players; security comes from sequence, not position

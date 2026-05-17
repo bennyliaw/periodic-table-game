@@ -344,6 +344,7 @@ function GlobalStyles() {
       @keyframes float2 { 0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-20px) rotate(3deg)} }
       @keyframes float3 { 0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-10px) rotate(-6deg)} }
       @keyframes float4 { 0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-15px) rotate(5deg)} }
+      @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
       ::-webkit-scrollbar { width: 4px; }
       ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
     `}</style>
@@ -616,23 +617,21 @@ function PlayerChip({ p, isActive, score, onTap, onLongPress }) {
 }
 
 function AddPlayerModal({ players, roomId, onAdd, onCancel }) {
+  const [step, setStep]                   = useState(1);
   const [name, setName]                   = useState("");
   const [age, setAge]                     = useState("");
   const [iconIdx, setIconIdx]             = useState(0);
   const [isCustom, setIsCustom]           = useState(false);
   const [customIcon, setCustomIcon]       = useState("");
-  const [localRoomId, setLocalRoomId]     = useState(roomId);
   const [constellationHash, setConstellationHash] = useState(null);
-  const isFirst      = players.length === 0;
   const color        = PLAYER_COLORS[players.length % PLAYER_COLORS.length];
   const selectedIcon = isCustom ? customIcon : PLAYER_ICONS[iconIdx];
-  const canAdd       = name.trim().length > 0 && selectedIcon.trim().length > 0 &&
-                       localRoomId.trim().length > 0 && constellationHash !== null;
+  const canStep1     = name.trim().length > 0 && selectedIcon.trim().length > 0;
+  const canAdd       = canStep1 && constellationHash !== null;
 
   function handleAdd() {
     if (!canAdd) return;
-    onAdd({ name: name.trim(), age: age ? parseInt(age) : null, icon: selectedIcon, color,
-            constellationHash, customRoomId: localRoomId.trim() });
+    onAdd({ name: name.trim(), age: age ? parseInt(age) : null, icon: selectedIcon, color, constellationHash });
   }
 
   function handleCustomChange(e) {
@@ -645,93 +644,93 @@ function AddPlayerModal({ players, roomId, onAdd, onCancel }) {
   return (
     <div style={{ position: "fixed", inset: 0, background: "#070b14ee", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, overflowY: "auto" }}>
       <div style={{ background: "#0a0f1a", border: "2px solid #1e293b", borderRadius: 28, padding: "28px 24px", width: "100%", maxWidth: 360, fontFamily: "'Nunito'" }}>
-        <div style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20, marginBottom: 22, textAlign: "center" }}>
-          Add Player
-        </div>
 
-        {/* Room code — first player only */}
-        {isFirst && (
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 4, fontFamily: "'Exo 2'" }}>Room Code</div>
-            <div style={{ color: "#1e293b", fontSize: 11, marginBottom: 8 }}>Share this with family, or enter theirs to join</div>
-            <input
-              value={localRoomId}
-              onChange={e => setLocalRoomId(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6))}
-              placeholder="e.g. XK9F2A"
-              style={{ width: "100%", padding: "13px 16px", background: "#111827", border: `2px solid ${localRoomId !== roomId ? color : "#1e293b"}`, borderRadius: 14, color: "#22d3ee", fontSize: 18, fontFamily: "'Exo 2'", fontWeight: 700, letterSpacing: 4, outline: "none", textAlign: "center", transition: "border-color 0.2s" }}
-            />
+        {step === 1 ? (<>
+          <div style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20, marginBottom: 22, textAlign: "center" }}>
+            Create Account
           </div>
-        )}
 
-        {/* Icon picker */}
-        <div style={{ marginBottom: 20 }}>
-          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10, fontFamily: "'Exo 2'" }}>Choose Icon</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8 }}>
-            {PLAYER_ICONS.map((icon, i) => (
-              <button key={i} onClick={() => { setIconIdx(i); setIsCustom(false); }} style={{
-                padding: 10, fontSize: 24, background: !isCustom && iconIdx === i ? `${color}20` : "#111827",
-                border: `2px solid ${!isCustom && iconIdx === i ? color : "#1e293b"}`,
-                borderRadius: 12, cursor: "pointer",
-              }}>{icon}</button>
-            ))}
-          </div>
-          <button onClick={() => { setIsCustom(true); setCustomIcon(""); }} style={{
-            width: "100%", marginTop: 8, padding: "11px 16px",
-            background: isCustom ? `${color}18` : "#111827",
-            border: `2px solid ${isCustom ? color : "#1e293b"}`,
-            borderRadius: 12, cursor: "pointer",
-            color: isCustom ? color : "#475569",
-            fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 13,
-          }}>✏️  Choose Custom Icon</button>
-
-          {/* Custom emoji input */}
-          {isCustom && (
-            <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 12 }}>
-              <input
-                value={customIcon}
-                onChange={handleCustomChange}
-                placeholder="Paste or type any emoji"
-                autoFocus
-                style={{ flex: 1, padding: "10px 14px", background: "#111827", border: `2px solid ${color}`, borderRadius: 12, color: "#e2e8f0", fontSize: 28, outline: "none", textAlign: "center" }}
-              />
-              {customIcon && (
-                <div style={{ fontSize: 44, lineHeight: 1 }}>{customIcon}</div>
-              )}
+          {/* Icon picker */}
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10, fontFamily: "'Exo 2'" }}>Choose Icon</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8 }}>
+              {PLAYER_ICONS.map((icon, i) => (
+                <button key={i} onClick={() => { setIconIdx(i); setIsCustom(false); }} style={{
+                  padding: 10, fontSize: 24, background: !isCustom && iconIdx === i ? `${color}20` : "#111827",
+                  border: `2px solid ${!isCustom && iconIdx === i ? color : "#1e293b"}`,
+                  borderRadius: 12, cursor: "pointer",
+                }}>{icon}</button>
+              ))}
             </div>
-          )}
-        </div>
+            <button onClick={() => { setIsCustom(true); setCustomIcon(""); }} style={{
+              width: "100%", marginTop: 8, padding: "10px 16px",
+              background: isCustom ? `${color}18` : "#111827",
+              border: `2px solid ${isCustom ? color : "#1e293b"}`,
+              borderRadius: 12, cursor: "pointer",
+              color: isCustom ? color : "#475569",
+              fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 13,
+            }}>✏️  Custom Icon</button>
+            {isCustom && (
+              <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 12 }}>
+                <input value={customIcon} onChange={handleCustomChange} placeholder="Paste any emoji"
+                  autoFocus
+                  style={{ flex: 1, padding: "10px 14px", background: "#111827", border: `2px solid ${color}`, borderRadius: 12, color: "#e2e8f0", fontSize: 28, outline: "none", textAlign: "center" }} />
+                {customIcon && <div style={{ fontSize: 40, lineHeight: 1 }}>{customIcon}</div>}
+              </div>
+            )}
+          </div>
 
-        {/* Name */}
-        <div style={{ marginBottom: 14 }}>
-          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Name</div>
-          <input
-            value={name} onChange={e => setName(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && handleAdd()}
-            placeholder="Enter name…" autoFocus={!isCustom}
-            style={{ width: "100%", padding: "13px 16px", background: "#111827", border: `2px solid ${name.trim() ? color : "#1e293b"}`, borderRadius: 14, color: "#e2e8f0", fontSize: 16, outline: "none", transition: "border-color 0.2s" }}
-          />
-        </div>
+          {/* Name */}
+          <div style={{ marginBottom: 12 }}>
+            <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Name</div>
+            <input value={name} onChange={e => setName(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && canStep1 && setStep(2)}
+              placeholder="Enter name…" autoFocus={!isCustom}
+              style={{ width: "100%", padding: "13px 16px", background: "#111827", border: `2px solid ${name.trim() ? color : "#1e293b"}`, borderRadius: 14, color: "#e2e8f0", fontSize: 16, outline: "none", transition: "border-color 0.2s" }} />
+          </div>
 
-        {/* Age */}
-        <div style={{ marginBottom: 20 }}>
-          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Age <span style={{ textTransform: "none", letterSpacing: 0 }}>(optional)</span></div>
-          <input
-            value={age} onChange={e => setAge(e.target.value.replace(/\D/g, "").slice(0, 2))}
-            placeholder="e.g. 8"
-            style={{ width: "100%", padding: "13px 16px", background: "#111827", border: "2px solid #1e293b", borderRadius: 14, color: "#e2e8f0", fontSize: 16, outline: "none" }}
-          />
-        </div>
+          {/* Age — compact inline */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+            <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, fontFamily: "'Exo 2'", whiteSpace: "nowrap" }}>Age <span style={{ textTransform: "none", letterSpacing: 0, opacity: 0.6 }}>(opt)</span></div>
+            <input value={age} onChange={e => setAge(e.target.value.replace(/\D/g, "").slice(0, 2))}
+              placeholder="—"
+              style={{ width: 64, padding: "10px 12px", background: "#111827", border: "2px solid #1e293b", borderRadius: 12, color: "#e2e8f0", fontSize: 15, outline: "none", textAlign: "center" }} />
+          </div>
 
-        {/* Secret Constellation */}
-        <div style={{ marginBottom: 20 }}>
-          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          {/* Buttons */}
+          <div style={{ display: "flex", gap: 10 }}>
+            {players.length > 0 && (
+              <button onClick={onCancel} style={{ flex: 1, padding: 14, background: "none", border: "2px solid #1e293b", borderRadius: 14, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Cancel</button>
+            )}
+            <button onClick={() => setStep(2)} disabled={!canStep1}
+              style={{ flex: 2, padding: 14, background: canStep1 ? `${color}18` : "#111827", border: `2px solid ${canStep1 ? color : "#1e293b"}`, borderRadius: 14, color: canStep1 ? color : "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15, cursor: canStep1 ? "pointer" : "not-allowed", transition: "all 0.2s" }}>
+              Next →
+            </button>
+          </div>
+        </>) : (<>
+
+          {/* Step 2 — Constellation */}
+          <button onClick={() => setStep(1)}
+            style={{ background: "none", border: "none", color: "#475569", fontSize: 13, cursor: "pointer", fontFamily: "'Exo 2'", padding: 0, marginBottom: 16 }}>
+            ← Back
+          </button>
+
+          {/* Player preview */}
+          <div style={{ textAlign: "center", marginBottom: 20 }}>
+            <div style={{ fontSize: 48, lineHeight: 1, marginBottom: 6 }}>{selectedIcon}</div>
+            <div style={{ color, fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 18 }}>{name}</div>
+          </div>
+
+          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 4, fontFamily: "'Exo 2'", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <span>Secret Constellation</span>
             {constellationHash && <span style={{ color: "#4ade80", letterSpacing: 0, textTransform: "none", fontSize: 12 }}>✓ Set</span>}
           </div>
+          <div style={{ color: "#1e293b", fontSize: 11, marginBottom: 12 }}>Connect at least 3 stars to set your pattern</div>
+
           {!constellationHash ? (
             <ConstellationPad mode="setup" color={color} onSuccess={hash => setConstellationHash(hash)} onCancel={null} />
           ) : (
-            <div style={{ textAlign: "center" }}>
+            <div style={{ textAlign: "center", marginBottom: 16 }}>
               <div style={{ color: "#475569", fontSize: 12, marginBottom: 6 }}>Your constellation is set</div>
               <button onClick={() => setConstellationHash(null)}
                 style={{ color: "#475569", fontSize: 12, background: "none", border: "none", cursor: "pointer", fontFamily: "'Nunito'", textDecoration: "underline" }}>
@@ -739,17 +738,118 @@ function AddPlayerModal({ players, roomId, onAdd, onCancel }) {
               </button>
             </div>
           )}
-        </div>
 
-        {/* Buttons */}
-        <div style={{ display: "flex", gap: 10 }}>
-          {players.length > 0 && (
-            <button onClick={onCancel} style={{ flex: 1, padding: 14, background: "none", border: "2px solid #1e293b", borderRadius: 14, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Cancel</button>
-          )}
-          <button onClick={handleAdd} disabled={!canAdd} style={{ flex: 2, padding: 14, background: canAdd ? `${color}18` : "#111827", border: `2px solid ${canAdd ? color : "#1e293b"}`, borderRadius: 14, color: canAdd ? color : "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15, cursor: canAdd ? "pointer" : "not-allowed", transition: "all 0.2s" }}>
-            {selectedIcon || "?"} Add Player
+          <button onClick={handleAdd} disabled={!canAdd}
+            style={{ width: "100%", marginTop: 8, padding: 14, background: canAdd ? `${color}18` : "#111827", border: `2px solid ${canAdd ? color : "#1e293b"}`, borderRadius: 14, color: canAdd ? color : "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15, cursor: canAdd ? "pointer" : "not-allowed", transition: "all 0.2s" }}>
+            {selectedIcon} Create Account ✓
           </button>
+        </>)}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════
+// LANDING SCREEN
+// ═══════════════════════════════════════════
+function LandingScreen({ onJoinRoom, onStartFresh }) {
+  const [view, setView]           = useState("main");
+  const [roomInput, setRoomInput] = useState("");
+  const [inputError, setInputError] = useState(false);
+
+  function handleJoin() {
+    const code = roomInput.trim().toUpperCase();
+    if (code.length < 3) { setInputError(true); return; }
+    onJoinRoom(code);
+  }
+
+  const FEATURES = [
+    { icon: "🃏", label: "Flash Cards", desc: "flip to learn symbols" },
+    { icon: "⚡", label: "Symbol Quiz", desc: "pick the right answer" },
+    { icon: "🔤", label: "Name Scramble", desc: "spell from the symbol" },
+    { icon: "🚀", label: "Speed Blast", desc: "60-second frenzy" },
+  ];
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#070b14", fontFamily: "'Nunito'",
+                  display: "flex", flexDirection: "column", alignItems: "center",
+                  justifyContent: "center", padding: "32px 20px" }}>
+
+      {/* Logo */}
+      <div style={{ textAlign: "center", marginBottom: 32, animation: "fadeInUp 0.5s ease forwards" }}>
+        <div style={{ fontSize: 52, fontFamily: "'Exo 2'", fontWeight: 900, lineHeight: 1.1,
+                      background: "linear-gradient(135deg, #22d3ee 0%, #a78bfa 55%, #f472b6 100%)",
+                      WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          ⚗️ Element Quest
         </div>
+        <div style={{ color: "#475569", fontSize: 14, marginTop: 8, fontFamily: "'Nunito'" }}>
+          The periodic table game for curious minds
+        </div>
+      </div>
+
+      {/* Feature card */}
+      <div style={{ background: "#0a0f1a", border: "1px solid #1e293b", borderRadius: 20,
+                    padding: "18px 20px", width: "100%", maxWidth: 340, marginBottom: 28 }}>
+        {FEATURES.map(f => (
+          <div key={f.label} style={{ display: "flex", alignItems: "center", gap: 12, padding: "7px 0" }}>
+            <span style={{ fontSize: 18, width: 24, textAlign: "center" }}>{f.icon}</span>
+            <span style={{ color: "#334155", fontSize: 13, fontFamily: "'Exo 2'", fontWeight: 700 }}>{f.label}</span>
+            <span style={{ color: "#1e293b", fontSize: 12 }}>— {f.desc}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Actions */}
+      <div style={{ width: "100%", maxWidth: 340 }}>
+        {view === "main" ? (<>
+          <button onClick={() => { setView("joining"); setRoomInput(""); setInputError(false); }}
+            style={{ width: "100%", padding: "15px 20px", marginBottom: 10,
+                     background: "#081a2a", border: "2px solid #22d3ee", borderRadius: 16,
+                     color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 16, cursor: "pointer" }}>
+            Join a Room
+          </button>
+          <button onClick={onStartFresh}
+            style={{ width: "100%", padding: "15px 20px",
+                     background: "linear-gradient(135deg, #22d3ee, #a78bfa)",
+                     border: "none", borderRadius: 16,
+                     color: "#070b14", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 16, cursor: "pointer" }}>
+            Start Fresh
+          </button>
+        </>) : (<>
+          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3,
+                        marginBottom: 8, fontFamily: "'Exo 2'", textAlign: "center" }}>
+            Enter Room Code
+          </div>
+          <input
+            value={roomInput} autoFocus
+            onChange={e => { setRoomInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6)); setInputError(false); }}
+            onKeyDown={e => e.key === "Enter" && handleJoin()}
+            placeholder="e.g. ABC123"
+            style={{ width: "100%", padding: "14px 16px", marginBottom: 10,
+                     background: "#111827", border: `2px solid ${inputError ? "#ef4444" : roomInput.length >= 3 ? "#22d3ee" : "#1e293b"}`,
+                     borderRadius: 14, color: "#22d3ee", fontSize: 22, fontFamily: "'Exo 2'",
+                     fontWeight: 700, letterSpacing: 6, outline: "none", textAlign: "center",
+                     transition: "border-color 0.2s", boxSizing: "border-box" }} />
+          {inputError && <div style={{ color: "#ef4444", fontSize: 12, textAlign: "center", marginBottom: 8 }}>
+            Room code must be at least 3 characters
+          </div>}
+          <div style={{ display: "flex", gap: 10 }}>
+            <button onClick={() => { setView("main"); setInputError(false); }}
+              style={{ flex: 1, padding: 14, background: "none", border: "2px solid #1e293b",
+                       borderRadius: 14, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>
+              Cancel
+            </button>
+            <button onClick={handleJoin} disabled={roomInput.length < 3}
+              style={{ flex: 2, padding: 14,
+                       background: roomInput.length >= 3 ? "#081a2a" : "#111827",
+                       border: `2px solid ${roomInput.length >= 3 ? "#22d3ee" : "#1e293b"}`,
+                       borderRadius: 14, color: roomInput.length >= 3 ? "#22d3ee" : "#334155",
+                       fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15,
+                       cursor: roomInput.length >= 3 ? "pointer" : "not-allowed", transition: "all 0.2s" }}>
+              Join →
+            </button>
+          </div>
+        </>)}
       </div>
     </div>
   );
@@ -1627,12 +1727,23 @@ export default function ElementQuest() {
   const [lastScore, setLastScore] = useState(0);
   const [gameKey, setGameKey] = useState(0);
   const [showAddPlayer, setShowAddPlayer] = useState(false);
+  const [showLanding, setShowLanding]     = useState(() => !localStorage.getItem("eq_visited"));
   const { play, toggleMute, muted } = useSound();
   const { players, scores, activePlayer, setActiveId, addPlayer, updateScore, updateMastery,
           setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
           roomId, joinRoom, loaded } = usePlayers();
 
-  useEffect(() => { if (loaded && players.length === 0) setShowAddPlayer(true); }, [loaded]);
+  function handleJoinRoom(code) {
+    joinRoom(code);
+    localStorage.setItem("eq_visited", "1");
+    setShowLanding(false);
+  }
+
+  function handleStartFresh() {
+    localStorage.setItem("eq_visited", "1");
+    setShowLanding(false);
+    setShowAddPlayer(true);
+  }
 
   function startGame(m) {
     if (!activePlayer) return;
@@ -1651,13 +1762,15 @@ export default function ElementQuest() {
   return (
     <>
       <GlobalStyles />
-      {showAddPlayer && (
+      {showLanding && (
+        <LandingScreen onJoinRoom={handleJoinRoom} onStartFresh={handleStartFresh} />
+      )}
+      {!showLanding && showAddPlayer && (
         <AddPlayerModal
           players={players}
           roomId={roomId}
-          onAdd={async ({ customRoomId, constellationHash, ...playerData }) => {
-            if (customRoomId && customRoomId !== roomId) joinRoom(customRoomId);
-            await addPlayer({ ...playerData, constellationHash }, customRoomId);
+          onAdd={async ({ constellationHash, ...playerData }) => {
+            await addPlayer({ ...playerData, constellationHash });
             setShowAddPlayer(false);
           }}
           onCancel={() => setShowAddPlayer(false)}
