@@ -102,7 +102,7 @@ Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in **Netlify → Site Setti
 |------|-------------|
 | 🃏 Flash Cards | Flip card to reveal symbol. 15-card sessions, mastery tracked per player. |
 | ⚡ Symbol Quiz | 4-choice quiz with streak bonuses |
-| 🔤 Name Scramble | Given the symbol, drag tiles to unscramble (or type) the element name |
+| 🔤 Name Scramble | Given the symbol, drag tiles to unscramble (or type) the element name — works on mobile touch and desktop |
 | 🚀 Speed Blast | 60-second rapid-fire quiz |
 
 ## Difficulty Levels
@@ -161,11 +161,11 @@ Any INSERT (new player) or UPDATE (score change) in that room is broadcast to al
 ## Roadmap
 
 - [x] CI/CD — GitHub Actions auto-deploys to Vercel on every push to `main`
-- [ ] Custom domain
+- [x] Custom domain — https://elements.demo.agentic-blueprint.com
+- [x] Mobile PWA — installable on Android (Chrome/Brave); iOS via Safari
+- [x] Per-player element mastery tracking
 - [ ] All 118 elements (tier 4)
 - [ ] Atomic number quiz mode
-- [ ] Per-player element mastery tracking
-- [ ] Mobile PWA (installable)
 
 ## Tech
 
