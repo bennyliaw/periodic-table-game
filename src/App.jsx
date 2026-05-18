@@ -1616,9 +1616,11 @@ function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
   const [flash, setFlash] = useState(null);
   const scoreRef   = useRef(0);
   const correctRef = useRef(0);
+  const streakRef  = useRef(0);
   const endedRef   = useRef(false);
   const [score, setScore]     = useState(0);
   const [correct, setCorrect] = useState(0);
+  const [streak, setStreak]   = useState(0);
 
   useEffect(() => {
     if (!started || timeLeft <= 0) return;
@@ -1641,11 +1643,17 @@ function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
     if (!started || timeLeft === 0) return;
     const el = deck[idx];
     if (c.symbol === el.symbol) {
-      scoreRef.current += 10; correctRef.current += 1;
+      const earned = 10 + streakRef.current * 2;
+      scoreRef.current += earned; correctRef.current += 1;
+      streakRef.current += 1;
       setScore(scoreRef.current); setCorrect(correctRef.current);
+      setStreak(streakRef.current);
       setFlash("correct");
       playSound("correct");
+      if (streakRef.current >= 3) playSound("streak", streakRef.current);
     } else {
+      streakRef.current = 0;
+      setStreak(0);
       setFlash("wrong");
       playSound("wrong");
     }
@@ -1679,7 +1687,10 @@ function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
           <span style={{ color: "#fbbf24", fontFamily: "'Exo 2'", fontWeight: 700 }}>⭐ {score}</span>
           <span style={{ color: tc, fontSize: 42, fontFamily: "'Exo 2'", fontWeight: 900, textShadow: `0 0 22px ${tc}`, transition: "color 0.5s" }}>{timeLeft}</span>
-          <span style={{ color: "#4ade80", fontFamily: "'Exo 2'", fontWeight: 700 }}>✅ {correct}</span>
+          <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2 }}>
+            <span style={{ color: "#4ade80", fontFamily: "'Exo 2'", fontWeight: 700 }}>✅ {correct}</span>
+            {streak >= 2 && <span style={{ color: "#fb923c", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 12 }}>🔥{streak}x</span>}
+          </span>
         </div>
         <div style={{ background: "#111827", borderRadius: 99, height: 6 }}>
           <div style={{ background: tc, height: 6, borderRadius: 99, width: `${(timeLeft / 60) * 100}%`, transition: "width 1s linear, background 0.5s", boxShadow: `0 0 8px ${tc}` }} />
