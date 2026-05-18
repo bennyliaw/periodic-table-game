@@ -157,6 +157,12 @@ App (screen router + shared state)
 - Player objects: `{ id, name, age, icon, color, score, mastered_elements, is_admin, constellation_hash, auth_reset }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`
 - `mastered_elements` is a `jsonb` array of element symbols (e.g. `["H","O","Fe"]`) stored on the player row
 
+**PWA update prompt:**
+- `registerType: 'prompt'` in `vite.config.js` — new SW waits instead of auto-applying
+- `useRegisterSW` from `virtual:pwa-register/react` in `ElementQuest` root; `onNeedRefresh` fetches `/release-notes.json` (not SW-cached — JSON excluded from Workbox default globPatterns) and sets `updateNotes` state
+- `UpdateBanner` renders fixed at bottom when `updateNotes !== null`; "Update now" calls `updateServiceWorker(true)` → page reloads with new version; "Later" dismisses
+- Before each deploy: update `public/release-notes.json` with bullet points for what changed
+
 **ScrambleMode drag (works on mobile + desktop):**
 - Uses `onPointerMove` on the tile container + `document.elementFromPoint` to detect which tile the pointer is over — do NOT use `onPointerEnter` on tiles
 - `onPointerEnter` on individual tiles causes oscillation on Android: when React re-renders and tiles reorder, Chrome fires spurious `pointerenter` on tiles that appear under the stationary pointer, reverting the reorder within the same frame
@@ -195,7 +201,7 @@ App (screen router + shared state)
 ## Planned Improvements (tackle in order)
 
 - [x] **Custom domain** — live at https://elements.demo.agentic-blueprint.com
-- [x] **Mobile PWA** — installable on Android via Chrome/Brave; iOS via Safari
+- [x] **Mobile PWA** — installable on Android via Chrome/Brave; iOS via Safari; update prompt with release notes
 - [ ] **More elements** — extend to all 118 with tier 4
 - [ ] **Atomic number quiz** — third game axis beyond name↔symbol
 - [ ] **Multiplayer** — real-time head-to-head via a simple WebSocket server

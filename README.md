@@ -162,7 +162,7 @@ Any INSERT (new player) or UPDATE (score change) in that room is broadcast to al
 
 - [x] CI/CD — GitHub Actions auto-deploys to Vercel on every push to `main`
 - [x] Custom domain — https://elements.demo.agentic-blueprint.com
-- [x] Mobile PWA — installable on Android (Chrome/Brave); iOS via Safari
+- [x] Mobile PWA — installable on Android (Chrome/Brave); iOS via Safari; update prompt with release notes
 - [x] Per-player element mastery tracking
 - [ ] All 118 elements (tier 4)
 - [ ] Atomic number quiz mode
