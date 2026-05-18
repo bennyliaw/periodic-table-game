@@ -1253,7 +1253,7 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onHome,
     const pct           = Math.min(100, Math.round((masteredInPool.length / pool.length) * 100));
     const allMastered   = masteredInPool.length >= pool.length;
     return (
-      <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", fontFamily: "'Nunito'" }}>
+      <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "14px 24px", fontFamily: "'Nunito'" }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
         <div style={{ color: "#e2e8f0", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 22, marginBottom: 8 }}>Session complete!</div>
         <div style={{ color: "#94a3b8", fontSize: 14, marginBottom: 20 }}>{masteredInPool.length} / {pool.length} mastered ({pct}%)</div>
@@ -1280,7 +1280,7 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onHome,
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px", fontFamily: "'Nunito'" }}>
+    <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "10px 20px", fontFamily: "'Nunito'" }}>
       <Header title="🃏 Flash Cards" score={score} idx={idx} total={deck.length} />
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", maxWidth: 380 }}>
@@ -1380,7 +1380,7 @@ function QuizMode({ difficulty, onEnd, onHome, playSound }) {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px", fontFamily: "'Nunito'" }}>
+    <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "10px 20px", fontFamily: "'Nunito'" }}>
       <Header title="⚡ Symbol Quiz" score={score} streak={streak} idx={idx} total={TOTAL} />
 
       {pop && (
@@ -1522,7 +1522,7 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px", fontFamily: "'Nunito'" }}>
+    <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "10px 20px", fontFamily: "'Nunito'" }}>
       <Header title="🔤 Name Scramble" score={score} idx={idx} total={TOTAL} />
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", maxWidth: 380, gap: 22 }}>
@@ -1681,7 +1681,7 @@ function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
   const el = deck[idx % deck.length];
 
   return (
-    <div style={{ minHeight: "100vh", background: flash === "correct" ? "#071808" : flash === "wrong" ? "#180707" : "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px", fontFamily: "'Nunito'", transition: "background 0.15s" }}>
+    <div style={{ minHeight: "100vh", background: flash === "correct" ? "#071808" : flash === "wrong" ? "#180707" : "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "10px 20px", fontFamily: "'Nunito'", transition: "background 0.15s" }}>
 
       {/* Timer row */}
       <div style={{ width: "100%", maxWidth: 420, marginBottom: 14 }}>
