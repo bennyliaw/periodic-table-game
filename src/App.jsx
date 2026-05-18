@@ -1444,7 +1444,6 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
   const wrongRef     = useRef(0);
   const tilesRef     = useRef([]);
   const dragIdxRef   = useRef(null);
-  const containerRef = useRef(null);
   const [score, setScore] = useState(0);
   const inputRef  = useRef(null);
 
@@ -1471,14 +1470,14 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
     e.preventDefault();
     dragIdxRef.current = i;
     setDragIdx(i);
-    containerRef.current?.setPointerCapture(e.pointerId);
   }
 
   function handlePointerEnter(i) {
-    if (dragIdxRef.current === null || dragIdxRef.current === i) return;
+    const fromIdx = dragIdxRef.current;
+    if (fromIdx === null || fromIdx === i) return;
     setTiles(prev => {
       const next = [...prev];
-      const [moved] = next.splice(dragIdxRef.current, 1);
+      const [moved] = next.splice(fromIdx, 1);
       next.splice(i, 0, moved);
       return next;
     });
@@ -1540,7 +1539,6 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
         <div style={{ textAlign: "center" }}>
           <div style={{ color: "#1e293b", fontSize: 11, letterSpacing: 3, marginBottom: 12, fontFamily: "'Exo 2'" }}>DRAG TO UNSCRAMBLE</div>
           <div
-            ref={containerRef}
             style={{ display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "center", touchAction: "none", userSelect: "none" }}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
@@ -1551,7 +1549,6 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
                 key={t.id}
                 data-tile-idx={i}
                 onPointerDown={e => handlePointerDown(e, i)}
-                onPointerEnter={() => handlePointerEnter(i)}
                 style={{
                   width: 34, height: 40, borderRadius: 8,
                   display: "flex", alignItems: "center", justifyContent: "center",
