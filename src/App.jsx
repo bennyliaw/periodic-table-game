@@ -1825,6 +1825,9 @@ export default function ElementQuest() {
         setUpdateNotes([]);
       }
     },
+    onRegistered(r) {
+      r && setInterval(() => r.update(), 60 * 60 * 1000); // check for updates every hour
+    },
   });
   const { players, scores, activePlayer, setActiveId, addPlayer, updateScore, updateMastery,
           setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
