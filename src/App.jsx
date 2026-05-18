@@ -978,7 +978,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   const adminCount = players.filter(p => p.is_admin).length;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#070b14", fontFamily: "'Nunito'", padding: "22px 18px", overflowY: "auto" }}>
+    <div style={{ minHeight: "100vh", background: "#070b14", fontFamily: "'Nunito'", padding: "2px 18px", overflowY: "auto" }}>
 
       {/* Floating bg symbols */}
       {BG_SYMBOLS.map((s, i) => (
