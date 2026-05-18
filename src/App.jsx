@@ -423,6 +423,7 @@ function ConstellationPad({ mode, storedHash, color, onSuccess, onCancel }) {
   const [trailPos, setTrailPos]   = useState(null); // { x, y } in % units
   const svgRef                    = useRef(null);
   const selectedRef               = useRef([]);
+  const hasDraggedRef             = useRef(false);
   useEffect(() => { selectedRef.current = selected; }, [selected]);
   const MAX = 8, MIN = 3;
 
@@ -455,6 +456,7 @@ function ConstellationPad({ mode, storedHash, color, onSuccess, onCancel }) {
     e.preventDefault();
     setIsDragging(true);
     setError(false);
+    hasDraggedRef.current = false;
     const i = getDotAt(e.clientX, e.clientY);
     if (i >= 0) addDot(i);
     setTrailPos(getPointerPct(e.clientX, e.clientY));
@@ -463,23 +465,30 @@ function ConstellationPad({ mode, storedHash, color, onSuccess, onCancel }) {
   function handlePointerMove(e) {
     if (!isDragging) return;
     const i = getDotAt(e.clientX, e.clientY);
-    if (i >= 0) addDot(i);
+    if (i >= 0) { addDot(i); hasDraggedRef.current = true; }
     setTrailPos(getPointerPct(e.clientX, e.clientY));
   }
 
-  function handlePointerUp() {
-    setIsDragging(false);
-    setTrailPos(null);
-  }
-
-  async function confirm() {
-    const hash = await hashConstellation(selected);
+  async function submitDots(dots) {
+    const hash = await hashConstellation(dots);
     if (mode === "setup") {
       onSuccess(hash);
     } else {
       if (hash === storedHash) { onSuccess(); }
       else { setError(true); setSelected([]); selectedRef.current = []; }
     }
+  }
+
+  function handlePointerUp() {
+    setIsDragging(false);
+    setTrailPos(null);
+    if (hasDraggedRef.current && selectedRef.current.length >= MIN) {
+      submitDots(selectedRef.current);
+    }
+  }
+
+  async function confirm() {
+    submitDots(selected);
   }
 
   const canConfirm = selected.length >= MIN;
