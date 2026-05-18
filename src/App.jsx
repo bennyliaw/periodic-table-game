@@ -1842,10 +1842,13 @@ export default function ElementQuest() {
   const { updateServiceWorker } = useRegisterSW({
     onNeedRefresh: handleUpdateDetected,
     onRegistered(r) {
-      r && setInterval(() => r.update(), 60 * 60 * 1000);
-      // If a SW is already waiting on mount (e.g. user dismissed "Later" and refreshed),
-      // treat it the same as a fresh detection
-      if (r?.waiting) handleUpdateDetected();
+      if (!r) return;
+      setInterval(() => r.update(), 60 * 60 * 1000);
+      if (r.waiting) handleUpdateDetected();
+      // Check for updates when app is brought back to foreground (Android PWA resume)
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') r.update();
+      });
     },
   });
 
