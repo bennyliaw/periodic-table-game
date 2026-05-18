@@ -145,7 +145,7 @@ App (screen router + shared state)
 ├── HomeScreen       — player select, difficulty, mode select
 ├── FlashcardMode    — 15-card sessions, "Mark done" / "Show again later", mastery tracked per player
 ├── QuizMode         — 10 questions, 4-choice symbol pick, streak bonus
-├── ScrambleMode     — 8 questions, type element name given symbol
+├── ScrambleMode     — 8 questions, drag tiles to unscramble element name (or type it)
 ├── SpeedMode        — 60s timer, rapid 4-choice quiz
 └── ResultsScreen    — star rating, scoreboard, play again
 ```
@@ -156,6 +156,12 @@ App (screen router + shared state)
 - `usePlayers()` hook manages player list + scores via Supabase (`eq_players` table)
 - Player objects: `{ id, name, age, icon, color, score, mastered_elements, is_admin, constellation_hash, auth_reset }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`
 - `mastered_elements` is a `jsonb` array of element symbols (e.g. `["H","O","Fe"]`) stored on the player row
+
+**ScrambleMode drag (works on mobile + desktop):**
+- Uses `onPointerMove` on the tile container + `document.elementFromPoint` to detect which tile the pointer is over — do NOT use `onPointerEnter` on tiles
+- `onPointerEnter` on individual tiles causes oscillation on Android: when React re-renders and tiles reorder, Chrome fires spurious `pointerenter` on tiles that appear under the stationary pointer, reverting the reorder within the same frame
+- `dragIdxRef` (useRef) shadows `dragIdx` state so `pointermove` handlers always read the latest value without stale closure issues; always capture `fromIdx = dragIdxRef.current` as a local before calling `setTiles` to avoid ref changing before React flushes
+- `data-tile-idx={i}` on each tile lets `elementFromPoint` identify the target by render position
 
 **Onboarding:**
 - `eq_visited` localStorage key gates the `LandingScreen` — absent = first visit, present = skip to HomeScreen
@@ -188,10 +194,10 @@ App (screen router + shared state)
 
 ## Planned Improvements (tackle in order)
 
-- [ ] **Custom domain** — `vercel domains add <domain>` once a domain is ready
+- [x] **Custom domain** — live at https://elements.demo.agentic-blueprint.com
+- [x] **Mobile PWA** — installable on Android via Chrome/Brave; iOS via Safari
 - [ ] **More elements** — extend to all 118 with tier 4
 - [ ] **Atomic number quiz** — third game axis beyond name↔symbol
-- [ ] **Mobile PWA** — add manifest + service worker so it installs on phone
 - [ ] **Multiplayer** — real-time head-to-head via a simple WebSocket server
 
 ---
