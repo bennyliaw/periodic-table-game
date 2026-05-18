@@ -1455,7 +1455,8 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
   const tilesRef     = useRef([]);
   const dragIdxRef   = useRef(null);
   const [score, setScore] = useState(0);
-  const inputRef  = useRef(null);
+  const inputRef       = useRef(null);
+  const lastModeRef    = useRef("drag"); // "drag" | "type" — tracks how user last interacted
 
   useEffect(() => { tilesRef.current = tiles; }, [tiles]);
 
@@ -1473,11 +1474,13 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
     setTyped("");
     setHint(false);
     setFeedback(null);
-    setTimeout(() => inputRef.current?.focus(), 80);
+    // Only open keyboard if user was in type mode on the previous card
+    if (lastModeRef.current === "type") setTimeout(() => inputRef.current?.focus(), 80);
   }, [idx]);
 
   function handlePointerDown(e, i) {
     e.preventDefault();
+    lastModeRef.current = "drag";
     dragIdxRef.current = i;
     setDragIdx(i);
   }
@@ -1580,7 +1583,7 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
           <input
             ref={inputRef}
             value={typed}
-            onChange={e => setTyped(e.target.value)}
+            onChange={e => { lastModeRef.current = "type"; setTyped(e.target.value); }}
             onKeyDown={e => e.key === "Enter" && submit()}
             placeholder="Type element name…"
             style={{
