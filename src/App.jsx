@@ -288,6 +288,8 @@ function shuffle(arr) {
   return a;
 }
 
+const DIFF_MULT = { easy: 0.2, medium: 0.4, hard: 0.6, all: 1.0 };
+
 function getPool(difficulty) {
   return difficulty === "easy"   ? ELEMENTS.filter(e => e.tier === 1)
        : difficulty === "medium" ? ELEMENTS.filter(e => e.tier <= 2)
@@ -1055,10 +1057,10 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
       <Section label="Difficulty">
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
           {[
-            { id: "easy",   label: "⭐ Starter",  desc: "15 common elements" },
-            { id: "medium", label: "⭐⭐ Explorer", desc: "31 elements" },
-            { id: "hard",   label: "⭐⭐⭐ Expert", desc: "Trickiest ones" },
-            { id: "all",    label: "🔥 Legend",    desc: "All 47 elements" },
+            { id: "easy",   label: "⭐ Starter",  desc: "15 elements · 0.2× pts" },
+            { id: "medium", label: "⭐⭐ Explorer", desc: "31 elements · 0.4× pts" },
+            { id: "hard",   label: "⭐⭐⭐ Expert", desc: "Trickiest · 0.6× pts" },
+            { id: "all",    label: "🔥 Legend",    desc: "All 47 · 1× pts" },
           ].map(d => (
             <button key={d.id} onClick={() => setDifficulty(d.id)} style={{
               padding: "12px 10px", textAlign: "left",
@@ -1365,7 +1367,7 @@ function QuizMode({ difficulty, onEnd, onHome, playSound }) {
     setSelected(c);
     const correct = c.symbol === el.symbol;
     if (correct) {
-      const earned = 10 + streakRef.current * 2;
+      const earned = Math.round((10 + streakRef.current * 2) * (DIFF_MULT[difficulty] ?? 1));
       scoreRef.current += earned;
       streakRef.current += 1;
       setScore(scoreRef.current);
@@ -1516,7 +1518,7 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
 
   function submit() {
     if (typed.trim().toLowerCase() === el.name.toLowerCase()) {
-      const earned = hint ? 5 : 10;
+      const earned = Math.round((hint ? 5 : 10) * (DIFF_MULT[difficulty] ?? 1));
       scoreRef.current += earned;
       setScore(scoreRef.current);
       setFeedback("correct");
@@ -1656,7 +1658,7 @@ function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
     if (!started || timeLeft === 0) return;
     const el = deck[idx % deck.length];
     if (c.symbol === el.symbol) {
-      const earned = 10 + streakRef.current * 2;
+      const earned = Math.round((10 + streakRef.current * 2) * (DIFF_MULT[difficulty] ?? 1));
       scoreRef.current += earned; correctRef.current += 1;
       streakRef.current += 1;
       setScore(scoreRef.current); setCorrect(correctRef.current);
