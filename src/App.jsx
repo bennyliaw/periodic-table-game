@@ -1817,20 +1817,41 @@ export default function ElementQuest() {
   const [showLanding, setShowLanding]     = useState(() => !localStorage.getItem("eq_visited"));
   const { play, toggleMute, muted } = useSound();
   const [updateNotes, setUpdateNotes] = useState(null);
+  const [pendingUpdate, setPendingUpdate] = useState(false);
+
+  async function fetchNotesAndShowBanner() {
+    try {
+      const res = await fetch('/release-notes.json', { cache: 'no-store' });
+      const data = await res.json();
+      setUpdateNotes(data.notes ?? []);
+    } catch {
+      setUpdateNotes([]);
+    }
+  }
+
+  function handleUpdateDetected() {
+    // Browser (non-installed) users: auto-apply update silently
+    // PWA (standalone) users: show the banner so they can choose when to reload
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      fetchNotesAndShowBanner();
+    } else {
+      setPendingUpdate(true);
+    }
+  }
+
   const { updateServiceWorker } = useRegisterSW({
-    onNeedRefresh: async () => {
-      try {
-        const res = await fetch('/release-notes.json', { cache: 'no-store' });
-        const data = await res.json();
-        setUpdateNotes(data.notes ?? []);
-      } catch {
-        setUpdateNotes([]);
-      }
-    },
+    onNeedRefresh: handleUpdateDetected,
     onRegistered(r) {
-      r && setInterval(() => r.update(), 60 * 60 * 1000); // check for updates every hour
+      r && setInterval(() => r.update(), 60 * 60 * 1000);
+      // If a SW is already waiting on mount (e.g. user dismissed "Later" and refreshed),
+      // treat it the same as a fresh detection
+      if (r?.waiting) handleUpdateDetected();
     },
   });
+
+  useEffect(() => {
+    if (pendingUpdate) updateServiceWorker(true);
+  }, [pendingUpdate]);
   const { players, scores, activePlayer, setActiveId, addPlayer, updateScore, updateMastery,
           setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
           roomId, joinRoom, loaded } = usePlayers();
