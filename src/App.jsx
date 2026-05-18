@@ -97,7 +97,7 @@ const PHRASES = {
   wrong:    ["Wrong!", "Oops!", "So close! Have another go!", "Not that, try again!", "Don't give up!", "Almost! Try again!", "Not quite, but keep going!"],
   streak3:  ["You're on a roll!", "Getting warm here!", "Keep it going!"],
   streak5:  ["You're on fire!", "Incredible! Keep it up!", "You cannot be stopped!"],
-  streak7:  ["Unstoppable! This is legendary!", "You are absolutely incredible!", "Is there anything you don't know?!"],
+  streak7:  ["Unstoppable!", "Absolute genius!", "Legend status!", "Mind-blowing!", "Element master!", "Off the charts!", "Nobel Prize incoming!", "Flawless!", "Science royalty!", "Pure genius!", "You know everything!"],
   perfect:  ["Perfect round! Every single answer correct! You are absolutely brilliant!", "Flawless! Not a single mistake! You're a true element master!", "One hundred percent! Perfect score! Extraordinary!"],
   roundEnd: ["Well done!", "Round complete! Great effort!", "Fantastic work!"],
 };
