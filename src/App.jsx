@@ -1782,24 +1782,26 @@ function ResultsScreen({ activePlayer, players, scores, lastRoundScore, onHome, 
 // ═══════════════════════════════════════════
 function UpdateBanner({ notes, onUpdate, onDismiss }) {
   return (
-    <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 9999, background: "#0a0f1a", borderTop: "2px solid #22d3ee", padding: "16px 20px", fontFamily: "'Nunito'", boxShadow: "0 -4px 24px rgba(34,211,238,0.15)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: notes.length > 0 ? 10 : 14 }}>
-        <span style={{ fontSize: 18 }}>⬆️</span>
-        <span style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 15 }}>Update ready</span>
-        <span style={{ color: "#475569", fontSize: 12, marginLeft: 4 }}>running v{APP_VERSION}</span>
-      </div>
-      {notes.length > 0 && (
-        <ul style={{ margin: "0 0 12px 0", paddingLeft: 18, color: "#94a3b8", fontSize: 13, lineHeight: 1.7 }}>
-          {notes.map((n, i) => <li key={i}>{n}</li>)}
-        </ul>
-      )}
-      <div style={{ display: "flex", gap: 10 }}>
-        <button onClick={onUpdate} style={{ flex: 2, padding: "11px 0", background: "#081a2a", border: "2px solid #22d3ee", borderRadius: 12, color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
-          Update now ↺
-        </button>
-        <button onClick={onDismiss} style={{ flex: 1, padding: "11px 0", background: "none", border: "2px solid #1e293b", borderRadius: 12, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
-          Later
-        </button>
+    <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", background: "rgba(7,11,20,0.75)" }}>
+      <div style={{ width: "100%", maxWidth: 380, background: "#0a0f1a", border: "2px solid #22d3ee", borderRadius: 20, padding: "24px 22px", fontFamily: "'Nunito'", boxShadow: "0 0 60px rgba(34,211,238,0.18)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: notes.length > 0 ? 14 : 20 }}>
+          <span style={{ fontSize: 20 }}>⬆️</span>
+          <span style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 16 }}>Update Ready</span>
+          <span style={{ color: "#475569", fontSize: 12, marginLeft: 4 }}>running v{APP_VERSION}</span>
+        </div>
+        {notes.length > 0 && (
+          <ul style={{ margin: "0 0 20px 0", paddingLeft: 18, color: "#94a3b8", fontSize: 13, lineHeight: 1.8 }}>
+            {notes.map((n, i) => <li key={i}>{n}</li>)}
+          </ul>
+        )}
+        <div style={{ display: "flex", gap: 10 }}>
+          <button onClick={onUpdate} style={{ flex: 2, padding: "13px 0", background: "#081a2a", border: "2px solid #22d3ee", borderRadius: 12, color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+            Update Now ↺
+          </button>
+          <button onClick={onDismiss} style={{ flex: 1, padding: "13px 0", background: "none", border: "2px solid #1e293b", borderRadius: 12, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+            Later
+          </button>
+        </div>
       </div>
     </div>
   );
