@@ -1457,10 +1457,12 @@ function ScrambleMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
   const [feedback, setFeedback] = useState(null);
   const scoreRef     = useRef(0);
   const wrongRef     = useRef(0);
+  const streakRef    = useRef(0);
   const tilesRef     = useRef([]);
   const dragIdxRef   = useRef(null);
   const pendingRef   = useRef(null);
   const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
   const inputRef       = useRef(null);
   const lastModeRef    = useRef("drag"); // "drag" | "type" — tracks how user last interacted
 
@@ -1523,16 +1525,21 @@ function ScrambleMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
 
   function submit() {
     if (typed.trim().toLowerCase() === el.name.toLowerCase()) {
-      const earned = Math.round((hint ? 5 : 10) * (DIFF_MULT[difficulty] ?? 1));
+      const earned = Math.round(((hint ? 5 : 10) + streakRef.current * 2) * (DIFF_MULT[difficulty] ?? 1));
       scoreRef.current += earned;
+      streakRef.current += 1;
       setScore(scoreRef.current);
+      setStreak(streakRef.current);
       setFeedback("correct");
       playSound("correct");
+      if (streakRef.current >= 3) playSound("streak", streakRef.current);
       pendingRef.current = setTimeout(() => {
         if (idx + 1 >= TOTAL) { onEnd(scoreRef.current, wrongRef.current === 0); return; }
         setIdx(i => i + 1);
       }, 900);
     } else {
+      streakRef.current = 0;
+      setStreak(0);
       setFeedback("wrong");
       wrongRef.current += 1;
       playSound("wrong");
@@ -1542,7 +1549,7 @@ function ScrambleMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
 
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "10px 20px", fontFamily: "'Nunito'" }}>
-      <Header title="🔤 Name Scramble" score={score} idx={idx} total={TOTAL} />
+      <Header title="🔤 Name Scramble" score={score} streak={streak} idx={idx} total={TOTAL} />
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", maxWidth: 380, gap: 22 }}>
 
