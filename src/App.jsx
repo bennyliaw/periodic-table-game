@@ -1843,7 +1843,7 @@ export default function ElementQuest() {
     onNeedRefresh: handleUpdateDetected,
     onRegistered(r) {
       if (!r) return;
-      setInterval(() => r.update(), 60 * 60 * 1000);
+      setInterval(() => r.update(), 5 * 60 * 1000);
       if (r.waiting) handleUpdateDetected();
       // Check for updates when app is brought back to foreground (Android PWA resume)
       document.addEventListener('visibilitychange', () => {
