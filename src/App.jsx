@@ -1340,7 +1340,7 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onHome,
 // ═══════════════════════════════════════════
 // QUIZ MODE
 // ═══════════════════════════════════════════
-function QuizMode({ difficulty, onEnd, onHome, playSound }) {
+function QuizMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
   const TOTAL = 10;
   const [deck]   = useState(() => getDeck(difficulty).slice(0, TOTAL));
   const [idx, setIdx]     = useState(0);
@@ -1438,7 +1438,7 @@ function QuizMode({ difficulty, onEnd, onHome, playSound }) {
           );
         })}
       </div>
-      <QuitStrip onHome={onHome} />
+      <QuitStrip onHome={() => onQuit(scoreRef.current)} />
     </div>
   );
 }
@@ -1446,7 +1446,7 @@ function QuizMode({ difficulty, onEnd, onHome, playSound }) {
 // ═══════════════════════════════════════════
 // SCRAMBLE MODE
 // ═══════════════════════════════════════════
-function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
+function ScrambleMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
   const TOTAL = 8;
   const [deck] = useState(() => getDeck(difficulty).filter(e => e.name.length >= 4).slice(0, TOTAL));
   const [idx, setIdx]       = useState(0);
@@ -1617,7 +1617,7 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
           </button>
         </div>
       </div>
-      <QuitStrip onHome={onHome} />
+      <QuitStrip onHome={() => onQuit(scoreRef.current)} />
     </div>
   );
 }
@@ -1625,7 +1625,7 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
 // ═══════════════════════════════════════════
 // SPEED BLAST MODE
 // ═══════════════════════════════════════════
-function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
+function SpeedMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
   const pool     = getDeck(difficulty);
   const longPool = shuffle([...pool, ...pool, ...pool]);
   const [deck]   = useState(longPool);
@@ -1737,7 +1737,7 @@ function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
           </div>
         </>
       )}
-      <QuitStrip onHome={onHome} />
+      <QuitStrip onHome={() => onQuit(scoreRef.current)} />
     </div>
   );
 }
@@ -1902,7 +1902,12 @@ export default function ElementQuest() {
     setScreen("results");
   }
 
-  const gp = { difficulty, onEnd: endRound, onHome: () => setScreen("home"), playSound: play };
+  function quitRound(earned) {
+    if (activePlayer && earned > 0) updateScore(activePlayer.id, earned);
+    setScreen("home");
+  }
+
+  const gp = { difficulty, onEnd: endRound, onHome: () => setScreen("home"), onQuit: quitRound, playSound: play };
 
   return (
     <>
