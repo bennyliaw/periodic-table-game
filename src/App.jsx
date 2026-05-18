@@ -1637,12 +1637,12 @@ function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
   }, [timeLeft, started]);
 
   useEffect(() => {
-    if (deck[idx]) setChoices(getChoices(deck[idx]));
+    setChoices(getChoices(deck[idx % deck.length]));
   }, [idx]);
 
   function pick(c) {
     if (!started || timeLeft === 0) return;
-    const el = deck[idx];
+    const el = deck[idx % deck.length];
     if (c.symbol === el.symbol) {
       const earned = 10 + streakRef.current * 2;
       scoreRef.current += earned; correctRef.current += 1;
@@ -1678,7 +1678,7 @@ function SpeedMode({ difficulty, onEnd, onHome, playSound }) {
     );
   }
 
-  const el = deck[idx];
+  const el = deck[idx % deck.length];
 
   return (
     <div style={{ minHeight: "100vh", background: flash === "correct" ? "#071808" : flash === "wrong" ? "#180707" : "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px", fontFamily: "'Nunito'", transition: "background 0.15s" }}>
