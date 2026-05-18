@@ -1,5 +1,6 @@
 {
   "notes": [
+    "Fix a bug reported by Justin — SpeedMode no longer stops at 45 cards!",
     "Android drag-and-drop fixed in Scramble mode",
     "Streak bonus added to Speed Blast",
     "New streak celebration phrases",
