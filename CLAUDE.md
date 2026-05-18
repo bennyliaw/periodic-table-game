@@ -159,8 +159,11 @@ App (screen router + shared state)
 
 **PWA update prompt:**
 - `registerType: 'prompt'` in `vite.config.js` — new SW waits instead of auto-applying
-- `useRegisterSW` from `virtual:pwa-register/react` in `ElementQuest` root; `onNeedRefresh` fetches `/release-notes.json` (not SW-cached — JSON excluded from Workbox default globPatterns) and sets `updateNotes` state
-- `UpdateBanner` renders fixed at bottom when `updateNotes !== null`; "Update now" calls `updateServiceWorker(true)` → page reloads with new version; "Later" dismisses
+- `useRegisterSW` from `virtual:pwa-register/react` in `ElementQuest` root
+- `handleUpdateDetected()` is called by both `onNeedRefresh` and `onRegistered` (checks `r.waiting` on mount so banner reappears after dismiss + refresh)
+- **Standalone (installed PWA):** shows `UpdateBanner` (full-screen blocking modal with backdrop blur); "Update Now" calls `updateServiceWorker(true)` → reloads; "Later" dismisses
+- **Browser (non-installed):** `setPendingUpdate(true)` → `useEffect` → `updateServiceWorker(true)` auto-applies silently
+- `onRegistered` sets up 5-minute poll (`r.update()`) and a `visibilitychange` listener to check for updates when the app is brought back to the foreground (Android PWA resume)
 - Before each deploy: update `public/release-notes.json` with bullet points for what changed
 
 **ScrambleMode drag (works on mobile + desktop):**
@@ -168,6 +171,7 @@ App (screen router + shared state)
 - `onPointerEnter` on individual tiles causes oscillation on Android: when React re-renders and tiles reorder, Chrome fires spurious `pointerenter` on tiles that appear under the stationary pointer, reverting the reorder within the same frame
 - `dragIdxRef` (useRef) shadows `dragIdx` state so `pointermove` handlers always read the latest value without stale closure issues; always capture `fromIdx = dragIdxRef.current` as a local before calling `setTiles` to avoid ref changing before React flushes
 - `data-tile-idx={i}` on each tile lets `elementFromPoint` identify the target by render position
+- `lastModeRef` tracks last interaction: `"drag"` (set on `pointerDown`) or `"type"` (set on input `onChange`); new card only auto-focuses the text input when `lastModeRef.current === "type"` — prevents keyboard reopening on mobile when user is in drag mode
 
 **Onboarding:**
 - `eq_visited` localStorage key gates the `LandingScreen` — absent = first visit, present = skip to HomeScreen
@@ -179,6 +183,7 @@ App (screen router + shared state)
 - `DOTS` — 12 fixed star positions (% coordinates) shared by all players; security comes from sequence, not position
 - `hashConstellation(indices)` — SHA-256 of `JSON.stringify(indices)` via Web Crypto API; stored in `constellation_hash`
 - `ConstellationPad` — drag-based SVG component; pointer events hit-test dot proximity (26px radius); trailing dashed line follows cursor while dragging
+- **Auto-confirm on drag release:** `hasDraggedRef` tracks whether `pointerMove` reached a new dot; if `true` and ≥3 stars selected, `handlePointerUp` calls `submitDots(selectedRef.current)` automatically — no confirm button needed. Tap-by-tap mode still requires the Confirm button.
 - `auth_reset: true` means the player skips verification on next tap and is prompted to set a new pattern
 - `is_admin` — first player in room gets `true`; admin can grant/revoke for others; last admin cannot remove themselves
 - Admin actions require `adminUnlocked` state (set by re-verifying constellation via padlock button, auto-locks after 5 min)
@@ -190,6 +195,12 @@ App (screen router + shared state)
 - "Mark done" adds the symbol to `mastered_elements` via `updateMastery()` and persists to Supabase
 - "Show again later" re-queues the card to the end of the current session deck (+1 pt)
 - Mastery is global (by symbol), not per-difficulty — mastering H in Starter carries over to Explorer
+
+**Scoring:**
+- `DIFF_MULT = { easy: 0.2, medium: 0.4, hard: 0.6, all: 1.0 }` — difficulty multiplier applied to all earned points in Quiz, Scramble, and Speed Blast; Flash Cards unaffected
+- Points are `Math.round(base * DIFF_MULT[difficulty])` — base is 10 per correct answer (+2 per streak level in Quiz/Speed)
+- Quitting mid-round awards the accumulated score via `quitRound(earned)` (saves to Supabase and goes home); `onQuit` prop on Quiz/Scramble/Speed, separate from `onHome` which is used for pre-game back buttons
+- `pendingRef` in QuizMode and ScrambleMode cancels the post-answer setTimeout on unmount — prevents stale `onEnd` from firing and double-saving after a quit
 
 **Data:**
 - 47 elements in `ELEMENTS[]`, each with `{ name, symbol, number, group, tier }`

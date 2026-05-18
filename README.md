@@ -101,18 +101,20 @@ Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in **Netlify → Site Setti
 | Mode | Description |
 |------|-------------|
 | 🃏 Flash Cards | Flip card to reveal symbol. 15-card sessions, mastery tracked per player. |
-| ⚡ Symbol Quiz | 4-choice quiz with streak bonuses |
-| 🔤 Name Scramble | Given the symbol, drag tiles to unscramble (or type) the element name — works on mobile touch and desktop |
-| 🚀 Speed Blast | 60-second rapid-fire quiz |
+| ⚡ Symbol Quiz | 4-choice quiz with streak bonuses. Score multiplied by difficulty. |
+| 🔤 Name Scramble | Given the symbol, drag tiles to unscramble (or type) the element name — works on mobile touch and desktop. Score multiplied by difficulty. |
+| 🚀 Speed Blast | 60-second rapid-fire quiz with streak bonuses. Score multiplied by difficulty. |
+
+Quitting a round mid-way still awards the accumulated score to the player's total.
 
 ## Difficulty Levels
 
-| Level | Elements |
-|-------|----------|
-| ⭐ Starter | 15 most common (H, O, Au, Fe…) |
-| ⭐⭐ Explorer | 31 elements |
-| ⭐⭐⭐ Expert | Tricky transition metals etc. |
-| 🔥 Legend | All 47 elements |
+| Level | Elements | Score multiplier |
+|-------|----------|-----------------|
+| ⭐ Starter | 15 most common (H, O, Au, Fe…) | 0.2× |
+| ⭐⭐ Explorer | 31 elements | 0.4× |
+| ⭐⭐⭐ Expert | Tricky transition metals etc. | 0.6× |
+| 🔥 Legend | All 47 elements | 1× |
 
 ## First Visit
 
