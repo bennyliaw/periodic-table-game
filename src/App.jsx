@@ -1350,8 +1350,11 @@ function QuizMode({ difficulty, onEnd, onHome, playSound }) {
   const scoreRef  = useRef(0);
   const streakRef = useRef(0);
   const wrongRef  = useRef(0);
+  const pendingRef = useRef(null);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
+
+  useEffect(() => () => clearTimeout(pendingRef.current), []);
 
   if (idx >= deck.length) return null;
   const el    = deck[idx];
@@ -1382,7 +1385,7 @@ function QuizMode({ difficulty, onEnd, onHome, playSound }) {
       setPop("❌");
       playSound("wrong");
     }
-    setTimeout(() => {
+    pendingRef.current = setTimeout(() => {
       setPop(null);
       setSelected(null);
       if (idx + 1 >= TOTAL) { onEnd(scoreRef.current, wrongRef.current === 0); return; }
@@ -1456,11 +1459,13 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
   const wrongRef     = useRef(0);
   const tilesRef     = useRef([]);
   const dragIdxRef   = useRef(null);
+  const pendingRef   = useRef(null);
   const [score, setScore] = useState(0);
   const inputRef       = useRef(null);
   const lastModeRef    = useRef("drag"); // "drag" | "type" — tracks how user last interacted
 
   useEffect(() => { tilesRef.current = tiles; }, [tiles]);
+  useEffect(() => () => clearTimeout(pendingRef.current), []);
 
   if (idx >= deck.length) return null;
   const el    = deck[idx];
@@ -1523,7 +1528,7 @@ function ScrambleMode({ difficulty, onEnd, onHome, playSound }) {
       setScore(scoreRef.current);
       setFeedback("correct");
       playSound("correct");
-      setTimeout(() => {
+      pendingRef.current = setTimeout(() => {
         if (idx + 1 >= TOTAL) { onEnd(scoreRef.current, wrongRef.current === 0); return; }
         setIdx(i => i + 1);
       }, 900);
