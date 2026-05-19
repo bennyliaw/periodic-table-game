@@ -1178,7 +1178,35 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   const [constellationModal, setConstellationModal] = useState(null);
   const [actionTarget, setActionTarget]       = useState(null);
   const [profileTarget, setProfileTarget]     = useState(null);
-  
+  const rankScrollRef = useRef(null);
+  const [canScrollL, setCanScrollL] = useState(false);
+  const [canScrollR, setCanScrollR] = useState(false);
+
+  function checkRankScroll() {
+    const el = rankScrollRef.current;
+    if (el) { setCanScrollL(el.scrollLeft > 0); setCanScrollR(el.scrollLeft < el.scrollWidth - el.clientWidth - 2); }
+  }
+
+  function scrollRank(dir) {
+    rankScrollRef.current?.scrollBy({ left: dir * 180, behavior: "smooth" });
+  }
+
+  function handleRankWheel(e) {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    const el = rankScrollRef.current;
+    if (el) { e.preventDefault(); el.scrollBy({ left: e.deltaY, behavior: "auto" }); }
+  }
+
+  useEffect(() => {
+    const el = rankScrollRef.current;
+    if (!el) return;
+    checkRankScroll();
+    const onScroll = () => checkRankScroll();
+    el.addEventListener("scroll", onScroll, { passive: true });
+    const ro = new ResizeObserver(() => checkRankScroll());
+    ro.observe(el);
+    return () => { el.removeEventListener("scroll", onScroll); ro.disconnect(); };
+  }, [slots]);
   const [slots, setSlots] = useState(() => {
     const pool = getPool(difficulty);
     const els = [...pool].sort(() => Math.random() - 0.5).slice(0, 30);
@@ -1397,7 +1425,19 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
 
       {/* Difficulty */}
       <Section label="Select Your Rank">
-        <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" }}>
+        <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+          {canScrollL && (
+            <button onClick={() => scrollRank(-1)}
+              aria-label="Scroll ranks left"
+              style={{ position: "absolute", left: -2, zIndex: 10, width: 26, height: 26, borderRadius: "50%",
+                       background: "#0a0f1a", border: "1px solid #1e293b", color: "#94a3b8", fontSize: 14,
+                       display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+                       boxShadow: "0 0 8px rgba(0,0,0,0.5)", padding: 0, lineHeight: 1 }}>
+              ‹
+            </button>
+          )}
+        <div ref={rankScrollRef} onWheel={handleRankWheel}
+          style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none", scrollBehavior: "smooth", width: "100%" }}>
           {LEVELS.map(d => {
             const active = difficulty === d.id;
             return (
@@ -1425,6 +1465,17 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
               </button>
             );
           })}
+        </div>
+          {canScrollR && (
+            <button onClick={() => scrollRank(1)}
+              aria-label="Scroll ranks right"
+              style={{ position: "absolute", right: -2, zIndex: 10, width: 26, height: 26, borderRadius: "50%",
+                       background: "#0a0f1a", border: "1px solid #1e293b", color: "#94a3b8", fontSize: 14,
+                       display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+                       boxShadow: "0 0 8px rgba(0,0,0,0.5)", padding: 0, lineHeight: 1 }}>
+              ›
+            </button>
+          )}
         </div>
       </Section>
 
