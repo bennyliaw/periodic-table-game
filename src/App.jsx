@@ -1444,7 +1444,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
             return (
               <button key={d.id} onClick={() => setDifficulty(d.id)}
                 style={{
-                flex: "0 0 auto", minWidth: 108, padding: "10px 8px", textAlign: "left",
+                flex: "0 0 calc((100% - 20px) / 3)", padding: "10px 8px", textAlign: "left",
                 background: active ? "rgba(26,45,74,0.65)" : "rgba(10,15,26,0.6)",
                 border: `2px solid ${active ? "#22d3ee" : "#1e293b"}`,
                 borderRadius: 14, transition: "all 0.2s",
@@ -1453,14 +1453,14 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
               }}>
                 <div style={{ fontSize: 18, marginBottom: 3, textAlign: "center" }}>{d.icon}</div>
                 <div style={{ color: active ? "#22d3ee" : "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 10, marginBottom: 3, textAlign: "center" }}>{d.label.replace(/^.{2}\s/, "")}</div>
-                <div style={{ color: active ? "#94a3b8" : "#64748b", fontSize: 8, lineHeight: 1.2, fontWeight: 600 }}>{d.line1}</div>
-                <div style={{ color: active ? "#64748b" : "#475569", fontSize: 8, marginTop: 1, lineHeight: 1.2 }}>{d.line2}</div>
+                <div style={{ color: active ? "#94a3b8" : "#64748b", fontSize: 10, lineHeight: 1.3, fontWeight: 600 }}>{d.line1}</div>
+                <div style={{ color: active ? "#64748b" : "#475569", fontSize: 10, marginTop: 2, lineHeight: 1.3 }}>{d.line2}</div>
                 <div style={{ display: "flex", gap: 3, marginTop: 4, flexWrap: "wrap" }}>
                   <span style={{ background: "rgba(13,26,45,0.7)", border: "1px solid #1e293b", borderRadius: 5, padding: "1px 4px", fontSize: 8, color: "#64748b" }}>
-                    {d.elements}el
+                    {d.elements} elements
                   </span>
                   <span style={{ background: "rgba(13,26,45,0.7)", border: "1px solid #1e293b", borderRadius: 5, padding: "1px 4px", fontSize: 8, color: "#64748b" }}>
-                    {d.basePts}pts
+                    {d.basePts} pts/card
                   </span>
                 </div>
               </button>
