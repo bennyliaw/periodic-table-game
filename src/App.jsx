@@ -1265,6 +1265,8 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   const [constellationModal, setConstellationModal] = useState(null);
   const [actionTarget, setActionTarget]       = useState(null);
   const [profileTarget, setProfileTarget]     = useState(null);
+  const [hintLevel, setHintLevel]             = useState(null); // level id to show tooltip for
+  const hintTimerRef = useRef(null);
   const rankScrollRef = useRef(null);
   const [canScrollL, setCanScrollL] = useState(false);
   const [canScrollR, setCanScrollR] = useState(false);
@@ -1433,6 +1435,14 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
     setConstellationModal({ mode: "verify", player: activePlayer, purpose: "admin-unlock" });
   }
 
+  function handleLockedClick(d) {
+    setHintLevel(d.id);
+    if (hintTimerRef.current) clearTimeout(hintTimerRef.current);
+    hintTimerRef.current = setTimeout(() => setHintLevel(null), 2500);
+  }
+
+  useEffect(() => () => { if (hintTimerRef.current) clearTimeout(hintTimerRef.current); }, []);
+
   const isAdminUnlocked = adminUnlocked && (Date.now() - adminUnlockTime < 5 * 60 * 1000);
   const adminCount = players.filter(p => p.is_admin).length;
 
@@ -1548,18 +1558,37 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
             const canAttempt   = !unlocked && prereqsMet && !!activePlayer;
             return (
               <button key={d.id}
-                onClick={() => unlocked && setDifficulty(d.id)}
+                onClick={() => unlocked ? setDifficulty(d.id) : handleLockedClick(d)}
                 style={{
                   flex: "0 0 calc((100% - 20px) / 3)", padding: "7px 5px", textAlign: "left",
                   position: "relative",
+                  overflow: "hidden",
                   background: active && unlocked ? "rgba(26,45,74,0.65)" : "rgba(10,15,26,0.6)",
                   border: `2px solid ${active && unlocked ? "#22d3ee" : "#1e293b"}`,
                   borderRadius: 14, transition: "all 0.2s",
                   boxShadow: active && unlocked ? "0 0 16px rgba(34,211,238,0.15)" : "none",
-                  cursor: unlocked ? "pointer" : "default",
+                  cursor: unlocked ? "pointer" : "pointer",
                   opacity: unlocked ? 1 : 0.6,
                 }}>
-                {!unlocked && <span style={{ position: "absolute", top: 4, left: 5, fontSize: 9 }}>🔒</span>}
+                {!unlocked && (() => {
+                  const bonus = UNLOCK_BONUS[d.id];
+                  const label = bonus ? `🔒 +฿${(bonus / 1000).toFixed(0).replace(/\.0$/, "")}k` : "🔒";
+                  return (
+                    <div style={{
+                      position: "absolute", top: -2, right: -22,
+                      width: 80,
+                      paddingTop: 1, paddingBottom: 1,
+                      background: "rgba(251,191,36,0.14)",
+                      border: "1px solid rgba(251,191,36,0.35)",
+                      color: "#fbbf24",
+                      fontSize: 7, fontWeight: 700,
+                      textAlign: "center",
+                      transform: "rotate(45deg)",
+                      zIndex: 2,
+                      pointerEvents: "none",
+                    }}>{label}</div>
+                  );
+                })()}
                 <div style={{ fontSize: 15, marginBottom: 2, textAlign: "center" }}>{d.icon}</div>
                 <div style={{ color: active && unlocked ? "#22d3ee" : "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 10, marginBottom: 3, textAlign: "center" }}>{d.label.replace(/^.{2}\s/, "")}</div>
                 <div style={{ color: active && unlocked ? "#94a3b8" : "#64748b", fontSize: 10, lineHeight: 1.3, fontWeight: 600 }}>{d.line1}</div>
@@ -1584,17 +1613,6 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
                     </span>
                   )}
                 </div>
-                {!unlocked && (() => {
-                  const bonus = UNLOCK_BONUS[d.id];
-                  return bonus ? (
-                    <div style={{ textAlign: "center", marginTop: 4 }}>
-                      <span style={{ display: "inline-block", background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 4, padding: "1px 5px", fontSize: 8, color: "#fbbf24", fontWeight: 700 }}>
-                        🎁 +฿{(bonus / 1000).toFixed(0).replace(/\.0$/, "")}k unlock reward
-                      </span>
-                    </div>
-                  ) : null;
-                })()}
-                {!unlocked && <div style={{ color: "#334155", fontSize: 9, lineHeight: 1.3, marginBottom: 2, marginTop: 3 }}>Complete training to unlock</div>}
                 {canAttempt && (
                   <div onClick={e => { e.stopPropagation(); onStartTrial(d.id); }}
                     style={{ marginTop: 5, width: "100%", padding: "3px 0",
@@ -1620,6 +1638,37 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
           )}
         </div>
       </Section>
+
+      {/* Lock hint tooltip */}
+      {hintLevel && (() => {
+        const hintD = LEVELS.find(l => l.id === hintLevel);
+        if (!hintD) return null;
+        const poolLvl = trialPoolLevel(hintLevel);
+        const poolInfo = poolLvl ? getLevelInfo(poolLvl) : null;
+        return (
+          <div style={{
+            position: "relative", zIndex: 1,
+            display: "flex", justifyContent: "center", marginBottom: 8,
+          }}>
+            <div style={{
+              background: "rgba(251,191,36,0.12)",
+              border: "1px solid rgba(251,191,36,0.3)",
+              borderRadius: 8,
+              padding: "6px 12px",
+              fontSize: 10,
+              color: "#fbbf24",
+              fontWeight: 600,
+              textAlign: "center",
+              maxWidth: 340,
+              lineHeight: 1.4,
+            }}>
+              {poolInfo
+                ? `🔒 Master 75% of ${poolInfo.rank} · Pass all 4 training modes`
+                : `🔒 Complete previous rank training`}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Modes */}
       <Section label="Choose Your Training Mode">
