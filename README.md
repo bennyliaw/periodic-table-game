@@ -39,6 +39,11 @@ alter table eq_players add column auth_reset boolean default true;
 -- Rank badge + activity tracking
 alter table eq_players add column highest_level text;
 alter table eq_players add column last_active timestamptz;
+
+-- Level unlock system
+alter table eq_players add column unlocked_levels jsonb default '["lv1","lv2"]'::jsonb;
+alter table eq_players add column training_passes  jsonb default '{}'::jsonb;
+alter table eq_players add column trial_grades     jsonb default '{}'::jsonb;
 ```
 
 Then go to **Project Settings → API** and copy your Project URL and `anon public` key into a `.env.local` file in the project root:
@@ -114,16 +119,18 @@ Quitting a round mid-way still awards the accumulated score to the player's tota
 
 ## Difficulty Levels
 
-| Level | Elements | Score multiplier |
-|-------|----------|-----------------|
-| 🥉 Cadet | 15 most common (H, O, Au, Fe…) | 0.2× |
-| 🥈 Petty Officer | 31 elements — noble gases, halogens, metals | 0.4× |
-| 🥇 Warrant Officer | 16 specialist heavy metals & transitions | 0.6× |
-| 🏆 Lieutenant | 47 elements — combined tiers 1–3 | 1× |
-| 👑 Captain | 82 elements — including rare metals | 1.3× |
-| ⚛️ Commodore | All 118 elements — full periodic table | 1.5× |
+| Level | Elements | Score multiplier | Unlock |
+|-------|----------|-----------------|--------|
+| 🥉 Cadet | 15 most common (H, O, Au, Fe…) | 0.2× | Always unlocked |
+| 🥈 Petty Officer | 31 elements — noble gases, halogens, metals | 0.4× | Always unlocked |
+| 🥇 Warrant Officer | 16 specialist heavy metals & transitions | 0.6× | Promotion Trial |
+| 🏆 Lieutenant | 47 elements — combined tiers 1–3 | 1× | Promotion Trial |
+| 👑 Captain | 82 elements — including rare metals | 1.3× | Promotion Trial |
+| ⚛️ Commodore | All 118 elements — full periodic table | 1.5× | Promotion Trial |
 
-Each rank card shows the element count and points-per-card at a glance. The rank row shows 2.5 cards per screen — scroll to see all six.
+Each rank card shows the element count and ฿ per card at a glance. The rank row shows 2.5 cards per screen — scroll to see all six.
+
+Passing a Promotion Trial unlocks the next rank and awards a one-time Berry bonus (lv3 +฿10k → lv6 +฿100k).
 
 ## First Visit
 

@@ -156,7 +156,7 @@ App (screen router + shared state)
 - `scoreRef` (useRef) used inside async callbacks to avoid stale closure bugs
 - `key={gameKey}` on game components forces full remount between rounds
 - `usePlayers()` hook manages player list + scores via Supabase (`eq_players` table)
-- Player objects: `{ id, name, age, icon, color, score, mastered_elements, is_admin, constellation_hash, auth_reset, highest_level }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`
+- Player objects: `{ id, name, age, icon, color, score, mastered_elements, is_admin, constellation_hash, auth_reset, highest_level, unlocked_levels, training_passes, trial_grades }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`
 - `mastered_elements` is a `jsonb` array of element symbols (e.g. `["H","O","Fe"]`) stored on the player row
 - `highest_level` is a difficulty ID string (`"lv1"`–`"lv6"`) — the highest level ever completed/quit by this player; shown as rank badge on their chip; `null` = 🧹 Chore Boy (never played)
 
@@ -179,7 +179,7 @@ App (screen router + shared state)
 - **Standalone (installed PWA):** shows `UpdateBanner` (full-screen blocking modal with backdrop blur); "Update Now" calls `updateServiceWorker(true)` → reloads; "Later" dismisses
 - **Browser (non-installed):** `setPendingUpdate(true)` → `useEffect` → `updateServiceWorker(true)` auto-applies silently
 - `onRegistered` sets up 5-minute poll (`r.update()`) and a `visibilitychange` listener to check for updates when the app is brought back to the foreground (Android PWA resume)
-- Before each deploy: update `public/release-notes.json` with bullet points for what changed
+- Before each deploy: update `public/release-notes.json` — format is `{ "sections": [{ "heading": "...", "notes": [...] }, ...] }`; newest version first, older versions below in dimmer style
 
 **ScrambleMode drag (works on mobile + desktop):**
 - Uses `onPointerMove` on the tile container + `document.elementFromPoint` to detect which tile the pointer is over — do NOT use `onPointerEnter` on tiles
@@ -209,7 +209,7 @@ App (screen router + shared state)
 - `getFlashDeck(difficulty, masteredSymbols)` deals 15 cards — unmastered first, topped up with mastered for review
 - "Mark done" adds the symbol to `mastered_elements` via `updateMastery()` and persists to Supabase
 - "Show again later" re-queues the card to the end of the current session deck (+1 pt)
-- Mastery is global (by symbol), not per-difficulty — mastering H in Starter carries over to Explorer
+- Mastery is global (by symbol), not per-difficulty — mastering H at Cadet carries over to Petty Officer and above
 
 **Difficulty levels (`LEVELS` array + `DIFF_MULT`):**
 - IDs: `lv1`–`lv6` (extensible — future admirals would be `lv7`+)
@@ -217,7 +217,7 @@ App (screen router + shared state)
 - `DIFF_MULT = { lv1: 0.2, lv2: 0.4, lv3: 0.6, lv4: 1.0, lv5: 1.3, lv6: 1.5 }`
 - Pool sizes: lv1=15 (tier 1), lv2=31 (tiers 1-2), lv3=16 (tier 3 only), lv4=47 (tiers 1-3), lv5=82 (tiers 1-4), lv6=118 (all)
 - `getLevelInfo(id)` — returns the LEVELS entry for a given ID
-- Rank selection row shows **2.5 cards** per screen width (`flex: "0 0 calc((100% - 15px) / 2.5)"`); scrollable to reach all 6; badges show full text ("15 elements", "2 pts/card")
+- Rank selection row shows **2.5 cards** per screen width (`flex: "0 0 calc((100% - 15px) / 2.5)"`); scrollable to reach all 6; badges show full text ("15 elements", "฿ 2/card")
 
 **Scoring (Berry ฿ currency):**
 - `DIFF_MULT[difficulty]` multiplier applied to all earned points in Quiz, Scramble, and Speed Blast; Flash Cards unaffected
@@ -268,7 +268,7 @@ App (screen router + shared state)
 ## Common Claude Code Tasks
 
 **"Add a new player field (e.g. avatar)"**
-→ Extend the player object in `usePlayers()` and the `AddPlayerModal` form. Player data lives in `eq_players` in localStorage.
+→ Extend the player object in `usePlayers()` and the `AddPlayerModal` form. Player data lives in the `eq_players` Supabase table.
 
 **"Add a new game mode"**
 → Add a new component (follow the pattern of QuizMode), add it to the mode list in HomeScreen, and route it in the App render block.
