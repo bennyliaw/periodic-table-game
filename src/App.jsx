@@ -1258,7 +1258,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
         }, 600);
       }, 450);
     };
-    const t = setInterval(cycle, 1500);
+    const t = setInterval(cycle, 5000);
     return () => clearInterval(t);
   }, []);
 
@@ -1270,12 +1270,12 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
         const picks = [...idles].sort(() => Math.random() - 0.5).slice(0, 3);
         return prev.map((s, i) => picks.includes(i) ? {
           ...s,
-          tx: (Math.random() - 0.5) * Math.min(window.innerWidth * 0.75, 380),
-          ty: (Math.random() - 0.5) * Math.min(window.innerHeight * 0.75, 520),
+          tx: (Math.random() - 0.5) * Math.min(window.innerWidth * 0.75, 760),
+          ty: (Math.random() - 0.5) * Math.min(window.innerHeight * 0.75, 1040),
         } : s);
       });
     };
-    const t = setInterval(wander, 500);
+    const t = setInterval(wander, 3000);
     return () => clearInterval(t);
   }, []);
 
@@ -1314,7 +1314,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
         const left = (i * 37 + 3) % 92;
         const top  = (i * 23 + 8) % 85;
         const animIdx = i % 8;
-        const dur = 3.2 + (i % 5) * 0.7;
+        const dur = 10 + (i % 5) * 3;
         const dly = (i * 0.18) % 2.5;
         const innerAnim = slot.phase === "in"
           ? `floatIn 0.5s ease-out both, wild${animIdx} ${dur}s ease-in-out 0.5s infinite`
@@ -1331,11 +1331,11 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
           }}>
             <div style={{
               transform: `translate(${slot.tx}px, ${slot.ty}px)`,
-              transition: frozen ? "none" : "transform 2s ease-in-out",
+              transition: frozen ? "none" : "transform 8s ease-in-out",
             }}>
               <div key={slot.cycleKey} style={{
                 color: GC[slot.el.group] || "#22d3ee",
-                fontSize: 16, fontFamily: "'Exo 2'", fontWeight: 900,
+                fontSize: 32, fontFamily: "'Exo 2'", fontWeight: 900,
                 animation: innerAnim,
               }}>{slot.el.symbol}</div>
             </div>
