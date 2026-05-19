@@ -154,8 +154,9 @@ App (screen router + shared state)
 - `scoreRef` (useRef) used inside async callbacks to avoid stale closure bugs
 - `key={gameKey}` on game components forces full remount between rounds
 - `usePlayers()` hook manages player list + scores via Supabase (`eq_players` table)
-- Player objects: `{ id, name, age, icon, color, score, mastered_elements, is_admin, constellation_hash, auth_reset }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`
+- Player objects: `{ id, name, age, icon, color, score, mastered_elements, is_admin, constellation_hash, auth_reset, highest_level }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`
 - `mastered_elements` is a `jsonb` array of element symbols (e.g. `["H","O","Fe"]`) stored on the player row
+- `highest_level` is a difficulty ID string (`"lv1"`–`"lv6"`) — the highest level ever completed/quit by this player; shown as rank badge on their chip; `null` = 🧹 Chore Boy (never played)
 
 **PWA update prompt:**
 - `registerType: 'prompt'` in `vite.config.js` — new SW waits instead of auto-applying
@@ -196,16 +197,25 @@ App (screen router + shared state)
 - "Show again later" re-queues the card to the end of the current session deck (+1 pt)
 - Mastery is global (by symbol), not per-difficulty — mastering H in Starter carries over to Explorer
 
+**Difficulty levels (`LEVELS` array + `DIFF_MULT`):**
+- IDs: `lv1`–`lv6` (extensible — future admirals would be `lv7`+)
+- Labels follow One Piece Marine ranks: 🥉 Cadet · 🥈 Petty Officer · 🥇 Warrant Officer · 🏆 Lieutenant · 👑 Captain · ⚛️ Commodore
+- `DIFF_MULT = { lv1: 0.2, lv2: 0.4, lv3: 0.6, lv4: 1.0, lv5: 1.3, lv6: 1.5 }`
+- Pool sizes: lv1=15 (tier 1), lv2=31 (tiers 1-2), lv3=16 (tier 3 only), lv4=47 (tiers 1-3), lv5=82 (tiers 1-4), lv6=118 (all)
+- `getLevelInfo(id)` — returns the LEVELS entry for a given ID
+
 **Scoring:**
-- `DIFF_MULT = { easy: 0.2, medium: 0.4, hard: 0.6, all: 1.0 }` — difficulty multiplier applied to all earned points in Quiz, Scramble, and Speed Blast; Flash Cards unaffected
+- `DIFF_MULT[difficulty]` multiplier applied to all earned points in Quiz, Scramble, and Speed Blast; Flash Cards unaffected
 - Points are `Math.round(base * DIFF_MULT[difficulty])` — base is 10 per correct answer (+2 per streak level in Quiz/Speed)
 - Quitting mid-round awards the accumulated score via `quitRound(earned)` (saves to Supabase and goes home); `onQuit` prop on Quiz/Scramble/Speed, separate from `onHome` which is used for pre-game back buttons
 - `pendingRef` in QuizMode and ScrambleMode cancels the post-answer setTimeout on unmount — prevents stale `onEnd` from firing and double-saving after a quit
+- `updateScore(id, earned, newHighestLevel)` — also updates `highest_level` if `newHighestLevel` is higher than current
 
 **Data:**
-- 47 elements in `ELEMENTS[]`, each with `{ name, symbol, number, group, tier }`
-- `tier: 1` = easy (15 elements), `tier: 2` = medium (+16), `tier: 3` = hard (+16)
-- Group colors in `GC` object — each element group has a distinct neon color
+- 118 elements in `ELEMENTS[]`, each with `{ name, symbol, number, group, tier }`
+- `tier: 1` = 15 elements, `tier: 2` = +16, `tier: 3` = +16, `tier: 4` = +35 ("known but uncommon"), `tier: 5` = +36 ("obscure/synthetic")
+- Group colors in `GC` object — includes `lanthanide` (#fb7185) added for tier 4/5 elements
+- ScrambleMode tile size is adaptive: `width: 28, fontSize: 13` for names > 9 chars; `34/16` otherwise
 
 ---
 
@@ -213,7 +223,11 @@ App (screen router + shared state)
 
 - [x] **Custom domain** — live at https://elements.demo.agentic-blueprint.com
 - [x] **Mobile PWA** — installable on Android via Chrome/Brave; iOS via Safari; update prompt with release notes
-- [ ] **More elements** — extend to all 118 with tier 4
+- [x] **All 118 elements** — tiers 1–5, 6 difficulty levels (lv1 Cadet → lv6 Commodore), One Piece Marine rank system
+- [x] **Rank badge on player chip** — 🧹 Chore Boy → 🥉🥈🥇🏆👑⚛️ based on `highest_level` field
+- [x] **Supabase migration** — `highest_level text` and `last_active timestamptz` columns added to `eq_players`
+- [ ] **Consider: lv3 Warrant Officer pool** — currently tier 3 only (16 elements, specialist track); consider whether it should be cumulative tiers 1–3 like Lieutenant. Revisit after kids play it.
+- [ ] **Level unlock system** — lv1 and lv2 unlocked by default; lv3–lv6 locked until player passes a "test round" at the previous level (earn a minimum score threshold). Unlocked status stored per-player in Supabase (`unlocked_levels jsonb`). Future admiral ranks (lv7+) follow same pattern.
 - [ ] **Atomic number quiz** — third game axis beyond name↔symbol
 - [ ] **Multiplayer** — real-time head-to-head via a simple WebSocket server
 

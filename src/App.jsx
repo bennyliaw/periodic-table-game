@@ -66,8 +66,80 @@ const ELEMENTS = [
   { name: "Germanium",  symbol: "Ge", number: 32, group: "metalloid",       tier: 3 },
   { name: "Arsenic",    symbol: "As", number: 33, group: "metalloid",       tier: 3 },
   { name: "Gallium",    symbol: "Ga", number: 31, group: "metal",           tier: 3 },
-  { name: "Strontium",  symbol: "Sr", number: 38, group: "alkaline-metal",  tier: 3 },
-  { name: "Radium",     symbol: "Ra", number: 88, group: "alkaline-metal",  tier: 3 },
+  { name: "Strontium",     symbol: "Sr", number: 38,  group: "alkaline-metal",  tier: 3 },
+  { name: "Radium",        symbol: "Ra", number: 88,  group: "alkaline-metal",  tier: 3 },
+  // tier 4 — "Known but uncommon"
+  { name: "Selenium",      symbol: "Se", number: 34,  group: "nonmetal",        tier: 4 },
+  { name: "Rubidium",      symbol: "Rb", number: 37,  group: "alkali-metal",    tier: 4 },
+  { name: "Yttrium",       symbol: "Y",  number: 39,  group: "transition-metal",tier: 4 },
+  { name: "Zirconium",     symbol: "Zr", number: 40,  group: "transition-metal",tier: 4 },
+  { name: "Niobium",       symbol: "Nb", number: 41,  group: "transition-metal",tier: 4 },
+  { name: "Molybdenum",    symbol: "Mo", number: 42,  group: "transition-metal",tier: 4 },
+  { name: "Technetium",    symbol: "Tc", number: 43,  group: "transition-metal",tier: 4 },
+  { name: "Ruthenium",     symbol: "Ru", number: 44,  group: "transition-metal",tier: 4 },
+  { name: "Rhodium",       symbol: "Rh", number: 45,  group: "transition-metal",tier: 4 },
+  { name: "Palladium",     symbol: "Pd", number: 46,  group: "transition-metal",tier: 4 },
+  { name: "Cadmium",       symbol: "Cd", number: 48,  group: "transition-metal",tier: 4 },
+  { name: "Indium",        symbol: "In", number: 49,  group: "metal",           tier: 4 },
+  { name: "Antimony",      symbol: "Sb", number: 51,  group: "metalloid",       tier: 4 },
+  { name: "Tellurium",     symbol: "Te", number: 52,  group: "metalloid",       tier: 4 },
+  { name: "Cesium",        symbol: "Cs", number: 55,  group: "alkali-metal",    tier: 4 },
+  { name: "Lanthanum",     symbol: "La", number: 57,  group: "lanthanide",      tier: 4 },
+  { name: "Cerium",        symbol: "Ce", number: 58,  group: "lanthanide",      tier: 4 },
+  { name: "Hafnium",       symbol: "Hf", number: 72,  group: "transition-metal",tier: 4 },
+  { name: "Tantalum",      symbol: "Ta", number: 73,  group: "transition-metal",tier: 4 },
+  { name: "Rhenium",       symbol: "Re", number: 75,  group: "transition-metal",tier: 4 },
+  { name: "Osmium",        symbol: "Os", number: 76,  group: "transition-metal",tier: 4 },
+  { name: "Iridium",       symbol: "Ir", number: 77,  group: "transition-metal",tier: 4 },
+  { name: "Thallium",      symbol: "Tl", number: 81,  group: "metal",           tier: 4 },
+  { name: "Bismuth",       symbol: "Bi", number: 83,  group: "metal",           tier: 4 },
+  { name: "Polonium",      symbol: "Po", number: 84,  group: "metalloid",       tier: 4 },
+  { name: "Astatine",      symbol: "At", number: 85,  group: "halogen",         tier: 4 },
+  { name: "Radon",         symbol: "Rn", number: 86,  group: "noble-gas",       tier: 4 },
+  { name: "Francium",      symbol: "Fr", number: 87,  group: "alkali-metal",    tier: 4 },
+  { name: "Actinium",      symbol: "Ac", number: 89,  group: "actinide",        tier: 4 },
+  { name: "Thorium",       symbol: "Th", number: 90,  group: "actinide",        tier: 4 },
+  { name: "Protactinium",  symbol: "Pa", number: 91,  group: "actinide",        tier: 4 },
+  { name: "Neptunium",     symbol: "Np", number: 93,  group: "actinide",        tier: 4 },
+  { name: "Plutonium",     symbol: "Pu", number: 94,  group: "actinide",        tier: 4 },
+  { name: "Americium",     symbol: "Am", number: 95,  group: "actinide",        tier: 4 },
+  { name: "Curium",        symbol: "Cm", number: 96,  group: "actinide",        tier: 4 },
+  // tier 5 — "Obscure / synthetic"
+  { name: "Praseodymium",  symbol: "Pr", number: 59,  group: "lanthanide",      tier: 5 },
+  { name: "Neodymium",     symbol: "Nd", number: 60,  group: "lanthanide",      tier: 5 },
+  { name: "Promethium",    symbol: "Pm", number: 61,  group: "lanthanide",      tier: 5 },
+  { name: "Samarium",      symbol: "Sm", number: 62,  group: "lanthanide",      tier: 5 },
+  { name: "Europium",      symbol: "Eu", number: 63,  group: "lanthanide",      tier: 5 },
+  { name: "Gadolinium",    symbol: "Gd", number: 64,  group: "lanthanide",      tier: 5 },
+  { name: "Terbium",       symbol: "Tb", number: 65,  group: "lanthanide",      tier: 5 },
+  { name: "Dysprosium",    symbol: "Dy", number: 66,  group: "lanthanide",      tier: 5 },
+  { name: "Holmium",       symbol: "Ho", number: 67,  group: "lanthanide",      tier: 5 },
+  { name: "Erbium",        symbol: "Er", number: 68,  group: "lanthanide",      tier: 5 },
+  { name: "Thulium",       symbol: "Tm", number: 69,  group: "lanthanide",      tier: 5 },
+  { name: "Ytterbium",     symbol: "Yb", number: 70,  group: "lanthanide",      tier: 5 },
+  { name: "Lutetium",      symbol: "Lu", number: 71,  group: "lanthanide",      tier: 5 },
+  { name: "Berkelium",     symbol: "Bk", number: 97,  group: "actinide",        tier: 5 },
+  { name: "Californium",   symbol: "Cf", number: 98,  group: "actinide",        tier: 5 },
+  { name: "Einsteinium",   symbol: "Es", number: 99,  group: "actinide",        tier: 5 },
+  { name: "Fermium",       symbol: "Fm", number: 100, group: "actinide",        tier: 5 },
+  { name: "Mendelevium",   symbol: "Md", number: 101, group: "actinide",        tier: 5 },
+  { name: "Nobelium",      symbol: "No", number: 102, group: "actinide",        tier: 5 },
+  { name: "Lawrencium",    symbol: "Lr", number: 103, group: "actinide",        tier: 5 },
+  { name: "Rutherfordium", symbol: "Rf", number: 104, group: "transition-metal",tier: 5 },
+  { name: "Dubnium",       symbol: "Db", number: 105, group: "transition-metal",tier: 5 },
+  { name: "Seaborgium",    symbol: "Sg", number: 106, group: "transition-metal",tier: 5 },
+  { name: "Bohrium",       symbol: "Bh", number: 107, group: "transition-metal",tier: 5 },
+  { name: "Hassium",       symbol: "Hs", number: 108, group: "transition-metal",tier: 5 },
+  { name: "Meitnerium",    symbol: "Mt", number: 109, group: "transition-metal",tier: 5 },
+  { name: "Darmstadtium",  symbol: "Ds", number: 110, group: "transition-metal",tier: 5 },
+  { name: "Roentgenium",   symbol: "Rg", number: 111, group: "transition-metal",tier: 5 },
+  { name: "Copernicium",   symbol: "Cn", number: 112, group: "transition-metal",tier: 5 },
+  { name: "Nihonium",      symbol: "Nh", number: 113, group: "metal",           tier: 5 },
+  { name: "Flerovium",     symbol: "Fl", number: 114, group: "metal",           tier: 5 },
+  { name: "Moscovium",     symbol: "Mc", number: 115, group: "metal",           tier: 5 },
+  { name: "Livermorium",   symbol: "Lv", number: 116, group: "metal",           tier: 5 },
+  { name: "Tennessine",    symbol: "Ts", number: 117, group: "halogen",         tier: 5 },
+  { name: "Oganesson",     symbol: "Og", number: 118, group: "noble-gas",       tier: 5 },
 ];
 
 const GC = {
@@ -80,6 +152,7 @@ const GC = {
   "transition-metal": "#22d3ee",
   "halogen":          "#f472b6",
   "actinide":         "#f87171",
+  "lanthanide":       "#fb7185",
 };
 
 const PLAYER_ICONS  = [
@@ -242,10 +315,16 @@ function usePlayers() {
     });
   }
 
-  async function updateScore(id, earned) {
+  async function updateScore(id, earned, newHighestLevel) {
     const player = players.find(p => p.id === id);
     if (!player) return;
-    await supabase.from("eq_players").update({ score: player.score + earned }).eq("id", id);
+    const update = { score: player.score + earned, last_active: new Date().toISOString() };
+    if (newHighestLevel) {
+      const curr = LEVELS.findIndex(l => l.id === player.highest_level);
+      const next = LEVELS.findIndex(l => l.id === newHighestLevel);
+      if (next > curr) update.highest_level = newHighestLevel;
+    }
+    await supabase.from("eq_players").update(update).eq("id", id);
   }
 
   async function updateMastery(id, symbols) {
@@ -288,13 +367,29 @@ function shuffle(arr) {
   return a;
 }
 
-const DIFF_MULT = { easy: 0.2, medium: 0.4, hard: 0.6, all: 1.0 };
+const DIFF_MULT = { lv1: 0.2, lv2: 0.4, lv3: 0.6, lv4: 1.0, lv5: 1.3, lv6: 1.5 };
+
+const LEVELS = [
+  { id: "lv1", icon: "🥉", label: "🥉 Cadet",           desc: "Your first training onboard. Drill the 15 most common elements found in nature.", elements: 15,  basePts: 2,  rank: "Cadet" },
+  { id: "lv2", icon: "🥈", label: "🥈 Petty Officer",   desc: "You've earned your first stripe. Expand to 31 elements — noble gases, halogens and everyday metals join the mix.",  elements: 31,  basePts: 4,  rank: "Petty Officer" },
+  { id: "lv3", icon: "🥇", label: "🥇 Warrant Officer", desc: "A new challenge entirely. These 16 elements are the ones that trip up even experienced sailors.",                  elements: 16,  basePts: 6,  rank: "Warrant Officer" },
+  { id: "lv4", icon: "🏆", label: "🏆 Lieutenant",      desc: "The combined challenge awaits. Prove mastery over all 47 elements learned in basic training.",                     elements: 47,  basePts: 10, rank: "Lieutenant" },
+  { id: "lv5", icon: "👑", label: "👑 Captain",         desc: "Deep waters ahead. 82 elements — including the rare metals that power modern technology.",                         elements: 82,  basePts: 15, rank: "Captain" },
+  { id: "lv6", icon: "⚛️", label: "⚛️ Commodore",       desc: "Command of the full periodic table. From Hydrogen to Oganesson — no element left behind.",                        elements: 118, basePts: 20, rank: "Commodore" },
+];
+
+function getLevelInfo(id) {
+  return LEVELS.find(l => l.id === id) ?? LEVELS[0];
+}
 
 function getPool(difficulty) {
-  return difficulty === "easy"   ? ELEMENTS.filter(e => e.tier === 1)
-       : difficulty === "medium" ? ELEMENTS.filter(e => e.tier <= 2)
-       : difficulty === "hard"   ? ELEMENTS.filter(e => e.tier === 3)
-       : ELEMENTS;
+  return difficulty === "lv1" ? ELEMENTS.filter(e => e.tier === 1)
+       : difficulty === "lv2" ? ELEMENTS.filter(e => e.tier <= 2)
+       : difficulty === "lv3" ? ELEMENTS.filter(e => e.tier === 3)
+       : difficulty === "lv4" ? ELEMENTS.filter(e => e.tier <= 3)
+       : difficulty === "lv5" ? ELEMENTS.filter(e => e.tier <= 4)
+       : difficulty === "lv6" ? ELEMENTS
+       : ELEMENTS.filter(e => e.tier === 1);
 }
 
 function getDeck(difficulty) {
@@ -594,8 +689,104 @@ function ConstellationModal({ title, subtitle, mode, storedHash, color, onSucces
   );
 }
 
-function PlayerChip({ p, isActive, score, onTap, onLongPress }) {
+function timeAgo(iso) {
+  if (!iso) return null;
+  const secs = Math.floor((Date.now() - new Date(iso)) / 1000);
+  if (secs < 60)  return "just now";
+  if (secs < 3600) return `${Math.floor(secs / 60)}m ago`;
+  if (secs < 86400) return `${Math.floor(secs / 3600)}h ago`;
+  const d = Math.floor(secs / 86400);
+  return d === 1 ? "yesterday" : `${d}d ago`;
+}
+
+const RANK_BLURB = {
+  null:  "Play your first round to earn a Marine rank!",
+  lv1:   "You know the basics! Ready to try Petty Officer?",
+  lv2:   "Solid foundation. Warrant Officer is calling.",
+  lv3:   "Impressive! Can you handle Lieutenant difficulty?",
+  lv4:   "You command the elements. Captain rank is within reach.",
+  lv5:   "Elite. Only Commodore stands above you — all 118 elements.",
+  lv6:   "You know all 118 elements. The Admirals await…",
+};
+
+function PlayerProfileCard({ p, score, isActive, onLogin, onSignOut, onClose }) {
+  const level   = p.highest_level || null;
+  const info    = level ? getLevelInfo(level) : null;
+  const rankIcon = info ? info.icon : "🧹";
+  const rankName = info ? info.rank : "Chore Boy";
+  const blurb    = RANK_BLURB[level];
+
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 500, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}
+         onClick={onClose}>
+      {/* backdrop */}
+      <div style={{ position: "absolute", inset: 0, background: "#070b14bb" }} />
+      <div onClick={e => e.stopPropagation()} style={{
+        position: "relative", background: "#0d1424",
+        border: `2px solid ${p.color}40`, borderRadius: "24px 24px 0 0",
+        padding: "24px 20px 36px", fontFamily: "'Nunito'",
+      }}>
+        {/* drag handle */}
+        <div style={{ width: 36, height: 4, background: "#1e293b", borderRadius: 2, margin: "0 auto 20px" }} />
+
+        {/* header */}
+        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}>
+          <div style={{ fontSize: 42 }}>{p.icon}</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ color: p.color, fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20 }}>{p.name}</div>
+            <div style={{ display: "flex", gap: 10, marginTop: 4, flexWrap: "wrap" }}>
+              {p.created_at && (
+                <span style={{ color: "#334155", fontSize: 12 }}>joined {timeAgo(p.created_at)}</span>
+              )}
+              {p.last_active && (
+                <span style={{ color: "#334155", fontSize: 12 }}>· active {timeAgo(p.last_active)}</span>
+              )}
+            </div>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <div style={{ fontSize: 28 }}>{rankIcon}</div>
+            <div style={{ color: "#475569", fontSize: 11, marginTop: 2, fontFamily: "'Exo 2'", fontWeight: 700 }}>{rankName}</div>
+          </div>
+        </div>
+
+        {/* rank blurb */}
+        <div style={{ background: "#0a0f1a", borderRadius: 14, padding: "12px 14px", marginBottom: 20,
+                      border: `1px solid ${p.color}20` }}>
+          <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.5 }}>{blurb}</div>
+        </div>
+
+        {/* score */}
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+          <div style={{ color: "#fbbf24", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 28 }}>
+            {score}<span style={{ fontSize: 13, opacity: 0.6, marginLeft: 4 }}>pts</span>
+          </div>
+        </div>
+
+        {/* actions */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {!isActive && (
+            <button onClick={onLogin} style={{
+              padding: "14px", background: `${p.color}18`, border: `2px solid ${p.color}`,
+              borderRadius: 14, color: p.color, fontFamily: "'Exo 2'", fontWeight: 700,
+              fontSize: 15, cursor: "pointer",
+            }}>✅ Play as {p.name}</button>
+          )}
+          {isActive && (
+            <button onClick={onSignOut} style={{
+              padding: "14px", background: "#0a0f1a", border: "2px solid #334155",
+              borderRadius: 14, color: "#64748b", fontFamily: "'Exo 2'", fontWeight: 700,
+              fontSize: 15, cursor: "pointer",
+            }}>Sign out</button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PlayerChip({ p, isActive, score, rank, onTap, onLongPress }) {
   const pressTimer = useRef(null);
+  const rankIcon = rank ? getLevelInfo(rank).icon : "🧹";
   return (
     <button
       onPointerDown={() => {
@@ -616,6 +807,7 @@ function PlayerChip({ p, isActive, score, onTap, onLongPress }) {
       {p.is_admin && (
         <span style={{ position: "absolute", top: 6, right: 6, fontSize: 12, lineHeight: 1, pointerEvents: "none" }}>👮</span>
       )}
+      <span style={{ position: "absolute", top: 6, left: 7, fontSize: 13, lineHeight: 1, pointerEvents: "none" }}>{rankIcon}</span>
       <div style={{ fontSize: 26, marginBottom: 3 }}>{p.icon}</div>
       <div style={{ color: isActive ? p.color : "#475569", fontFamily: "'Exo 2'", fontWeight: 700,
                     fontSize: 13, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 72 }}>
@@ -961,6 +1153,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   const [adminUnlockTime, setAdminUnlockTime] = useState(0);
   const [constellationModal, setConstellationModal] = useState(null);
   const [actionTarget, setActionTarget]       = useState(null);
+  const [profileTarget, setProfileTarget]     = useState(null);
 
   useEffect(() => {
     if (!adminUnlocked) return;
@@ -971,13 +1164,22 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   }, [adminUnlocked, adminUnlockTime]);
 
   function handlePlayerTap(p) {
-    if (p.id === activeId) { setActiveId(null); return; }
+    setProfileTarget(p);
+  }
+
+  function handleProfileLogin(p) {
+    setProfileTarget(null);
     if (!p.constellation_hash || p.auth_reset) {
       onSetActiveId(p.id);
       setConstellationModal({ mode: "setup", player: p, purpose: "login" });
     } else {
       setConstellationModal({ mode: "verify", player: p, purpose: "login" });
     }
+  }
+
+  function handleProfileSignOut() {
+    setProfileTarget(null);
+    setActiveId(null);
   }
 
   function handlePadlockClick() {
@@ -1033,6 +1235,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
         <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" }}>
           {players.map(p => (
             <PlayerChip key={p.id} p={p} isActive={activeId === p.id} score={scores[p.id] || 0}
+              rank={p.highest_level || null}
               onTap={handlePlayerTap}
               onLongPress={p => {
                 if (activePlayer?.is_admin) setActionTarget(p);
@@ -1054,30 +1257,36 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
       </Section>
 
       {/* Difficulty */}
-      <Section label="Difficulty">
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-          {[
-            { id: "easy",   label: "⭐ Starter",  desc: "15 elements · 0.2× pts" },
-            { id: "medium", label: "⭐⭐ Explorer", desc: "31 elements · 0.4× pts" },
-            { id: "hard",   label: "⭐⭐⭐ Expert", desc: "Trickiest · 0.6× pts" },
-            { id: "all",    label: "🔥 Legend",    desc: "All 47 · 1× pts" },
-          ].map(d => (
-            <button key={d.id} onClick={() => setDifficulty(d.id)} style={{
-              padding: "12px 10px", textAlign: "left",
-              background: difficulty === d.id ? "#1a2d4a" : "#0a0f1a",
-              border: `2px solid ${difficulty === d.id ? "#22d3ee" : "#1e293b"}`,
-              borderRadius: 14, transition: "all 0.2s",
-              boxShadow: difficulty === d.id ? "0 0 16px rgba(34,211,238,0.15)" : "none",
-            }}>
-              <div style={{ color: difficulty === d.id ? "#22d3ee" : "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13 }}>{d.label}</div>
-              <div style={{ color: "#1e293b", fontSize: 11, marginTop: 3 }}>{d.desc}</div>
-            </button>
-          ))}
+      <Section label="Select Your Rank">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+          {LEVELS.map(d => {
+            const active = difficulty === d.id;
+            return (
+              <button key={d.id} onClick={() => setDifficulty(d.id)} style={{
+                padding: "10px 8px", textAlign: "left",
+                background: active ? "#1a2d4a" : "#0a0f1a",
+                border: `2px solid ${active ? "#22d3ee" : "#1e293b"}`,
+                borderRadius: 14, transition: "all 0.2s",
+                boxShadow: active ? "0 0 16px rgba(34,211,238,0.15)" : "none",
+              }}>
+                <div style={{ color: active ? "#22d3ee" : "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 12 }}>{d.label}</div>
+                {d.desc && <div style={{ color: "#334155", fontSize: 10, marginTop: 3, lineHeight: 1.4 }}>{d.desc}</div>}
+                <div style={{ display: "flex", gap: 4, marginTop: 6, flexWrap: "wrap" }}>
+                  <span style={{ background: "#0d1a2d", border: "1px solid #1e293b", borderRadius: 6, padding: "2px 6px", fontSize: 10, color: "#475569" }}>
+                    {d.elements} elements
+                  </span>
+                  <span style={{ background: "#0d1a2d", border: "1px solid #1e293b", borderRadius: 6, padding: "2px 6px", fontSize: 10, color: "#475569" }}>
+                    {d.basePts} pts/card
+                  </span>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </Section>
 
       {/* Modes */}
-      <Section label="Choose Your Mode">
+      <Section label="Choose Your Training Mode">
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
           {(() => {
             const pool           = getPool(difficulty);
@@ -1100,6 +1309,18 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
           })()}
         </div>
       </Section>
+
+      {/* Player profile card */}
+      {profileTarget && (
+        <PlayerProfileCard
+          p={profileTarget}
+          score={scores[profileTarget.id] || 0}
+          isActive={profileTarget.id === activeId}
+          onLogin={() => handleProfileLogin(profileTarget)}
+          onSignOut={handleProfileSignOut}
+          onClose={() => setProfileTarget(null)}
+        />
+      )}
 
       {/* Constellation auth modal */}
       {constellationModal && (
@@ -1577,9 +1798,9 @@ function ScrambleMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
                 data-tile-idx={i}
                 onPointerDown={e => handlePointerDown(e, i)}
                 style={{
-                  width: 34, height: 40, borderRadius: 8,
+                  width: el.name.length > 9 ? 28 : 34, height: 40, borderRadius: 8,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  color, fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 16,
+                  color, fontFamily: "'Exo 2'", fontWeight: 700, fontSize: el.name.length > 9 ? 13 : 16,
                   cursor: dragIdx === i ? "grabbing" : "grab",
                   background: dragIdx === i ? `${color}25` : "#111827",
                   border: `2px solid ${dragIdx === i ? color : "#1e293b"}`,
@@ -1836,7 +2057,7 @@ function UpdateBanner({ notes, onUpdate, onDismiss }) {
 export default function ElementQuest() {
   const [screen, setScreen]   = useState("home");
   const [mode, setMode]       = useState(null);
-  const [difficulty, setDifficulty] = useState("easy");
+  const [difficulty, setDifficulty] = useState("lv1");
   const [lastScore, setLastScore] = useState(0);
   const [gameKey, setGameKey] = useState(0);
   const [showAddPlayer, setShowAddPlayer] = useState(false);
@@ -1904,13 +2125,13 @@ export default function ElementQuest() {
 
   function endRound(earned, perfect = false) {
     setLastScore(earned);
-    if (activePlayer) updateScore(activePlayer.id, earned);
+    if (activePlayer) updateScore(activePlayer.id, earned, difficulty);
     play(perfect ? "perfect" : "roundEnd");
     setScreen("results");
   }
 
   function quitRound(earned) {
-    if (activePlayer && earned > 0) updateScore(activePlayer.id, earned);
+    if (activePlayer && earned > 0) updateScore(activePlayer.id, earned, difficulty);
     setScreen("home");
   }
 

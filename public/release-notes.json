@@ -1,10 +1,7 @@
 {
   "notes": [
-    "Move up difficulty now earns more scoring :)",
-    "Fix a bug reported by Justin — SpeedMode no longer stops at 45 cards!",
-    "Android drag-and-drop fixed in Scramble mode",
-    "Streak bonus added to Speed Blast",
-    "New streak celebration phrases",
-    "Tap your active player chip to sign out"
+    "All 118 elements unlocked — 6 Marine ranks from Cadet to Commodore!",
+    "New rank system: earn your Marine rank and climb from Cadet to Commodore",
+    "Tap any player to see their Marine rank, score and activity"
   ]
 }

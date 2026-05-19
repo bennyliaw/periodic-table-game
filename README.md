@@ -35,6 +35,10 @@ alter table eq_players add column mastered_elements jsonb default '[]'::jsonb;
 alter table eq_players add column is_admin boolean default false;
 alter table eq_players add column constellation_hash text;
 alter table eq_players add column auth_reset boolean default true;
+
+-- Rank badge + activity tracking
+alter table eq_players add column highest_level text;
+alter table eq_players add column last_active timestamptz;
 ```
 
 Then go to **Project Settings → API** and copy your Project URL and `anon public` key into a `.env.local` file in the project root:
