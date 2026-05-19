@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { supabase } from "./supabase.js";
 import { useRegisterSW } from 'virtual:pwa-register/react';
 
@@ -406,10 +406,10 @@ const DIFF_MULT = { lv1: 0.2, lv2: 0.4, lv3: 0.6, lv4: 1.0, lv5: 1.3, lv6: 1.5 }
 
 const LEVELS = [
   { id: "lv1", icon: "🥉", label: "🥉 Cadet",           line1: "Your first training onboard.",        line2: "Drill the 15 most common elements found in nature.",                              elements: 15,  basePts: 2,  rank: "Cadet" },
-  { id: "lv2", icon: "🥈", label: "🥈 Petty Officer",   line1: "You've earned your first stripe.",    line2: "Expand to 31 elements — noble gases, halogens and everyday metals join the mix.", elements: 31,  basePts: 4,  rank: "Petty Officer" },
-  { id: "lv3", icon: "🥇", label: "🥇 Warrant Officer", line1: "A new challenge entirely.",           line2: "Heavy metals and transitions — these 16 elements trip up even experienced sailors.", elements: 16, basePts: 6,  rank: "Warrant Officer" },
+  { id: "lv2", icon: "🥈", label: "🥈 Petty Officer",   line1: "You've earned your first stripe.",    line2: "Now noble gases, halogens and everyday metals join the mix.", elements: 31,  basePts: 4,  rank: "Petty Officer" },
+  { id: "lv3", icon: "🥇", label: "🥇 Warrant Officer", line1: "A new challenge entirely.",           line2: "Heavy metals and transitions to stop inexperienced sailors.", elements: 16, basePts: 6,  rank: "Warrant Officer" },
   { id: "lv4", icon: "🏆", label: "🏆 Lieutenant",      line1: "The combined challenge awaits.",      line2: "Prove mastery over all 47 elements learned in basic training.",                   elements: 47,  basePts: 10, rank: "Lieutenant" },
-  { id: "lv5", icon: "👑", label: "👑 Captain",         line1: "Deep waters ahead.",                 line2: "82 elements — including the rare metals that power modern technology.",            elements: 82,  basePts: 15, rank: "Captain" },
+  { id: "lv5", icon: "👑", label: "👑 Captain",         line1: "Deep waters ahead.",                 line2: "Including the rare metals that power modern technology.",            elements: 82,  basePts: 15, rank: "Captain" },
   { id: "lv6", icon: "⚛️", label: "⚛️ Commodore",       line1: "Command of the full periodic table.", line2: "From Hydrogen to Oganesson — no element left behind.",                           elements: 118, basePts: 20, rank: "Commodore" },
 ];
 
