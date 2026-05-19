@@ -1258,7 +1258,7 @@ function RoomCodeBar({ roomId, onJoin }) {
 // ═══════════════════════════════════════════
 
 function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onAddPlayer, roomId, joinRoom,
-                      difficulty, setDifficulty, onStart, activePlayer,
+                      difficulty, setDifficulty, onStart, onStartTrial, activePlayer,
                       setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation }) {
   const [adminUnlocked, setAdminUnlocked]     = useState(false);
   const [adminUnlockTime, setAdminUnlockTime] = useState(0);
@@ -1540,29 +1540,65 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
         <div ref={rankScrollRef} onWheel={handleRankWheel}
           style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none", scrollBehavior: "smooth", width: "100%" }}>
           {LEVELS.map(d => {
-            const active = difficulty === d.id;
+            const active       = difficulty === d.id;
+            const unlocked     = isLevelUnlocked(activePlayer, d.id);
+            const hasTrialChip = d.id !== "lv1";
+            const trialGrade   = hasTrialChip ? getTrialGrade(activePlayer, d.id) : null;
+            const prereqsMet   = hasTrialChip && promotionPrereqsMet(activePlayer, d.id);
+            const canAttempt   = !unlocked && prereqsMet && !!activePlayer;
             return (
-              <button key={d.id} onClick={() => setDifficulty(d.id)}
+              <button key={d.id}
+                onClick={() => unlocked && setDifficulty(d.id)}
                 style={{
-                flex: "0 0 calc((100% - 15px) / 2.5)", padding: "7px 8px", textAlign: "left",
-                background: active ? "rgba(26,45,74,0.65)" : "rgba(10,15,26,0.6)",
-                border: `2px solid ${active ? "#22d3ee" : "#1e293b"}`,
-                borderRadius: 14, transition: "all 0.2s",
-                boxShadow: active ? "0 0 16px rgba(34,211,238,0.15)" : "none",
-                cursor: "pointer",
-              }}>
+                  flex: "0 0 calc((100% - 15px) / 2.5)", padding: "7px 8px", textAlign: "left",
+                  position: "relative",
+                  background: active && unlocked ? "rgba(26,45,74,0.65)" : "rgba(10,15,26,0.6)",
+                  border: `2px solid ${active && unlocked ? "#22d3ee" : "#1e293b"}`,
+                  borderRadius: 14, transition: "all 0.2s",
+                  boxShadow: active && unlocked ? "0 0 16px rgba(34,211,238,0.15)" : "none",
+                  cursor: unlocked ? "pointer" : "default",
+                  opacity: unlocked ? 1 : 0.6,
+                }}>
+                {!unlocked && <span style={{ position: "absolute", top: 4, left: 5, fontSize: 9 }}>🔒</span>}
                 <div style={{ fontSize: 15, marginBottom: 2, textAlign: "center" }}>{d.icon}</div>
-                <div style={{ color: active ? "#22d3ee" : "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 10, marginBottom: 3, textAlign: "center" }}>{d.label.replace(/^.{2}\s/, "")}</div>
-                <div style={{ color: active ? "#94a3b8" : "#64748b", fontSize: 10, lineHeight: 1.3, fontWeight: 600 }}>{d.line1}</div>
-                <div style={{ color: active ? "#64748b" : "#475569", fontSize: 10, marginTop: 2, lineHeight: 1.3 }}>{d.line2}</div>
-                <div style={{ display: "flex", gap: 3, marginTop: 4, flexWrap: "wrap" }}>
+                <div style={{ color: active && unlocked ? "#22d3ee" : "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 10, marginBottom: 3, textAlign: "center" }}>{d.label.replace(/^.{2}\s/, "")}</div>
+                {unlocked ? (
+                  <>
+                    <div style={{ color: active ? "#94a3b8" : "#64748b", fontSize: 10, lineHeight: 1.3, fontWeight: 600 }}>{d.line1}</div>
+                    <div style={{ color: active ? "#64748b" : "#475569", fontSize: 10, marginTop: 2, lineHeight: 1.3 }}>{d.line2}</div>
+                  </>
+                ) : (
+                  <div style={{ color: "#334155", fontSize: 9, lineHeight: 1.3, marginBottom: 2 }}>Complete training to unlock</div>
+                )}
+                <div style={{ display: "flex", gap: 3, marginTop: 4, flexWrap: "wrap", alignItems: "center" }}>
                   <span style={{ background: "rgba(13,26,45,0.7)", border: "1px solid #1e293b", borderRadius: 5, padding: "1px 4px", fontSize: 8, color: "#64748b" }}>
                     {d.elements} elements
                   </span>
                   <span style={{ background: "rgba(13,26,45,0.7)", border: "1px solid #1e293b", borderRadius: 5, padding: "1px 4px", fontSize: 8, color: "#64748b" }}>
                     ฿ {d.basePts}/card
                   </span>
+                  {hasTrialChip && activePlayer && (
+                    <span
+                      onClick={e => { e.stopPropagation(); if (unlocked || prereqsMet) onStartTrial(d.id); }}
+                      style={{
+                        opacity: (!unlocked && !prereqsMet) ? 0.35 : 1,
+                        border: "1px solid #1e293b", borderRadius: 5, padding: "1px 4px",
+                        fontSize: 8, background: "rgba(13,26,45,0.7)", color: "#64748b",
+                        cursor: (!unlocked && !prereqsMet) ? "default" : "pointer",
+                      }}>
+                      ⚔️ {trialGrade ? GRADE_ICON[trialGrade] : "—"}
+                    </span>
+                  )}
                 </div>
+                {canAttempt && (
+                  <div onClick={e => { e.stopPropagation(); onStartTrial(d.id); }}
+                    style={{ marginTop: 5, width: "100%", padding: "3px 0",
+                             border: "1px solid #fbbf24", borderRadius: 6, color: "#fbbf24",
+                             background: "rgba(251,191,36,0.08)", fontSize: 8, fontWeight: 700,
+                             textAlign: "center", cursor: "pointer" }}>
+                    ⚔️ Attempt Promotion
+                  </div>
+                )}
               </button>
             );
           })}
@@ -1600,7 +1636,11 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
               { id: "quiz",      icon: "⚡", label: "Symbol Quiz",   desc: "Pick the right symbol" },
               { id: "scramble",  icon: "🔤", label: "Name Scramble", desc: "Spell from the symbol" },
               { id: "speed",     icon: "🚀", label: "Speed Blast",   desc: "30-second frenzy!" },
-            ].map(m => <ModeCard key={m.id} {...m} onClick={() => onStart(m.id)} />);
+            ].map(m => {
+              const modeGrade = activePlayer ? getTrainingGrade(activePlayer, difficulty, m.id) : undefined;
+              const badge = activePlayer ? (modeGrade ? GRADE_ICON[modeGrade] : null) : undefined;
+              return <ModeCard key={m.id} {...m} badge={badge} onClick={() => onStart(m.id)} />;
+            });
           })()}
         </div>
       </Section>
@@ -1721,16 +1761,21 @@ function Section({ label, children }) {
   );
 }
 
-function ModeCard({ icon, label, desc, onClick, extra }) {
+function ModeCard({ icon, label, desc, onClick, extra, badge }) {
   const [h, setH] = useState(false);
   return (
     <button onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} style={{
-      padding: "18px 12px", textAlign: "center",
+      padding: "18px 12px", textAlign: "center", position: "relative",
       background: h ? "rgba(17,24,39,0.7)" : "rgba(10,15,26,0.6)",
       border: `2px solid ${h ? "#22d3ee" : "#1e293b"}`,
       borderRadius: 18, transition: "all 0.18s",
       boxShadow: h ? "0 0 22px rgba(34,211,238,0.14)" : "none",
     }}>
+      {badge !== undefined && (
+        badge
+          ? <span style={{ position: "absolute", top: 6, right: 7, fontSize: 12 }}>{badge}</span>
+          : <span style={{ position: "absolute", top: 7, right: 8, fontSize: 9, color: "#334155" }}>—</span>
+      )}
       <div style={{ fontSize: 30, marginBottom: 8 }}>{icon}</div>
       <div style={{ color: h ? "#e2e8f0" : "#94a3b8", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14 }}>{label}</div>
       <div style={{ color: "#475569", fontSize: 11, marginTop: 4 }}>{desc}</div>
@@ -2518,7 +2563,7 @@ export default function ElementQuest() {
           onAddPlayer={() => setShowAddPlayer(true)}
           roomId={roomId} joinRoom={joinRoom}
           difficulty={difficulty} setDifficulty={setDifficulty}
-          onStart={startGame}
+          onStart={startGame} onStartTrial={startTrial}
           setAdminStatus={setAdminStatus}
           deletePlayer={deletePlayer}
           resetPlayerAuth={resetPlayerAuth}
