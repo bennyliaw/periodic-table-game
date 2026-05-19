@@ -349,10 +349,45 @@ function usePlayers() {
     await supabase.from("eq_players").update({ constellation_hash: hash, auth_reset: false }).eq("id", id);
   }
 
+  async function saveTrainingPass(id, levelId, mode, grade) {
+    if (!grade) return;
+    const player = players.find(p => p.id === id);
+    if (!player) return;
+    const current = player.training_passes ?? {};
+    const existing = current[levelId]?.[mode];
+    if (existing && GRADE_ORDER[existing] >= GRADE_ORDER[grade]) return;
+    const updated = { ...current, [levelId]: { ...(current[levelId] ?? {}), [mode]: grade } };
+    await supabase.from("eq_players").update({ training_passes: updated }).eq("id", id);
+  }
+
+  async function saveTrialGrade(id, levelId, grade) {
+    if (!grade) return;
+    const player = players.find(p => p.id === id);
+    if (!player) return;
+    const current = player.trial_grades ?? {};
+    if (current[levelId] && GRADE_ORDER[current[levelId]] >= GRADE_ORDER[grade]) return;
+    await supabase.from("eq_players").update({ trial_grades: { ...current, [levelId]: grade } }).eq("id", id);
+  }
+
+  async function unlockLevel(id, levelId) {
+    const player = players.find(p => p.id === id);
+    if (!player) return;
+    const current = player.unlocked_levels ?? ["lv1", "lv2"];
+    if (current.includes(levelId)) return;
+    const bonus = UNLOCK_BONUS[levelId] ?? 0;
+    await supabase.from("eq_players").update({
+      unlocked_levels: [...current, levelId],
+      score: (player.score ?? 0) + bonus,
+      last_active: new Date().toISOString(),
+    }).eq("id", id);
+  }
+
   const scores = Object.fromEntries(players.map(p => [p.id, p.score]));
   const activePlayer = players.find(p => p.id === activeId) || null;
   return { players, scores, activePlayer, setActiveId, addPlayer, updateScore, updateMastery,
-           setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation, roomId, joinRoom, loaded };
+           setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
+           saveTrainingPass, saveTrialGrade, unlockLevel,
+           roomId, joinRoom, loaded };
 }
 
 // ═══════════════════════════════════════════
@@ -408,6 +443,57 @@ function getFlashDeck(difficulty, masteredSymbols) {
 function getChoices(correct) {
   const wrong = shuffle(ELEMENTS.filter(e => e.symbol !== correct.symbol)).slice(0, 3);
   return shuffle([correct, ...wrong]);
+}
+
+// ═══════════════════════════════════════════
+// LEVEL UNLOCK SYSTEM — CONSTANTS + HELPERS
+// ═══════════════════════════════════════════
+const UNLOCK_BONUS = { lv3: 10000, lv4: 25000, lv5: 50000, lv6: 100000 };
+const GRADE_ORDER  = { pass: 1, merit: 2, distinction: 3 };
+const GRADE_ICON   = { pass: "🔵", merit: "💜", distinction: "💫" };
+const MODE_KEYS    = ["flashcard", "quiz", "scramble", "speed"];
+
+function fmtBerry(n, prefix = true) {
+  const num = n < 1000 ? String(n)
+    : n < 10000 ? (n / 1000).toFixed(1).replace(/\.0$/, "") + "k"
+    : Math.floor(n / 1000) + "k";
+  return prefix ? "฿ " + num : num;
+}
+
+function isLevelUnlocked(player, levelId) {
+  return (player?.unlocked_levels ?? ["lv1", "lv2"]).includes(levelId);
+}
+
+function trialPoolLevel(targetLevelId) {
+  const i = LEVELS.findIndex(l => l.id === targetLevelId);
+  return i > 0 ? LEVELS[i - 1].id : null;
+}
+
+function getTrainingGrade(player, levelId, mode) {
+  return player?.training_passes?.[levelId]?.[mode] ?? null;
+}
+
+function getTrialGrade(player, levelId) {
+  return player?.trial_grades?.[levelId] ?? null;
+}
+
+function trainingGradeFromAccuracy(correct, total) {
+  const pct = correct / total;
+  if (pct >= 0.9) return "distinction";
+  if (pct >= 0.8) return "merit";
+  if (pct >= 0.6) return "pass";
+  return null;
+}
+
+function promotionPrereqsMet(player, targetLevelId) {
+  if (!player) return false;
+  const poolLvl = trialPoolLevel(targetLevelId);
+  if (!poolLvl) return false;
+  const pool = getPool(poolLvl);
+  const mastered = player.mastered_elements ?? [];
+  if (pool.filter(e => mastered.includes(e.symbol)).length / pool.length < 0.75) return false;
+  const passes = player.training_passes?.[poolLvl] ?? {};
+  return MODE_KEYS.every(m => passes[m] != null);
 }
 
 // ═══════════════════════════════════════════
@@ -764,7 +850,7 @@ function PlayerProfileCard({ p, score, isActive, onLogin, onSignOut, onClose }) 
         {/* score */}
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
           <div style={{ color: "#fbbf24", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 28 }}>
-            {score}<span style={{ fontSize: 13, opacity: 0.6, marginLeft: 4 }}>pts</span>
+            ฿ {score.toLocaleString()}
           </div>
         </div>
 
@@ -840,7 +926,7 @@ function PlayerChip({ p, isActive, score, rank, onTap, onLongPress }) {
         {p.name}
       </div>
       <div style={{ color: isActive ? "#fbbf24" : "#64748b", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20, marginTop: 2 }}>
-        {score}<span style={{ fontSize: 11, opacity: 0.6, marginLeft: 2 }}>pts</span>
+        {fmtBerry(score)}
       </div>
     </button>
   );
@@ -1474,7 +1560,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
                     {d.elements} elements
                   </span>
                   <span style={{ background: "rgba(13,26,45,0.7)", border: "1px solid #1e293b", borderRadius: 5, padding: "1px 4px", fontSize: 8, color: "#64748b" }}>
-                    {d.basePts} pts/card
+                    ฿ {d.basePts}/card
                   </span>
                 </div>
               </button>
@@ -1752,10 +1838,10 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onHome,
         {flipped ? (
           <div style={{ display: "flex", gap: 14, width: "100%" }}>
             <button onClick={() => next("again")} style={{ flex: 1, padding: 16, background: "#160a0a", border: "2px solid #ef4444", borderRadius: 18, color: "#ef4444", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13 }}>
-              📖 Show again later +1
+              📖 Show again later +฿1
             </button>
             <button onClick={() => next("done")} style={{ flex: 1, padding: 16, background: "#091508", border: "2px solid #4ade80", borderRadius: 18, color: "#4ade80", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13, boxShadow: "0 0 22px rgba(74,222,128,0.22)" }}>
-              ✅ Mark done +5
+              ✅ Mark done +฿5
             </button>
           </div>
         ) : (
@@ -1838,7 +1924,7 @@ function QuizMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
         <div style={{ color: "#1e293b", fontSize: 13, marginBottom: 10, letterSpacing: 1 }}>What is the symbol for…</div>
         <div style={{ color: "#f1f5f9", fontSize: 40, fontFamily: "'Exo 2'", fontWeight: 900 }}>{el.name}</div>
         <div style={{ color, fontSize: 12, marginTop: 6, opacity: 0.6 }}>Element #{el.number}</div>
-        {streak >= 2 && <div style={{ color: "#fb923c", fontSize: 13, marginTop: 8, fontWeight: 700 }}>🔥 {streak}x streak! +{streak * 2} bonus</div>}
+        {streak >= 2 && <div style={{ color: "#fb923c", fontSize: 13, marginTop: 8, fontWeight: 700 }}>🔥 {streak}x streak! +฿ {streak * 2} bonus</div>}
       </div>
 
       {/* 2×2 Choices */}
@@ -2040,13 +2126,13 @@ function ScrambleMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
             }}
           />
           {hint && <div style={{ color: "#fbbf24", fontSize: 13, textAlign: "center", marginTop: 8 }}>💡 Starts with "{el.name[0]}", {el.name.length} letters</div>}
-          {feedback === "correct" && <div style={{ color: "#4ade80", fontSize: 16, textAlign: "center", marginTop: 8, fontWeight: 800 }}>✨ Correct! +{hint ? 5 : 10} pts</div>}
+          {feedback === "correct" && <div style={{ color: "#4ade80", fontSize: 16, textAlign: "center", marginTop: 8, fontWeight: 800 }}>✨ Correct! +฿ {hint ? 5 : 10}</div>}
         </div>
 
         <div style={{ display: "flex", gap: 10, width: "100%" }}>
           {!hint && (
             <button onClick={() => setHint(true)} style={{ flex: 1, padding: 14, background: "#111827", border: "2px solid #1e293b", borderRadius: 14, color: "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13 }}>
-              💡 Hint (−5pts)
+              💡 Hint (−฿5)
             </button>
           )}
           <button onClick={submit} style={{ flex: 2, padding: 14, background: "#081a2a", border: "2px solid #22d3ee", borderRadius: 14, color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15, boxShadow: "0 0 18px rgba(34,211,238,0.16)" }}>
@@ -2200,7 +2286,7 @@ function ResultsScreen({ activePlayer, players, scores, lastRoundScore, onHome, 
       </div>
       <div style={{ color: "#f1f5f9", fontSize: 24, fontFamily: "'Exo 2'", fontWeight: 900, marginBottom: 6 }}>{msg}</div>
       <div style={{ color: "#fbbf24", fontSize: 42, fontFamily: "'Exo 2'", fontWeight: 900, marginBottom: 28 }}>
-        +{lastRoundScore}<span style={{ fontSize: 18, opacity: 0.6, marginLeft: 4 }}>pts</span>
+        +{fmtBerry(lastRoundScore)}
       </div>
 
       {/* Scoreboard */}
@@ -2215,7 +2301,7 @@ function ResultsScreen({ activePlayer, players, scores, lastRoundScore, onHome, 
                 <span style={{ color: p.id === activePlayer?.id ? p.color : "#334155", fontFamily: "'Exo 2'", fontWeight: 700 }}>{p.name}</span>
                 {isLeader && <span style={{ color: "#fbbf24", fontSize: 12 }}>👑</span>}
               </div>
-              <div style={{ color: p.color, fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 26 }}>{scores[p.id] || 0}</div>
+              <div style={{ color: p.color, fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 26 }}>{fmtBerry(scores[p.id] || 0)}</div>
             </div>
           );
         })}
