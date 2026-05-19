@@ -107,7 +107,8 @@ Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in **Netlify → Site Setti
 | 🃏 Flash Cards | Flip card to reveal symbol. 15-card sessions, mastery tracked per player. |
 | ⚡ Symbol Quiz | 4-choice quiz with streak bonuses. Score multiplied by difficulty. |
 | 🔤 Name Scramble | Given the symbol, drag tiles to unscramble (or type) the element name — works on mobile touch and desktop. Score multiplied by difficulty. |
-| 🚀 Speed Blast | 60-second rapid-fire quiz with streak bonuses. Score multiplied by difficulty. |
+| 🚀 Speed Blast | 30-second rapid-fire quiz with streak bonuses. Score multiplied by difficulty. |
+| ⚔️ Promotion Trial | 60-second, 30-question gauntlet (MC + type-in) that unlocks the next rank on pass. |
 
 Quitting a round mid-way still awards the accumulated score to the player's total.
 
@@ -176,7 +177,7 @@ Any INSERT (new player) or UPDATE (score change) in that room is broadcast to al
 - [x] Per-player element mastery tracking
 - [x] All 118 elements across 6 difficulty levels (One Piece Marine ranks: Cadet → Commodore)
 - [x] Rank badge on player chip based on highest level completed
-- [ ] Level unlock system — lv3–lv6 locked until player passes a test round at the previous level
+- [x] Level unlock system — lv3–lv6 locked; earn training badges then attempt Promotion Trial to unlock
 - [ ] Atomic number quiz mode
 - [ ] Multiplayer — real-time head-to-head
 

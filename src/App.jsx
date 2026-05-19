@@ -2322,6 +2322,261 @@ function SpeedMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
 }
 
 // ═══════════════════════════════════════════
+// PROMOTION TRIAL MODE
+// ═══════════════════════════════════════════
+
+function generateTrialQuestions(pool) {
+  const cCount = 5 + Math.floor(Math.random() * 4); // 5–8 type-in
+  const rem = 30 - cCount;
+  const aExtra = Math.floor(Math.random() * (rem - 9)); // at least 5 for each of A and B
+  const aCount = 5 + aExtra;
+  const bCount = rem - aCount;
+  const qs = [];
+  for (let i = 0; i < aCount; i++) {
+    const el = pool[Math.floor(Math.random() * pool.length)];
+    const dist = shuffle(pool.filter(e => e.symbol !== el.symbol)).slice(0, 3);
+    qs.push({ type: "A", el, choices: shuffle([...dist, el]) });
+  }
+  for (let i = 0; i < bCount; i++) {
+    const el = pool[Math.floor(Math.random() * pool.length)];
+    const dist = shuffle(pool.filter(e => e.symbol !== el.symbol)).slice(0, 3);
+    qs.push({ type: "B", el, choices: shuffle([...dist, el]) });
+  }
+  for (let i = 0; i < cCount; i++) {
+    const el = pool[Math.floor(Math.random() * pool.length)];
+    qs.push({ type: "C", el });
+  }
+  return shuffle(qs);
+}
+
+function calcTrialGrade(correct, score, maxScore) {
+  const pct = maxScore > 0 ? score / maxScore : 0;
+  if (correct >= 28 && pct >= 0.92) return "distinction";
+  if (correct >= 24 && pct >= 0.80) return "merit";
+  if (correct >= 20 && pct >= 0.60) return "pass";
+  return null;
+}
+
+function TrialGame({ questions, targetLevel, wasUnlocked, onResult, onRetry, onHome }) {
+  const TOTAL_TIME = 60;
+  const maxScore = questions.reduce((s, q) => s + (q.type === "C" ? 15 : 5), 0);
+
+  const [timeLeft, setTimeLeft]       = useState(TOTAL_TIME);
+  const [qIdx, setQIdx]               = useState(0);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [score, setScore]             = useState(0);
+  const [phase, setPhase]             = useState("playing"); // "playing" | "feedback" | "complete"
+  const [feedback, setFeedback]       = useState(null);      // null | "correct" | "wrong"
+  const [typedInput, setTypedInput]   = useState("");
+  const [resultGrade, setResultGrade] = useState(null);
+
+  const scoreRef     = useRef(0);
+  const correctRef   = useRef(0);
+  const phaseRef     = useRef("playing");
+  const feedbackRef  = useRef(null);
+
+  const targetLevelInfo = getLevelInfo(targetLevel);
+
+  function finishTrial() {
+    if (phaseRef.current === "complete") return;
+    phaseRef.current = "complete";
+    const grade = calcTrialGrade(correctRef.current, scoreRef.current, maxScore);
+    setResultGrade(grade);
+    setPhase("complete");
+    onResult(grade);
+  }
+
+  useEffect(() => {
+    if (phase !== "playing") return;
+    if (timeLeft <= 0) { finishTrial(); return; }
+    const id = setTimeout(() => setTimeLeft(t => t - 1), 1000);
+    return () => clearTimeout(id);
+  }, [timeLeft, phase]);
+
+  useEffect(() => {
+    return () => { if (feedbackRef.current) clearTimeout(feedbackRef.current); };
+  }, []);
+
+  function advanceQ() {
+    const nextIdx = qIdx + 1;
+    if (nextIdx >= questions.length) {
+      finishTrial();
+    } else {
+      setQIdx(nextIdx);
+      setTypedInput("");
+      setFeedback(null);
+      setPhase("playing");
+    }
+  }
+
+  function handleAnswer(isCorrect) {
+    if (phaseRef.current !== "playing") return;
+    phaseRef.current = "feedback";
+    const q = questions[qIdx];
+    const pts = isCorrect ? (q.type === "C" ? 15 : 5) : 0;
+    if (isCorrect) {
+      correctRef.current++;
+      scoreRef.current += pts;
+      setCorrectCount(c => c + 1);
+      setScore(s => s + pts);
+    }
+    setFeedback(isCorrect ? "correct" : "wrong");
+    setPhase("feedback");
+    if (feedbackRef.current) clearTimeout(feedbackRef.current);
+    feedbackRef.current = setTimeout(() => {
+      phaseRef.current = "playing";
+      advanceQ();
+    }, 500);
+  }
+
+  useEffect(() => {
+    if (phase !== "playing") return;
+    const q = questions[qIdx];
+    if (q?.type === "C" && typedInput.length > 0 && typedInput.length === q.el.symbol.length) {
+      handleAnswer(typedInput.trim().toUpperCase() === q.el.symbol.toUpperCase());
+    }
+  }, [typedInput]);
+
+  const q = questions[qIdx];
+  const timePct = timeLeft / TOTAL_TIME;
+  const fuseColor = timeLeft > 15 ? "#4ade80" : timeLeft > 5 ? "#fb923c" : "#ef4444";
+  const unlockBonus = UNLOCK_BONUS[targetLevel] ?? 0;
+
+  if (phase === "complete") {
+    const grade = resultGrade;
+    return (
+      <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px 20px", fontFamily: "'Nunito'", textAlign: "center" }}>
+        <div style={{ fontSize: 72, marginBottom: 8 }}>{grade ? GRADE_ICON[grade] : "💔"}</div>
+        <div style={{ fontSize: 28, fontWeight: 900, color: grade ? "#f1f5f9" : "#94a3b8", fontFamily: "'Exo 2'", marginBottom: 6 }}>
+          {grade === "distinction" ? "Distinction!" : grade === "merit" ? "Merit!" : grade === "pass" ? "Pass!" : "Not quite yet..."}
+        </div>
+        <div style={{ color: "#64748b", fontSize: 13, marginBottom: 6 }}>
+          {correctRef.current} / {questions.length} correct
+        </div>
+        <div style={{ color: "#475569", fontSize: 12, marginBottom: grade && !wasUnlocked && unlockBonus > 0 ? 12 : 24 }}>
+          ฿ {scoreRef.current} of ฿ {maxScore} possible
+        </div>
+        {grade && !wasUnlocked && unlockBonus > 0 && (
+          <div style={{ background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.35)", borderRadius: 10, padding: "8px 20px", color: "#fbbf24", fontSize: 14, fontWeight: 700, marginBottom: 24 }}>
+            +฿ {unlockBonus.toLocaleString()} unlock reward!
+          </div>
+        )}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%", maxWidth: 300 }}>
+          {grade && grade !== "distinction" && (
+            <button onClick={onRetry} style={{ padding: "12px 0", background: "rgba(139,92,246,0.15)", border: "1px solid rgba(139,92,246,0.5)", borderRadius: 12, color: "#a78bfa", fontSize: 14, fontWeight: 700, fontFamily: "'Nunito'" }}>
+              Try for 💫 Distinction
+            </button>
+          )}
+          {!grade && (
+            <button onClick={onRetry} style={{ padding: "12px 0", background: "rgba(30,41,59,0.8)", border: "1px solid #334155", borderRadius: 12, color: "#e2e8f0", fontSize: 14, fontWeight: 700, fontFamily: "'Nunito'" }}>
+              Try Again
+            </button>
+          )}
+          <button onClick={onHome} style={{ padding: "12px 0", background: "#1e293b", border: "1px solid #334155", borderRadius: 12, color: "#94a3b8", fontSize: 14, fontWeight: 700, fontFamily: "'Nunito'" }}>
+            ← Back to Training
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "16px 16px 24px", fontFamily: "'Nunito'" }}>
+      <div style={{ width: "100%", maxWidth: 480, display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+        <div style={{ color: "#64748b", fontSize: 12 }}>⚔️ Promotion Trial → {targetLevelInfo.rank}</div>
+        <div style={{ color: "#94a3b8", fontSize: 13, fontWeight: 700 }}>{qIdx + 1} / {questions.length}</div>
+      </div>
+
+      {/* TNT fuse */}
+      <div style={{ width: "100%", maxWidth: 480, display: "flex", alignItems: "center", gap: 4, marginBottom: 10 }}>
+        <div style={{ flex: Math.max(0, 1 - timePct), minWidth: 0 }} />
+        <span style={{ fontSize: 14, flexShrink: 0 }}>🔥</span>
+        <div style={{ flex: timePct, height: 4, background: fuseColor, borderRadius: 2, transition: "flex 1s linear, background 0.3s" }} />
+        <span style={{ fontSize: 20, flexShrink: 0, animation: timeLeft <= 5 ? "shake 0.15s infinite" : "none" }}>💣</span>
+        <div style={{ color: timeLeft <= 5 ? "#ef4444" : "#94a3b8", fontSize: 13, fontWeight: 700, minWidth: 28, textAlign: "right" }}>{timeLeft}s</div>
+      </div>
+
+      <div style={{ color: "#475569", fontSize: 12, marginBottom: 14 }}>✓ {correctCount} correct · ฿ {score}</div>
+
+      {/* Question card */}
+      <div style={{ width: "100%", maxWidth: 480, background: "#0d1627", border: `2px solid ${feedback === "correct" ? "#4ade80" : feedback === "wrong" ? "#ef4444" : "#1e293b"}`, borderRadius: 18, padding: "20px 16px", marginBottom: 14, transition: "border-color 0.2s", textAlign: "center" }}>
+        {q.type === "A" && (
+          <>
+            <div style={{ color: "#64748b", fontSize: 11, marginBottom: 8 }}>Which element has this symbol?</div>
+            <div style={{ color: "#e2e8f0", fontSize: 54, fontFamily: "'Exo 2'", fontWeight: 900, lineHeight: 1 }}>{q.el.symbol}</div>
+            <div style={{ color: "#475569", fontSize: 12, marginTop: 4 }}>{q.el.number}</div>
+          </>
+        )}
+        {q.type === "B" && (
+          <>
+            <div style={{ color: "#64748b", fontSize: 11, marginBottom: 8 }}>What is the symbol for...</div>
+            <div style={{ color: "#e2e8f0", fontSize: 22, fontWeight: 700 }}>{q.el.name}</div>
+          </>
+        )}
+        {q.type === "C" && (
+          <>
+            <div style={{ color: "#64748b", fontSize: 11, marginBottom: 10 }}>Type the symbol for...</div>
+            <div style={{ color: "#e2e8f0", fontSize: 22, fontWeight: 700, marginBottom: 14 }}>{q.el.name}</div>
+            <input
+              value={typedInput}
+              onChange={e => setTypedInput(e.target.value)}
+              disabled={phase !== "playing"}
+              maxLength={q.el.symbol.length + 1}
+              autoFocus
+              style={{ width: 80, padding: "8px 0", textAlign: "center", fontSize: 24, fontFamily: "'Exo 2'", fontWeight: 700, background: "#0a0f1a", border: "1px solid #334155", borderRadius: 10, color: "#f1f5f9", outline: "none" }}
+            />
+          </>
+        )}
+      </div>
+
+      {/* MC choices */}
+      {(q.type === "A" || q.type === "B") && (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, width: "100%", maxWidth: 480 }}>
+          {q.choices.map((c, i) => {
+            const isTarget = q.type === "A" ? c.name === q.el.name : c.symbol === q.el.symbol;
+            const cc = GC[c.group] || "#64748b";
+            const btnBg = feedback === "correct" && isTarget ? "rgba(74,222,128,0.15)"
+                        : feedback === "wrong"   && isTarget ? "rgba(74,222,128,0.08)"
+                        : "#0a0f1a";
+            const btnBorder = feedback && isTarget ? "#4ade8080" : `${cc}40`;
+            return (
+              <button key={i} onClick={() => phase === "playing" && handleAnswer(isTarget)} style={{ padding: "14px 8px", background: btnBg, border: `2px solid ${btnBorder}`, borderRadius: 14, transition: "all 0.1s", cursor: phase === "playing" ? "pointer" : "default" }}>
+                {q.type === "A"
+                  ? <div style={{ color: "#e2e8f0", fontSize: 14, fontWeight: 700 }}>{c.name}</div>
+                  : <div style={{ color: cc, fontSize: 30, fontFamily: "'Exo 2'", fontWeight: 900 }}>{c.symbol}</div>
+                }
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <button onClick={onHome} style={{ marginTop: "auto", paddingTop: 20, background: "none", border: "none", color: "#334155", fontSize: 12, cursor: "pointer" }}>
+        ✕ quit trial
+      </button>
+    </div>
+  );
+}
+
+function PromotionTrialMode({ targetLevel, wasUnlocked, onResult, onHome }) {
+  const [attemptKey, setAttemptKey] = useState(0);
+  const pool = useMemo(() => getPool(trialPoolLevel(targetLevel)), [targetLevel]);
+  const questions = useMemo(() => generateTrialQuestions(pool), [pool, attemptKey]);
+
+  return (
+    <TrialGame
+      key={attemptKey}
+      questions={questions}
+      targetLevel={targetLevel}
+      wasUnlocked={wasUnlocked}
+      onResult={onResult}
+      onRetry={() => setAttemptKey(k => k + 1)}
+      onHome={onHome}
+    />
+  );
+}
+
+// ═══════════════════════════════════════════
 // RESULTS SCREEN
 // ═══════════════════════════════════════════
 function ResultsScreen({ activePlayer, players, scores, lastRoundScore, grade, onHome, onPlayAgain }) {
@@ -2587,6 +2842,21 @@ export default function ElementQuest() {
           lastRoundScore={lastScore} grade={lastRoundGrade}
           onHome={() => setScreen("home")}
           onPlayAgain={() => { setGameKey(k => k + 1); setScreen("game"); }}
+        />
+      )}
+      {screen === "promotion" && promotionTarget && (
+        <PromotionTrialMode
+          key={promotionTarget}
+          targetLevel={promotionTarget}
+          wasUnlocked={isLevelUnlocked(activePlayer, promotionTarget)}
+          onResult={async (grade) => {
+            if (!activePlayer) return;
+            await saveTrialGrade(activePlayer.id, promotionTarget, grade);
+            if (grade && !isLevelUnlocked(activePlayer, promotionTarget)) {
+              await unlockLevel(activePlayer.id, promotionTarget);
+            }
+          }}
+          onHome={() => { setPromotionTarget(null); setScreen("home"); }}
         />
       )}
     </>

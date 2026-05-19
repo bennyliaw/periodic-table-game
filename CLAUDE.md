@@ -145,9 +145,11 @@ App (screen router + shared state)
 ├── HomeScreen       — player select, difficulty, mode select
 ├── FlashcardMode    — 15-card sessions, "Mark done" / "Show again later", mastery tracked per player
 ├── QuizMode         — 10 questions, 4-choice symbol pick, streak bonus
-├── ScrambleMode     — 8 questions, drag tiles to unscramble element name (or type it)
-├── SpeedMode        — 60s timer, rapid 4-choice quiz
-└── ResultsScreen    — star rating, scoreboard, play again
+├── ScrambleMode        — 10 questions, drag tiles to unscramble element name (or type it)
+├── SpeedMode           — 30s timer, rapid 4-choice quiz
+├── PromotionTrialMode  — outer wrapper; holds attemptKey for retries
+├── TrialGame           — 60s TNT fuse, 30 questions (Types A/B/C), grade → unlock
+└── ResultsScreen       — star rating, scoreboard, play again
 ```
 
 **Key state patterns:**
@@ -217,12 +219,29 @@ App (screen router + shared state)
 - `getLevelInfo(id)` — returns the LEVELS entry for a given ID
 - Rank selection row shows **2.5 cards** per screen width (`flex: "0 0 calc((100% - 15px) / 2.5)"`); scrollable to reach all 6; badges show full text ("15 elements", "2 pts/card")
 
-**Scoring:**
+**Scoring (Berry ฿ currency):**
 - `DIFF_MULT[difficulty]` multiplier applied to all earned points in Quiz, Scramble, and Speed Blast; Flash Cards unaffected
 - Points are `Math.round(base * DIFF_MULT[difficulty])` — base is 10 per correct answer (+2 per streak level in Quiz/Speed)
+- `fmtBerry(n, prefix=true)` — formats score as `฿ 1.5k` / `฿ 30k`; use `prefix=false` when ฿ symbol already appears nearby
 - Quitting mid-round awards the accumulated score via `quitRound(earned)` (saves to Supabase and goes home); `onQuit` prop on Quiz/Scramble/Speed, separate from `onHome` which is used for pre-game back buttons
 - `pendingRef` in QuizMode and ScrambleMode cancels the post-answer setTimeout on unmount — prevents stale `onEnd` from firing and double-saving after a quit
 - `updateScore(id, earned, newHighestLevel)` — also updates `highest_level` if `newHighestLevel` is higher than current
+- Promotion Trial questions score Type A/B = 5 pts each, Type C (type-in) = 15 pts each; trial score does NOT add to player total
+- First-time unlock bonuses added to player total via `unlockLevel()`: lv3=10k, lv4=25k, lv5=50k, lv6=100k
+
+**Training grades:**
+- `trainingGradeFromAccuracy(correct, total)` — 60%→🔵 Pass, 80%→💜 Merit, 90%→💫 Distinction
+- `makeEndRound(modeKey)` factory wires grade saving for all 4 training modes; FlashcardMode uses `flashcardQuit` for quit path (grade saved on quit, unlike other modes)
+- `saveTrainingPass(id, levelId, mode, grade)` — only upgrades, never downgrades stored grade
+- `promotionPrereqsMet(player, targetLevelId)` — requires 75% mastery of pool level + Pass in all 4 modes at that level
+
+**Promotion Trial:**
+- `generateTrialQuestions(pool)` — 30 questions: 5–8 Type C (type symbol), rest split A/B equally (min 5 each)
+- Type A: symbol shown → pick element name; Type B: name shown → pick symbol; Type C: name shown → type symbol
+- `calcTrialGrade(correct, score, maxScore)` — distinction≥28 correct + 92%, merit≥24+80%, pass≥20+60%
+- Auto-submit in Type C when `typedInput.length === el.symbol.length` (handles 1-char symbols like H, O, C)
+- `PromotionTrialMode` holds `attemptKey` state; `TrialGame key={attemptKey}` remounts on retry
+- `wasUnlocked` captured at render time in App router and passed as prop (not re-derived after Supabase update)
 
 **Data:**
 - 118 elements in `ELEMENTS[]`, each with `{ name, symbol, number, group, tier }`
@@ -240,7 +259,7 @@ App (screen router + shared state)
 - [x] **Rank badge on player chip** — 🧹 Chore Boy → 🥉🥈🥇🏆👑⚛️ based on `highest_level` field
 - [x] **Supabase migration** — `highest_level text` and `last_active timestamptz` columns added to `eq_players`
 - [ ] **Consider: lv3 Warrant Officer pool** — currently tier 3 only (16 elements, specialist track); consider whether it should be cumulative tiers 1–3 like Lieutenant. Revisit after kids play it.
-- [ ] **Level unlock system** — lv1 and lv2 unlocked by default; lv3–lv6 locked until player passes a "test round" at the previous level (earn a minimum score threshold). Unlocked status stored per-player in Supabase (`unlocked_levels jsonb`). Future admiral ranks (lv7+) follow same pattern.
+- [x] **Level unlock system** — lv3–lv6 locked; unlock via Promotion Trial (30 questions, 60s). Training badges (🔵💜💫) tracked per mode per level. Supabase columns: `unlocked_levels`, `training_passes`, `trial_grades` (jsonb). Unlock bonuses: lv3=+10k, lv4=+25k, lv5=+50k, lv6=+100k Berry. Berry (฿) replaces "pts" in all UI. Speed Blast 30s; Scramble 10 questions. Prereqs: 75% pool mastery + Pass in all 4 modes at previous level.
 - [ ] **Atomic number quiz** — third game axis beyond name↔symbol
 - [ ] **Multiplayer** — real-time head-to-head via a simple WebSocket server
 
