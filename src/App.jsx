@@ -370,12 +370,12 @@ function shuffle(arr) {
 const DIFF_MULT = { lv1: 0.2, lv2: 0.4, lv3: 0.6, lv4: 1.0, lv5: 1.3, lv6: 1.5 };
 
 const LEVELS = [
-  { id: "lv1", icon: "🥉", label: "🥉 Cadet",           desc: "Your first training onboard. Drill the 15 most common elements found in nature.", elements: 15,  basePts: 2,  rank: "Cadet" },
-  { id: "lv2", icon: "🥈", label: "🥈 Petty Officer",   desc: "You've earned your first stripe. Expand to 31 elements — noble gases, halogens and everyday metals join the mix.",  elements: 31,  basePts: 4,  rank: "Petty Officer" },
-  { id: "lv3", icon: "🥇", label: "🥇 Warrant Officer", desc: "A new challenge entirely. These 16 elements are the ones that trip up even experienced sailors.",                  elements: 16,  basePts: 6,  rank: "Warrant Officer" },
-  { id: "lv4", icon: "🏆", label: "🏆 Lieutenant",      desc: "The combined challenge awaits. Prove mastery over all 47 elements learned in basic training.",                     elements: 47,  basePts: 10, rank: "Lieutenant" },
-  { id: "lv5", icon: "👑", label: "👑 Captain",         desc: "Deep waters ahead. 82 elements — including the rare metals that power modern technology.",                         elements: 82,  basePts: 15, rank: "Captain" },
-  { id: "lv6", icon: "⚛️", label: "⚛️ Commodore",       desc: "Command of the full periodic table. From Hydrogen to Oganesson — no element left behind.",                        elements: 118, basePts: 20, rank: "Commodore" },
+  { id: "lv1", icon: "🥉", label: "🥉 Cadet",           line1: "Your first training onboard.",        line2: "Drill the 15 most common elements found in nature.",                              elements: 15,  basePts: 2,  rank: "Cadet" },
+  { id: "lv2", icon: "🥈", label: "🥈 Petty Officer",   line1: "You've earned your first stripe.",    line2: "Expand to 31 elements — noble gases, halogens and everyday metals join the mix.", elements: 31,  basePts: 4,  rank: "Petty Officer" },
+  { id: "lv3", icon: "🥇", label: "🥇 Warrant Officer", line1: "A new challenge entirely.",           line2: "Heavy metals and transitions — these 16 elements trip up even experienced sailors.", elements: 16, basePts: 6,  rank: "Warrant Officer" },
+  { id: "lv4", icon: "🏆", label: "🏆 Lieutenant",      line1: "The combined challenge awaits.",      line2: "Prove mastery over all 47 elements learned in basic training.",                   elements: 47,  basePts: 10, rank: "Lieutenant" },
+  { id: "lv5", icon: "👑", label: "👑 Captain",         line1: "Deep waters ahead.",                 line2: "82 elements — including the rare metals that power modern technology.",            elements: 82,  basePts: 15, rank: "Captain" },
+  { id: "lv6", icon: "⚛️", label: "⚛️ Commodore",       line1: "Command of the full periodic table.", line2: "From Hydrogen to Oganesson — no element left behind.",                           elements: 118, basePts: 20, rank: "Commodore" },
 ];
 
 function getLevelInfo(id) {
@@ -467,7 +467,7 @@ function Header({ title, score, streak = 0, idx, total }) {
           <div style={{ background: "#111827", borderRadius: 99, height: 5 }}>
             <div style={{ background: "linear-gradient(90deg,#22d3ee,#a78bfa)", height: 5, borderRadius: 99, width: `${(idx / total) * 100}%`, transition: "width 0.4s ease" }} />
           </div>
-          <div style={{ color: "#1e293b", fontSize: 11, textAlign: "center", marginTop: 4 }}>{idx + 1} / {total}</div>
+          <div style={{ color: "#475569", fontSize: 11, textAlign: "center", marginTop: 4 }}>{idx + 1} / {total}</div>
         </>
       )}
     </div>
@@ -736,23 +736,23 @@ function PlayerProfileCard({ p, score, isActive, onLogin, onSignOut, onClose }) 
             <div style={{ color: p.color, fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20 }}>{p.name}</div>
             <div style={{ display: "flex", gap: 10, marginTop: 4, flexWrap: "wrap" }}>
               {p.created_at && (
-                <span style={{ color: "#334155", fontSize: 12 }}>joined {timeAgo(p.created_at)}</span>
+                <span style={{ color: "#64748b", fontSize: 12 }}>joined {timeAgo(p.created_at)}</span>
               )}
               {p.last_active && (
-                <span style={{ color: "#334155", fontSize: 12 }}>· active {timeAgo(p.last_active)}</span>
+                <span style={{ color: "#64748b", fontSize: 12 }}>· active {timeAgo(p.last_active)}</span>
               )}
             </div>
           </div>
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: 28 }}>{rankIcon}</div>
-            <div style={{ color: "#475569", fontSize: 11, marginTop: 2, fontFamily: "'Exo 2'", fontWeight: 700 }}>{rankName}</div>
+            <div style={{ color: "#64748b", fontSize: 11, marginTop: 2, fontFamily: "'Exo 2'", fontWeight: 700 }}>{rankName}</div>
           </div>
         </div>
 
         {/* rank blurb */}
         <div style={{ background: "#0a0f1a", borderRadius: 14, padding: "12px 14px", marginBottom: 20,
                       border: `1px solid ${p.color}20` }}>
-          <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.5 }}>{blurb}</div>
+          <div style={{ color: "#94a3b8", fontSize: 13, lineHeight: 1.5 }}>{blurb}</div>
         </div>
 
         {/* score */}
@@ -809,11 +809,11 @@ function PlayerChip({ p, isActive, score, rank, onTap, onLongPress }) {
       )}
       <span style={{ position: "absolute", top: 6, left: 7, fontSize: 13, lineHeight: 1, pointerEvents: "none" }}>{rankIcon}</span>
       <div style={{ fontSize: 26, marginBottom: 3 }}>{p.icon}</div>
-      <div style={{ color: isActive ? p.color : "#475569", fontFamily: "'Exo 2'", fontWeight: 700,
+      <div style={{ color: isActive ? p.color : "#94a3b8", fontFamily: "'Exo 2'", fontWeight: 700,
                     fontSize: 13, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 72 }}>
         {p.name}
       </div>
-      <div style={{ color: isActive ? "#fbbf24" : "#1e293b", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20, marginTop: 2 }}>
+      <div style={{ color: isActive ? "#fbbf24" : "#64748b", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20, marginTop: 2 }}>
         {score}<span style={{ fontSize: 11, opacity: 0.6, marginLeft: 2 }}>pts</span>
       </div>
     </button>
@@ -1110,12 +1110,12 @@ function RoomCodeBar({ roomId, onJoin }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ color: "#1e293b", fontSize: 11, fontFamily: "'Exo 2'", letterSpacing: 2 }}>ROOM</span>
+        <span style={{ color: "#475569", fontSize: 11, fontFamily: "'Exo 2'", letterSpacing: 2 }}>ROOM</span>
         <span style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 15, letterSpacing: 4 }}>{roomId}</span>
-        <button onClick={copy} title="Copy room code" style={{ background: "none", border: "none", color: copied ? "#4ade80" : "#334155", cursor: "pointer", fontSize: 13, padding: 0, lineHeight: 1 }}>
+        <button onClick={copy} title="Copy room code" style={{ background: "none", border: "none", color: copied ? "#4ade80" : "#64748b", cursor: "pointer", fontSize: 13, padding: 0, lineHeight: 1 }}>
           {copied ? "✓" : "⎘"}
         </button>
-        <button onClick={() => { setJoining(j => !j); setInputError(false); setInput(""); }} style={{ background: "none", border: "none", color: "#1e293b", cursor: "pointer", fontSize: 11, fontFamily: "'Exo 2'", padding: 0, textDecoration: "underline" }}>
+        <button onClick={() => { setJoining(j => !j); setInputError(false); setInput(""); }} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 11, fontFamily: "'Exo 2'", padding: 0, textDecoration: "underline" }}>
           {joining ? "cancel" : "join room"}
         </button>
       </div>
@@ -1216,9 +1216,9 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
             {isAdminUnlocked ? "🔓" : "🔒"}
           </button>
         )}
-        <div style={{ color: "#1e293b", fontSize: 11, letterSpacing: 4, textTransform: "uppercase", fontFamily: "'Exo 2'", marginBottom: 6 }}>
+        <div style={{ color: "#475569", fontSize: 11, letterSpacing: 4, textTransform: "uppercase", fontFamily: "'Exo 2'", marginBottom: 6 }}>
           Periodic Table Challenge
-          <span style={{ letterSpacing: 1, color: "#164e63", marginLeft: 8 }}>· v{APP_VERSION}</span>
+          <span style={{ letterSpacing: 1, color: "#334155", marginLeft: 8 }}>· v{APP_VERSION}</span>
         </div>
         <div style={{ fontSize: 36, fontFamily: "'Exo 2'", fontWeight: 900,
           background: "linear-gradient(135deg, #22d3ee 0%, #a78bfa 55%, #f472b6 100%)",
@@ -1270,12 +1270,13 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
                 boxShadow: active ? "0 0 16px rgba(34,211,238,0.15)" : "none",
               }}>
                 <div style={{ color: active ? "#22d3ee" : "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 12 }}>{d.label}</div>
-                {d.desc && <div style={{ color: "#334155", fontSize: 10, marginTop: 3, lineHeight: 1.4 }}>{d.desc}</div>}
+                <div style={{ color: active ? "#94a3b8" : "#64748b", fontSize: 10, marginTop: 4, lineHeight: 1.3, fontWeight: 600 }}>{d.line1}</div>
+                <div style={{ color: active ? "#64748b" : "#475569", fontSize: 10, marginTop: 2, lineHeight: 1.3 }}>{d.line2}</div>
                 <div style={{ display: "flex", gap: 4, marginTop: 6, flexWrap: "wrap" }}>
-                  <span style={{ background: "#0d1a2d", border: "1px solid #1e293b", borderRadius: 6, padding: "2px 6px", fontSize: 10, color: "#475569" }}>
+                  <span style={{ background: "#0d1a2d", border: "1px solid #1e293b", borderRadius: 6, padding: "2px 6px", fontSize: 10, color: "#64748b" }}>
                     {d.elements} elements
                   </span>
-                  <span style={{ background: "#0d1a2d", border: "1px solid #1e293b", borderRadius: 6, padding: "2px 6px", fontSize: 10, color: "#475569" }}>
+                  <span style={{ background: "#0d1a2d", border: "1px solid #1e293b", borderRadius: 6, padding: "2px 6px", fontSize: 10, color: "#64748b" }}>
                     {d.basePts} pts/card
                   </span>
                 </div>
@@ -1420,7 +1421,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
 function Section({ label, children }) {
   return (
     <div style={{ marginBottom: 20, position: "relative", zIndex: 1 }}>
-      <div style={{ color: "#1e293b", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, textAlign: "center", marginBottom: 10, fontFamily: "'Exo 2'" }}>{label}</div>
+      <div style={{ color: "#94a3b8", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, textAlign: "center", marginBottom: 10, fontFamily: "'Exo 2'" }}>{label}</div>
       {children}
     </div>
   );
@@ -1438,7 +1439,7 @@ function ModeCard({ icon, label, desc, onClick, extra }) {
     }}>
       <div style={{ fontSize: 30, marginBottom: 8 }}>{icon}</div>
       <div style={{ color: h ? "#e2e8f0" : "#94a3b8", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14 }}>{label}</div>
-      <div style={{ color: "#1e293b", fontSize: 11, marginTop: 4 }}>{desc}</div>
+      <div style={{ color: "#475569", fontSize: 11, marginTop: 4 }}>{desc}</div>
       {extra}
     </button>
   );
