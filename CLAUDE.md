@@ -158,6 +158,18 @@ App (screen router + shared state)
 - `mastered_elements` is a `jsonb` array of element symbols (e.g. `["H","O","Fe"]`) stored on the player row
 - `highest_level` is a difficulty ID string (`"lv1"`–`"lv6"`) — the highest level ever completed/quit by this player; shown as rank badge on their chip; `null` = 🧹 Chore Boy (never played)
 
+**HomeScreen floating background animation:**
+- 30 fixed slots, each with `{ el, phase, cycleKey, tx, ty }` — phase state machine: `"idle"` | `"out"` | `"in"` | `"wiggle"`
+- Three-layer div structure: outer (fixed anchor position + opacity fade), middle (JS-driven tx/ty wander with CSS transition), inner (keyed by `cycleKey` — wild rotate/scale animation or shake)
+- **Wild animations** (`wild0`–`wild7`): rotation + scale only, no translate — translate lives in the middle div so shake runs from the wandered position
+- **Mount**: slots initialize as `phase:"in"` and stagger to `"idle"` within 400ms — elements floatIn on first render; initial positions spread across full screen
+- **Cycle**: 2 elements swap (fade out → new element floatIn) every 2s
+- **Wander**: 6 random idle slots get new `tx`/`ty` every 2.5s; CSS `transition: transform 8s ease-in-out` on middle div makes movement slow and smooth
+- **Level-switch**: each element shakes individually (random 0–180ms stagger), all fade out at 650ms, new elements stagger in from 1050ms
+- `dly = 0` on wild animation — all elements start dancing immediately on mount; no stagger delay
+- `slotsRef` / `difficultyRef` (useRef synced via useEffect) avoid stale closures in setInterval callbacks
+- Opacity: `0.25` when visible, `0` when fading out
+
 **PWA update prompt:**
 - `registerType: 'prompt'` in `vite.config.js` — new SW waits instead of auto-applying
 - `useRegisterSW` from `virtual:pwa-register/react` in `ElementQuest` root
@@ -203,6 +215,7 @@ App (screen router + shared state)
 - `DIFF_MULT = { lv1: 0.2, lv2: 0.4, lv3: 0.6, lv4: 1.0, lv5: 1.3, lv6: 1.5 }`
 - Pool sizes: lv1=15 (tier 1), lv2=31 (tiers 1-2), lv3=16 (tier 3 only), lv4=47 (tiers 1-3), lv5=82 (tiers 1-4), lv6=118 (all)
 - `getLevelInfo(id)` — returns the LEVELS entry for a given ID
+- Rank selection row shows **2.5 cards** per screen width (`flex: "0 0 calc((100% - 15px) / 2.5)"`); scrollable to reach all 6; badges show full text ("15 elements", "2 pts/card")
 
 **Scoring:**
 - `DIFF_MULT[difficulty]` multiplier applied to all earned points in Quiz, Scramble, and Speed Blast; Flash Cards unaffected

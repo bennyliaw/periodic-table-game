@@ -115,10 +115,14 @@ Quitting a round mid-way still awards the accumulated score to the player's tota
 
 | Level | Elements | Score multiplier |
 |-------|----------|-----------------|
-| ⭐ Starter | 15 most common (H, O, Au, Fe…) | 0.2× |
-| ⭐⭐ Explorer | 31 elements | 0.4× |
-| ⭐⭐⭐ Expert | Tricky transition metals etc. | 0.6× |
-| 🔥 Legend | All 47 elements | 1× |
+| 🥉 Cadet | 15 most common (H, O, Au, Fe…) | 0.2× |
+| 🥈 Petty Officer | 31 elements — noble gases, halogens, metals | 0.4× |
+| 🥇 Warrant Officer | 16 specialist heavy metals & transitions | 0.6× |
+| 🏆 Lieutenant | 47 elements — combined tiers 1–3 | 1× |
+| 👑 Captain | 82 elements — including rare metals | 1.3× |
+| ⚛️ Commodore | All 118 elements — full periodic table | 1.5× |
+
+Each rank card shows the element count and points-per-card at a glance. The rank row shows 2.5 cards per screen — scroll to see all six.
 
 ## First Visit
 
@@ -170,8 +174,11 @@ Any INSERT (new player) or UPDATE (score change) in that room is broadcast to al
 - [x] Custom domain — https://elements.demo.agentic-blueprint.com
 - [x] Mobile PWA — installable on Android (Chrome/Brave); iOS via Safari; update prompt with release notes
 - [x] Per-player element mastery tracking
-- [ ] All 118 elements (tier 4)
+- [x] All 118 elements across 6 difficulty levels (One Piece Marine ranks: Cadet → Commodore)
+- [x] Rank badge on player chip based on highest level completed
+- [ ] Level unlock system — lv3–lv6 locked until player passes a test round at the previous level
 - [ ] Atomic number quiz mode
+- [ ] Multiplayer — real-time head-to-head
 
 ## Tech
 
