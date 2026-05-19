@@ -2638,25 +2638,25 @@ function ResultsScreen({ activePlayer, players, scores, lastRoundScore, grade, o
 // ═══════════════════════════════════════════
 // APP ROOT
 // ═══════════════════════════════════════════
-function UpdateBanner({ notes, heading, onUpdate, onDismiss }) {
+function UpdateBanner({ sections, onUpdate, onDismiss }) {
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", background: "rgba(7,11,20,0.75)" }}>
-      <div style={{ width: "100%", maxWidth: 380, background: "#0a0f1a", border: "2px solid #22d3ee", borderRadius: 20, padding: "24px 22px", fontFamily: "'Nunito'", boxShadow: "0 0 60px rgba(34,211,238,0.18)" }}>
+      <div style={{ width: "100%", maxWidth: 380, background: "#0a0f1a", border: "2px solid #22d3ee", borderRadius: 20, padding: "24px 22px", fontFamily: "'Nunito'", boxShadow: "0 0 60px rgba(34,211,238,0.18)", maxHeight: "80vh", overflowY: "auto" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
           <span style={{ fontSize: 20 }}>⬆️</span>
           <span style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 16 }}>Update Ready</span>
           <span style={{ color: "#475569", fontSize: 12, marginLeft: 4 }}>running v{APP_VERSION}</span>
         </div>
-        {notes.length > 0 && (
-          <>
-            {heading && (
-              <div style={{ color: "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 11, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>{heading}</div>
+        {sections?.map((s, idx) => s.notes?.length > 0 && (
+          <div key={idx} style={{ marginBottom: idx < sections.length - 1 ? 14 : 20 }}>
+            {s.heading && (
+              <div style={{ color: idx === 0 ? "#64748b" : "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 11, letterSpacing: 2, textTransform: "uppercase", marginBottom: 6 }}>{s.heading}</div>
             )}
-            <ul style={{ margin: "0 0 20px 0", paddingLeft: 18, color: "#94a3b8", fontSize: 13, lineHeight: 1.8 }}>
-              {notes.map((n, i) => <li key={i}>{n}</li>)}
+            <ul style={{ margin: 0, paddingLeft: 18, color: idx === 0 ? "#94a3b8" : "#475569", fontSize: idx === 0 ? 13 : 12, lineHeight: 1.8 }}>
+              {s.notes.map((n, i) => <li key={i}>{n}</li>)}
             </ul>
-          </>
-        )}
+          </div>
+        ))}
         <div style={{ display: "flex", gap: 10 }}>
           <button onClick={onUpdate} style={{ flex: 2, padding: "13px 0", background: "#081a2a", border: "2px solid #22d3ee", borderRadius: 12, color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
             Update Now ↺
@@ -2681,18 +2681,20 @@ export default function ElementQuest() {
   const [showAddPlayer, setShowAddPlayer] = useState(false);
   const [showLanding, setShowLanding]     = useState(() => !localStorage.getItem("eq_visited"));
   const { play, toggleMute, muted } = useSound();
-  const [updateNotes, setUpdateNotes] = useState(null);
-  const [updateHeading, setUpdateHeading] = useState(null);
+  const [updateSections, setUpdateSections] = useState(null);
   const [pendingUpdate, setPendingUpdate] = useState(false);
 
   async function fetchNotesAndShowBanner() {
     try {
       const res = await fetch('/release-notes.json', { cache: 'no-store' });
       const data = await res.json();
-      setUpdateNotes(data.notes ?? []);
-      setUpdateHeading(data.heading ?? null);
+      if (data.sections) {
+        setUpdateSections(data.sections);
+      } else {
+        setUpdateSections([{ heading: data.heading ?? null, notes: data.notes ?? [] }]);
+      }
     } catch {
-      setUpdateNotes([]);
+      setUpdateSections([]);
     }
   }
 
@@ -2779,12 +2781,11 @@ export default function ElementQuest() {
 
   return (
     <>
-      {updateNotes !== null && (
+      {updateSections !== null && (
         <UpdateBanner
-          notes={updateNotes}
-          heading={updateHeading}
+          sections={updateSections}
           onUpdate={() => updateServiceWorker(true)}
-          onDismiss={() => setUpdateNotes(null)}
+          onDismiss={() => setUpdateSections(null)}
         />
       )}
       <GlobalStyles />
