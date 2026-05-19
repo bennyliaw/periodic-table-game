@@ -1197,16 +1197,6 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
     if (el) { e.preventDefault(); el.scrollBy({ left: e.deltaY, behavior: "auto" }); }
   }
 
-  useEffect(() => {
-    const el = rankScrollRef.current;
-    if (!el) return;
-    checkRankScroll();
-    const onScroll = () => checkRankScroll();
-    el.addEventListener("scroll", onScroll, { passive: true });
-    const ro = new ResizeObserver(() => checkRankScroll());
-    ro.observe(el);
-    return () => { el.removeEventListener("scroll", onScroll); ro.disconnect(); };
-  }, [slots]);
   const [slots, setSlots] = useState(() => {
     const pool = getPool(difficulty);
     const els = [...pool].sort(() => Math.random() - 0.5).slice(0, 30);
@@ -1217,6 +1207,17 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   });
   const slotsRef = useRef([]);
   useEffect(() => { slotsRef.current = slots; }, [slots]);
+
+  useEffect(() => {
+    const el = rankScrollRef.current;
+    if (!el) return;
+    checkRankScroll();
+    const onScroll = () => checkRankScroll();
+    el.addEventListener("scroll", onScroll, { passive: true });
+    const ro = new ResizeObserver(() => checkRankScroll());
+    ro.observe(el);
+    return () => { el.removeEventListener("scroll", onScroll); ro.disconnect(); };
+  }, [slots]);
   const difficultyRef = useRef(difficulty);
   useEffect(() => { difficultyRef.current = difficulty; }, [difficulty]);
 
