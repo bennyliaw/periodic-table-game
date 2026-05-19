@@ -1093,7 +1093,7 @@ function LandingScreen({ onJoinRoom, onStartFresh }) {
     { icon: "🃏", label: "Flash Cards", desc: "flip to learn symbols" },
     { icon: "⚡", label: "Symbol Quiz", desc: "pick the right answer" },
     { icon: "🔤", label: "Name Scramble", desc: "spell from the symbol" },
-    { icon: "🚀", label: "Speed Blast", desc: "60-second frenzy" },
+    { icon: "🚀", label: "Speed Blast", desc: "30-second frenzy" },
   ];
 
   return (
@@ -1599,7 +1599,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
               { id: "flashcard", icon: "🃏", label: "Flash Cards",   desc: "Flip to learn symbols", extra: flashcardExtra },
               { id: "quiz",      icon: "⚡", label: "Symbol Quiz",   desc: "Pick the right symbol" },
               { id: "scramble",  icon: "🔤", label: "Name Scramble", desc: "Spell from the symbol" },
-              { id: "speed",     icon: "🚀", label: "Speed Blast",   desc: "60-second frenzy!" },
+              { id: "speed",     icon: "🚀", label: "Speed Blast",   desc: "30-second frenzy!" },
             ].map(m => <ModeCard key={m.id} {...m} onClick={() => onStart(m.id)} />);
           })()}
         </div>
@@ -1742,8 +1742,9 @@ function ModeCard({ icon, label, desc, onClick, extra }) {
 // ═══════════════════════════════════════════
 // FLASH CARD MODE
 // ═══════════════════════════════════════════
-function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onHome, playSound }) {
+function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onQuit, onHome, playSound }) {
   const masteredRef           = useRef([...masteredElements]);
+  const sessionMasteredRef    = useRef(new Set());
   const [deck, setDeck]       = useState(() => getFlashDeck(difficulty, masteredElements));
   const [idx, setIdx]         = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -1754,8 +1755,16 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onHome,
   const el    = deck[idx];
   const color = el ? (GC[el.group] || "#60a5fa") : "#22d3ee";
 
+  function calcMasteryArgs() {
+    const pool   = getPool(difficulty);
+    const prior  = new Set(masteredElements);
+    const totalMastered = pool.filter(e => prior.has(e.symbol) || sessionMasteredRef.current.has(e.symbol)).length;
+    return [totalMastered, pool.length];
+  }
+
   function next(action) {
     if (action === "done") {
+      sessionMasteredRef.current.add(el.symbol);
       if (!masteredRef.current.includes(el.symbol)) {
         masteredRef.current = [...masteredRef.current, el.symbol];
         onMastery(masteredRef.current);
@@ -1798,7 +1807,7 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onHome,
             >Continue (next 15 cards)</button>
           )}
           <button
-            onClick={() => onEnd(scoreRef.current)}
+            onClick={() => onEnd(scoreRef.current, ...calcMasteryArgs())}
             style={{ padding: 16, background: "#111827", border: "2px solid #1e293b", borderRadius: 18, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14 }}
           >🏠 Back to menu</button>
         </div>
@@ -1848,7 +1857,7 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onHome,
           <div style={{ color: "#1e293b", fontSize: 14 }}>Tap the card to flip</div>
         )}
       </div>
-      <QuitStrip onHome={onHome} />
+      <QuitStrip onHome={() => onQuit(scoreRef.current, ...calcMasteryArgs())} />
     </div>
   );
 }
@@ -1904,7 +1913,7 @@ function QuizMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
     pendingRef.current = setTimeout(() => {
       setPop(null);
       setSelected(null);
-      if (idx + 1 >= TOTAL) { onEnd(scoreRef.current, wrongRef.current === 0); return; }
+      if (idx + 1 >= TOTAL) { onEnd(scoreRef.current, TOTAL - wrongRef.current, TOTAL); return; }
       setIdx(i => i + 1);
     }, 1100);
   }
@@ -1963,7 +1972,7 @@ function QuizMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
 // SCRAMBLE MODE
 // ═══════════════════════════════════════════
 function ScrambleMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
-  const TOTAL = 8;
+  const TOTAL = 10;
   const [deck] = useState(() => getDeck(difficulty).filter(e => e.name.length >= 4).slice(0, TOTAL));
   const [idx, setIdx]       = useState(0);
   const [tiles, setTiles]   = useState([]);
@@ -2050,7 +2059,7 @@ function ScrambleMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
       playSound("correct");
       if (streakRef.current >= 3) playSound("streak", streakRef.current);
       pendingRef.current = setTimeout(() => {
-        if (idx + 1 >= TOTAL) { onEnd(scoreRef.current, wrongRef.current === 0); return; }
+        if (idx + 1 >= TOTAL) { onEnd(scoreRef.current, TOTAL - wrongRef.current, TOTAL); return; }
         setIdx(i => i + 1);
       }, 900);
     } else {
@@ -2153,13 +2162,14 @@ function SpeedMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
   const longPool = shuffle([...pool, ...pool, ...pool]);
   const [deck]   = useState(longPool);
   const [started, setStarted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(30);
   const [idx, setIdx]     = useState(0);
   const [choices, setChoices] = useState(() => getChoices(longPool[0]));
   const [flash, setFlash] = useState(null);
-  const scoreRef   = useRef(0);
-  const correctRef = useRef(0);
-  const streakRef  = useRef(0);
+  const scoreRef          = useRef(0);
+  const correctRef        = useRef(0);
+  const totalAnsweredRef  = useRef(0);
+  const streakRef         = useRef(0);
   const endedRef   = useRef(false);
   const [score, setScore]     = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -2174,7 +2184,7 @@ function SpeedMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
   useEffect(() => {
     if (started && timeLeft === 0 && !endedRef.current) {
       endedRef.current = true;
-      onEnd(scoreRef.current);
+      onEnd(scoreRef.current, correctRef.current, totalAnsweredRef.current);
     }
   }, [timeLeft, started]);
 
@@ -2185,6 +2195,7 @@ function SpeedMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
   function pick(c) {
     if (!started || timeLeft === 0) return;
     const el = deck[idx % deck.length];
+    totalAnsweredRef.current += 1;
     if (c.symbol === el.symbol) {
       const earned = Math.round((10 + streakRef.current * 2) * (DIFF_MULT[difficulty] ?? 1));
       scoreRef.current += earned; correctRef.current += 1;
@@ -2212,7 +2223,7 @@ function SpeedMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
         <button onClick={onHome} style={{ position: "absolute", top: 20, left: 20, background: "none", border: "none", color: "#64748b", fontSize: 24, cursor: "pointer" }}>←</button>
         <div style={{ fontSize: 72, marginBottom: 18 }}>🚀</div>
         <div style={{ color: "#f1f5f9", fontSize: 30, fontFamily: "'Exo 2'", fontWeight: 900, marginBottom: 8 }}>Speed Blast!</div>
-        <div style={{ color: "#1e293b", fontSize: 14, marginBottom: 40 }}>60 seconds · No stopping · Max score wins!</div>
+        <div style={{ color: "#1e293b", fontSize: 14, marginBottom: 40 }}>30 seconds · No stopping · Max score wins!</div>
         <button onClick={() => setStarted(true)} style={{ padding: "20px 56px", background: "#0a1e33", border: "3px solid #22d3ee", borderRadius: 20, color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 22, boxShadow: "0 0 50px rgba(34,211,238,0.28)", letterSpacing: 2 }}>
           GO! ⚡
         </button>
@@ -2236,7 +2247,7 @@ function SpeedMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
           </span>
         </div>
         <div style={{ background: "#111827", borderRadius: 99, height: 6 }}>
-          <div style={{ background: tc, height: 6, borderRadius: 99, width: `${(timeLeft / 60) * 100}%`, transition: "width 1s linear, background 0.5s", boxShadow: `0 0 8px ${tc}` }} />
+          <div style={{ background: tc, height: 6, borderRadius: 99, width: `${(timeLeft / 30) * 100}%`, transition: "width 1s linear, background 0.5s", boxShadow: `0 0 8px ${tc}` }} />
         </div>
       </div>
 
@@ -2268,7 +2279,7 @@ function SpeedMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
 // ═══════════════════════════════════════════
 // RESULTS SCREEN
 // ═══════════════════════════════════════════
-function ResultsScreen({ activePlayer, players, scores, lastRoundScore, onHome, onPlayAgain }) {
+function ResultsScreen({ activePlayer, players, scores, lastRoundScore, grade, onHome, onPlayAgain }) {
   const stars = lastRoundScore >= 70 ? 3 : lastRoundScore >= 30 ? 2 : 1;
   const msgs  = [
     ["Keep at it! 💪", "Practice makes perfect! 🔬", "Every scientist starts somewhere! 🧪"],
@@ -2285,9 +2296,14 @@ function ResultsScreen({ activePlayer, players, scores, lastRoundScore, onHome, 
         {"⭐".repeat(stars)}{"⬛".repeat(3 - stars)}
       </div>
       <div style={{ color: "#f1f5f9", fontSize: 24, fontFamily: "'Exo 2'", fontWeight: 900, marginBottom: 6 }}>{msg}</div>
-      <div style={{ color: "#fbbf24", fontSize: 42, fontFamily: "'Exo 2'", fontWeight: 900, marginBottom: 28 }}>
+      <div style={{ color: "#fbbf24", fontSize: 42, fontFamily: "'Exo 2'", fontWeight: 900, marginBottom: grade ? 10 : 28 }}>
         +{fmtBerry(lastRoundScore)}
       </div>
+      {grade && (
+        <div style={{ color: "#e2e8f0", fontSize: 15, fontFamily: "'Exo 2'", fontWeight: 700, marginBottom: 20 }}>
+          {GRADE_ICON[grade]} {grade.charAt(0).toUpperCase() + grade.slice(1)}
+        </div>
+      )}
 
       {/* Scoreboard */}
       <div style={{ background: "#0a0f1a", border: "2px solid #1e293b", borderRadius: 24, padding: "20px", width: "100%", maxWidth: 300, marginBottom: 24 }}>
@@ -2359,6 +2375,8 @@ export default function ElementQuest() {
   const [mode, setMode]       = useState(null);
   const [difficulty, setDifficulty] = useState("lv1");
   const [lastScore, setLastScore] = useState(0);
+  const [lastRoundGrade, setLastRoundGrade] = useState(null);
+  const [promotionTarget, setPromotionTarget] = useState(null);
   const [gameKey, setGameKey] = useState(0);
   const [showAddPlayer, setShowAddPlayer] = useState(false);
   const [showLanding, setShowLanding]     = useState(() => !localStorage.getItem("eq_visited"));
@@ -2406,6 +2424,7 @@ export default function ElementQuest() {
   }, [pendingUpdate]);
   const { players, scores, activePlayer, setActiveId, addPlayer, updateScore, updateMastery,
           setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
+          saveTrainingPass, saveTrialGrade, unlockLevel,
           roomId, joinRoom, loaded } = usePlayers();
 
   function handleJoinRoom(code) {
@@ -2425,11 +2444,25 @@ export default function ElementQuest() {
     setMode(m); setGameKey(k => k + 1); setScreen("game");
   }
 
-  function endRound(earned, perfect = false) {
-    setLastScore(earned);
-    if (activePlayer) updateScore(activePlayer.id, earned, difficulty);
-    play(perfect ? "perfect" : "roundEnd");
-    setScreen("results");
+  function makeEndRound(modeKey) {
+    return (earned, correct = 0, total = 0) => {
+      const grade = total > 0 ? trainingGradeFromAccuracy(correct, total) : null;
+      if (grade && activePlayer) saveTrainingPass(activePlayer.id, difficulty, modeKey, grade);
+      if (activePlayer) updateScore(activePlayer.id, earned, difficulty);
+      setLastScore(earned);
+      setLastRoundGrade(grade);
+      play(grade === "distinction" ? "perfect" : "roundEnd");
+      setScreen("results");
+    };
+  }
+
+  function flashcardQuit(earned, correct = 0, total = 0) {
+    if (total > 0 && activePlayer) {
+      const grade = trainingGradeFromAccuracy(correct, total);
+      if (grade) saveTrainingPass(activePlayer.id, difficulty, "flashcard", grade);
+    }
+    if (activePlayer && earned > 0) updateScore(activePlayer.id, earned, difficulty);
+    setScreen("home");
   }
 
   function quitRound(earned) {
@@ -2437,7 +2470,12 @@ export default function ElementQuest() {
     setScreen("home");
   }
 
-  const gp = { difficulty, onEnd: endRound, onHome: () => setScreen("home"), onQuit: quitRound, playSound: play };
+  function startTrial(targetLevelId) {
+    setPromotionTarget(targetLevelId);
+    setScreen("promotion");
+  }
+
+  const gp = { difficulty, onEnd: makeEndRound("quiz"), onHome: () => setScreen("home"), onQuit: quitRound, playSound: play };
 
   return (
     <>
@@ -2490,17 +2528,18 @@ export default function ElementQuest() {
       {screen === "game" && mode === "flashcard" && (
         <FlashcardMode
           key={gameKey} {...gp}
+          onEnd={makeEndRound("flashcard")} onQuit={flashcardQuit}
           masteredElements={activePlayer?.mastered_elements || []}
           onMastery={symbols => updateMastery(activePlayer.id, symbols)}
         />
       )}
-      {screen === "game" && mode === "quiz"      && <QuizMode      key={gameKey} {...gp} />}
-      {screen === "game" && mode === "scramble"  && <ScrambleMode  key={gameKey} {...gp} />}
-      {screen === "game" && mode === "speed"     && <SpeedMode     key={gameKey} {...gp} />}
+      {screen === "game" && mode === "quiz"      && <QuizMode      key={gameKey} {...gp} onEnd={makeEndRound("quiz")} />}
+      {screen === "game" && mode === "scramble"  && <ScrambleMode  key={gameKey} {...gp} onEnd={makeEndRound("scramble")} />}
+      {screen === "game" && mode === "speed"     && <SpeedMode     key={gameKey} {...gp} onEnd={makeEndRound("speed")} />}
       {screen === "results" && (
         <ResultsScreen
           activePlayer={activePlayer} players={players} scores={scores}
-          lastRoundScore={lastScore}
+          lastRoundScore={lastScore} grade={lastRoundGrade}
           onHome={() => setScreen("home")}
           onPlayAgain={() => { setGameKey(k => k + 1); setScreen("game"); }}
         />
