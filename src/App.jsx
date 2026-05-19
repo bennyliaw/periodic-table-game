@@ -1201,12 +1201,23 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
     const pool = getPool(difficulty);
     const els = [...pool].sort(() => Math.random() - 0.5).slice(0, 30);
     return els.map(el => ({
-      el, phase: "idle", cycleKey: 0,
-      tx: (Math.random() - 0.5) * 200, ty: (Math.random() - 0.5) * 300,
+      el, phase: "in", cycleKey: 0,
+      tx: (Math.random() - 0.5) * Math.min(window.innerWidth * 0.75, 760),
+      ty: (Math.random() - 0.5) * Math.min(window.innerHeight * 0.75, 1040),
     }));
   });
   const slotsRef = useRef([]);
   useEffect(() => { slotsRef.current = slots; }, [slots]);
+  useEffect(() => {
+    const timers = [];
+    for (let i = 0; i < 30; i++) {
+      const t = setTimeout(() => {
+        setSlots(prev => prev.map((s, si) => si === i ? { ...s, phase: "idle" } : s));
+      }, Math.floor(Math.random() * 400));
+      timers.push(t);
+    }
+    return () => timers.forEach(clearTimeout);
+  }, []);
 
   useEffect(() => {
     const el = rankScrollRef.current;
@@ -1273,22 +1284,24 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
       const cur = slotsRef.current;
       const idles = cur.reduce((acc, s, i) => s.phase === "idle" ? [...acc, i] : acc, []);
       if (!idles.length) return;
-      const idx = idles[Math.floor(Math.random() * idles.length)];
-      setSlots(prev => prev.map((s, i) => i === idx ? { ...s, phase: "out" } : s));
-      setTimeout(() => {
-        const used = new Set(slotsRef.current.map(s => s.el.symbol));
-        const avail = pool.filter(e => !used.has(e.symbol));
-        const src = avail.length ? avail : pool;
-        const newEl = src[Math.floor(Math.random() * src.length)];
-        setSlots(prev => prev.map((s, i) => i === idx
-          ? { el: newEl, phase: "in", cycleKey: s.cycleKey + 1 }
-          : s));
+      const picks = [...idles].sort(() => Math.random() - 0.5).slice(0, Math.min(2, idles.length));
+      picks.forEach(idx => {
+        setSlots(prev => prev.map((s, i) => i === idx ? { ...s, phase: "out" } : s));
         setTimeout(() => {
-          setSlots(prev => prev.map((s, i) => i === idx ? { ...s, phase: "idle" } : s));
-        }, 600);
-      }, 450);
+          const used = new Set(slotsRef.current.map(s => s.el.symbol));
+          const avail = pool.filter(e => !used.has(e.symbol));
+          const src = avail.length ? avail : pool;
+          const newEl = src[Math.floor(Math.random() * src.length)];
+          setSlots(prev => prev.map((s, i) => i === idx
+            ? { el: newEl, phase: "in", cycleKey: s.cycleKey + 1 }
+            : s));
+          setTimeout(() => {
+            setSlots(prev => prev.map((s, i) => i === idx ? { ...s, phase: "idle" } : s));
+          }, 600);
+        }, 450);
+      });
     };
-    const t = setInterval(cycle, 5000);
+    const t = setInterval(cycle, 2000);
     return () => clearInterval(t);
   }, []);
 
@@ -1297,7 +1310,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
       setSlots(prev => {
         const idles = prev.map((s, i) => s.phase === "idle" ? i : -1).filter(i => i >= 0);
         if (idles.length === 0) return prev;
-        const picks = [...idles].sort(() => Math.random() - 0.5).slice(0, 3);
+        const picks = [...idles].sort(() => Math.random() - 0.5).slice(0, 6);
         return prev.map((s, i) => picks.includes(i) ? {
           ...s,
           tx: (Math.random() - 0.5) * Math.min(window.innerWidth * 0.75, 760),
@@ -1305,7 +1318,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
         } : s);
       });
     };
-    const t = setInterval(wander, 3000);
+    const t = setInterval(wander, 2500);
     return () => clearInterval(t);
   }, []);
 
@@ -1345,7 +1358,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
         const top  = (i * 23 + 8) % 85;
         const animIdx = i % 8;
         const dur = 10 + (i % 5) * 3;
-        const dly = (i * 0.18) % 2.5;
+        const dly = 0;
         const innerAnim = slot.phase === "in"
           ? `floatIn 0.5s ease-out both, wild${animIdx} ${dur}s ease-in-out 0.5s infinite`
           : slot.phase === "wiggle"
@@ -1356,7 +1369,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
           <div key={i} style={{
             position: "fixed", pointerEvents: "none", zIndex: 0,
             left: `${left}%`, top: `${top}%`,
-            opacity: slot.phase === "out" ? 0 : 0.18,
+            opacity: slot.phase === "out" ? 0 : 0.25,
             transition: slot.phase === "out" ? "opacity 0.35s ease-out" : "none",
           }}>
             <div style={{
