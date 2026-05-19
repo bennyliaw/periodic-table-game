@@ -179,7 +179,7 @@ App (screen router + shared state)
 - **Standalone (installed PWA):** shows `UpdateBanner` (full-screen blocking modal with backdrop blur); "Update Now" calls `updateServiceWorker(true)` → reloads; "Later" dismisses
 - **Browser (non-installed):** `setPendingUpdate(true)` → `useEffect` → `updateServiceWorker(true)` auto-applies silently
 - `onRegistered` sets up 5-minute poll (`r.update()`) and a `visibilitychange` listener to check for updates when the app is brought back to the foreground (Android PWA resume)
-- Before each deploy: update `public/release-notes.json` — format is `{ "sections": [{ "heading": "...", "notes": [...] }, ...] }`; newest version first, older versions below in dimmer style
+- Before each deploy: update `public/release-notes.json` — always include BOTH top-level `heading`/`notes` (for old SW still running during update) AND a `sections` array (for new code); old SW reads flat fields, new SW reads `sections`
 
 **ScrambleMode drag (works on mobile + desktop):**
 - Uses `onPointerMove` on the tile container + `document.elementFromPoint` to detect which tile the pointer is over — do NOT use `onPointerEnter` on tiles
