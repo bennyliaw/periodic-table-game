@@ -417,7 +417,8 @@ function GlobalStyles() {
   return (
     <style>{`
       @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Nunito:wght@400;600;700;800&display=swap');
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+      input, textarea { user-select: text; -webkit-user-select: text; }
       body { background: #070b14; }
       button { cursor: pointer; font-family: 'Nunito', sans-serif; }
       input  { font-family: 'Nunito', sans-serif; }
