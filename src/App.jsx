@@ -1200,7 +1200,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
           left: `${8 + i * 19}%`, top: `${12 + (i % 3) * 22}%`,
           color: Object.values(GC)[i], fontSize: 22,
           fontFamily: "'Exo 2'", fontWeight: 900,
-          opacity: 0.05, animation: `float${i} ${3.5 + i * 0.6}s ease-in-out infinite`,
+          opacity: 0.12, animation: `float${i} ${3.5 + i * 0.6}s ease-in-out infinite`,
           animationDelay: `${i * 0.4}s`,
         }}>{s}</div>
       ))}
