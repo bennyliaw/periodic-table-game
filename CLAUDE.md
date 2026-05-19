@@ -265,6 +265,17 @@ App (screen router + shared state)
 
 ---
 
+## Advisor Usage
+When the task involves:
+- New feature design spanning multiple layers (DB, API, UI)
+- Architectural decisions or refactoring
+- Deployment or infrastructure changes
+- Anything I flag as "complex" or "critical"
+
+→ Consult the advisor before writing any code, not just when stuck.
+
+---
+
 ## Environment
 
 - Node.js: 18+ recommended
