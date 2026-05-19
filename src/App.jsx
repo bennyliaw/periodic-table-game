@@ -1550,7 +1550,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
               <button key={d.id}
                 onClick={() => unlocked && setDifficulty(d.id)}
                 style={{
-                  flex: "0 0 calc((100% - 15px) / 2.5)", padding: "7px 8px", textAlign: "left",
+                  flex: "0 0 calc((100% - 20px) / 3)", padding: "7px 8px", textAlign: "left",
                   position: "relative",
                   background: active && unlocked ? "rgba(26,45,74,0.65)" : "rgba(10,15,26,0.6)",
                   border: `2px solid ${active && unlocked ? "#22d3ee" : "#1e293b"}`,
