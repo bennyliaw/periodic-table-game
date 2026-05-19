@@ -795,7 +795,8 @@ function PlayerChip({ p, isActive, score, rank, onTap, onLongPress }) {
       onPointerUp={() => {
         if (pressTimer.current) { clearTimeout(pressTimer.current); pressTimer.current = null; onTap(p); }
       }}
-      onPointerLeave={() => { if (pressTimer.current) { clearTimeout(pressTimer.current); pressTimer.current = null; } }}
+      onPointerCancel={() => { clearTimeout(pressTimer.current); pressTimer.current = null; }}
+      onContextMenu={e => e.preventDefault()}
       style={{
         position: "relative",
         flex: "0 0 auto", minWidth: 88, padding: "14px 10px", textAlign: "center",
@@ -1144,7 +1145,6 @@ function RoomCodeBar({ roomId, onJoin }) {
 // ═══════════════════════════════════════════
 // HOME SCREEN
 // ═══════════════════════════════════════════
-const BG_SYMBOLS = ["Au", "Ne", "Fe", "Hg", "Pb"];
 
 function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onAddPlayer, roomId, joinRoom,
                       difficulty, setDifficulty, onStart, activePlayer,
@@ -1193,17 +1193,22 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", fontFamily: "'Nunito'", padding: "2px 18px", overflowY: "auto" }}>
 
-      {/* Floating bg symbols */}
-      {BG_SYMBOLS.map((s, i) => (
-        <div key={i} style={{
-          position: "fixed", pointerEvents: "none", zIndex: 0,
-          left: `${8 + i * 19}%`, top: `${12 + (i % 3) * 22}%`,
-          color: Object.values(GC)[i], fontSize: 22,
-          fontFamily: "'Exo 2'", fontWeight: 900,
-          opacity: 0.12, animation: `float${i} ${3.5 + i * 0.6}s ease-in-out infinite`,
-          animationDelay: `${i * 0.4}s`,
-        }}>{s}</div>
-      ))}
+      {/* Floating bg symbols — pulled from current rank's pool */}
+      {(() => {
+        const pool = getPool(difficulty);
+        const step = Math.floor(pool.length / 5);
+        const symbols = Array.from({ length: 5 }, (_, i) => pool[i * step] || pool[i]);
+        return symbols.map((el, i) => (
+          <div key={`${difficulty}-${i}`} style={{
+            position: "fixed", pointerEvents: "none", zIndex: 0,
+            left: `${8 + i * 19}%`, top: `${12 + (i % 3) * 22}%`,
+            color: GC[el.group] || "#22d3ee", fontSize: 22,
+            fontFamily: "'Exo 2'", fontWeight: 900,
+            opacity: 0.12, animation: `float${i} ${3.5 + i * 0.6}s ease-in-out infinite`,
+            animationDelay: `${i * 0.4}s`,
+          }}>{el.symbol}</div>
+        ));
+      })()}
 
       {/* Title */}
       <div style={{ textAlign: "center", marginBottom: 26, position: "relative", zIndex: 1 }}>
