@@ -824,7 +824,7 @@ function PlayerChip({ p, isActive, score, rank, onTap, onLongPress }) {
       style={{
         position: "relative",
         flex: "0 0 auto", minWidth: 88, padding: "14px 10px", textAlign: "center",
-        background: isActive ? `${p.color}14` : "#0a0f1a",
+        background: isActive ? `${p.color}14` : "rgba(10,15,26,0.6)",
         border: `2px solid ${isActive ? p.color : "#1e293b"}`,
         borderRadius: 18, transition: "all 0.2s", cursor: "pointer",
         boxShadow: isActive ? `0 0 28px ${p.color}28` : "none",
@@ -1383,7 +1383,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
           ))}
           <button onClick={onAddPlayer} style={{
             flex: "0 0 auto", minWidth: 80, padding: "14px 10px", textAlign: "center",
-            background: "#0a0f1a", border: "2px dashed #1e293b",
+            background: "rgba(10,15,26,0.6)", border: "2px dashed #1e293b",
             borderRadius: 18, cursor: "pointer", transition: "all 0.2s",
           }}>
             <div style={{ fontSize: 26, marginBottom: 3, color: "#334155" }}>＋</div>
@@ -1409,7 +1409,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
                 onTouchEnd={e => { e.preventDefault(); setTooltipIdx(expanded ? null : d.id); }}
                 style={{
                 padding: "10px 8px", textAlign: "left",
-                background: active ? "#1a2d4a" : "#0a0f1a",
+                background: active ? "rgba(26,45,74,0.65)" : "rgba(10,15,26,0.6)",
                 border: `2px solid ${active ? "#22d3ee" : "#1e293b"}`,
                 borderRadius: 14, transition: "all 0.2s",
                 boxShadow: active ? "0 0 16px rgba(34,211,238,0.15)" : "none",
@@ -1421,10 +1421,10 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
                   <div style={{ color: active ? "#64748b" : "#475569", fontSize: 10, marginTop: 2, lineHeight: 1.3 }}>{d.line2}</div>
                 )}
                 <div style={{ display: "flex", gap: 4, marginTop: 6, flexWrap: "wrap" }}>
-                  <span style={{ background: "#0d1a2d", border: "1px solid #1e293b", borderRadius: 6, padding: "2px 6px", fontSize: 10, color: "#64748b" }}>
+                  <span style={{ background: "rgba(13,26,45,0.7)", border: "1px solid #1e293b", borderRadius: 6, padding: "2px 6px", fontSize: 10, color: "#64748b" }}>
                     {d.elements} elements
                   </span>
-                  <span style={{ background: "#0d1a2d", border: "1px solid #1e293b", borderRadius: 6, padding: "2px 6px", fontSize: 10, color: "#64748b" }}>
+                  <span style={{ background: "rgba(13,26,45,0.7)", border: "1px solid #1e293b", borderRadius: 6, padding: "2px 6px", fontSize: 10, color: "#64748b" }}>
                     {d.basePts} pts/card
                   </span>
                 </div>
@@ -1580,7 +1580,7 @@ function ModeCard({ icon, label, desc, onClick, extra }) {
   return (
     <button onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} style={{
       padding: "18px 12px", textAlign: "center",
-      background: h ? "#111827" : "#0a0f1a",
+      background: h ? "rgba(17,24,39,0.7)" : "rgba(10,15,26,0.6)",
       border: `2px solid ${h ? "#22d3ee" : "#1e293b"}`,
       borderRadius: 18, transition: "all 0.18s",
       boxShadow: h ? "0 0 22px rgba(34,211,238,0.14)" : "none",
