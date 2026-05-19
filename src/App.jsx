@@ -786,16 +786,35 @@ function PlayerProfileCard({ p, score, isActive, onLogin, onSignOut, onClose }) 
 
 function PlayerChip({ p, isActive, score, rank, onTap, onLongPress }) {
   const pressTimer = useRef(null);
+  const startPos   = useRef(null);
   const rankIcon = rank ? getLevelInfo(rank).icon : "🧹";
+
+  function startPress() {
+    pressTimer.current = setTimeout(() => { pressTimer.current = null; onLongPress(p); }, 600);
+  }
+  function endPress() {
+    if (pressTimer.current) { clearTimeout(pressTimer.current); pressTimer.current = null; onTap(p); }
+  }
+  function cancelPress() { clearTimeout(pressTimer.current); pressTimer.current = null; }
+
   return (
     <button
-      onPointerDown={() => {
-        pressTimer.current = setTimeout(() => { pressTimer.current = null; onLongPress(p); }, 500);
+      onTouchStart={e => {
+        const t = e.touches[0];
+        startPos.current = { x: t.clientX, y: t.clientY };
+        startPress();
       }}
-      onPointerUp={() => {
-        if (pressTimer.current) { clearTimeout(pressTimer.current); pressTimer.current = null; onTap(p); }
+      onTouchMove={e => {
+        if (!startPos.current) return;
+        const t = e.touches[0];
+        if (Math.abs(t.clientX - startPos.current.x) > 10 || Math.abs(t.clientY - startPos.current.y) > 10)
+          cancelPress();
       }}
-      onPointerCancel={() => { clearTimeout(pressTimer.current); pressTimer.current = null; }}
+      onTouchEnd={e => { e.preventDefault(); endPress(); }}
+      onTouchCancel={cancelPress}
+      onMouseDown={startPress}
+      onMouseUp={endPress}
+      onMouseLeave={cancelPress}
       onContextMenu={e => e.preventDefault()}
       style={{
         position: "relative",
