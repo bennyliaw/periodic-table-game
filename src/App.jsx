@@ -1178,6 +1178,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   const [constellationModal, setConstellationModal] = useState(null);
   const [actionTarget, setActionTarget]       = useState(null);
   const [profileTarget, setProfileTarget]     = useState(null);
+  const [tooltipIdx, setTooltipIdx]           = useState(null);
   const [slots, setSlots] = useState(() => {
     const pool = getPool(difficulty);
     const els = [...pool].sort(() => Math.random() - 0.5).slice(0, 30);
@@ -1399,17 +1400,26 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
           {LEVELS.map(d => {
             const active = difficulty === d.id;
+            const expanded = tooltipIdx === d.id;
             return (
-              <button key={d.id} onClick={() => setDifficulty(d.id)} style={{
+              <button key={d.id} onClick={() => { setDifficulty(d.id); setTooltipIdx(expanded ? null : d.id); }}
+                onMouseEnter={() => setTooltipIdx(d.id)}
+                onMouseLeave={() => setTooltipIdx(null)}
+                onTouchStart={() => {}}
+                onTouchEnd={e => { e.preventDefault(); setTooltipIdx(expanded ? null : d.id); }}
+                style={{
                 padding: "10px 8px", textAlign: "left",
                 background: active ? "#1a2d4a" : "#0a0f1a",
                 border: `2px solid ${active ? "#22d3ee" : "#1e293b"}`,
                 borderRadius: 14, transition: "all 0.2s",
                 boxShadow: active ? "0 0 16px rgba(34,211,238,0.15)" : "none",
+                cursor: "pointer",
               }}>
                 <div style={{ color: active ? "#22d3ee" : "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 12 }}>{d.label}</div>
                 <div style={{ color: active ? "#94a3b8" : "#64748b", fontSize: 10, marginTop: 4, lineHeight: 1.3, fontWeight: 600 }}>{d.line1}</div>
-                <div style={{ color: active ? "#64748b" : "#475569", fontSize: 10, marginTop: 2, lineHeight: 1.3 }}>{d.line2}</div>
+                {expanded && (
+                  <div style={{ color: active ? "#64748b" : "#475569", fontSize: 10, marginTop: 2, lineHeight: 1.3 }}>{d.line2}</div>
+                )}
                 <div style={{ display: "flex", gap: 4, marginTop: 6, flexWrap: "wrap" }}>
                   <span style={{ background: "#0d1a2d", border: "1px solid #1e293b", borderRadius: 6, padding: "2px 6px", fontSize: 10, color: "#64748b" }}>
                     {d.elements} elements
