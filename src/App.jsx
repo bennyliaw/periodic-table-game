@@ -437,11 +437,16 @@ function GlobalStyles() {
         0%,100% { transform: rotate(-8deg) scale(1.15); }
         50%      { transform: rotate(8deg)  scale(1.15); }
       }
-      @keyframes float0 { 0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(6deg)} }
-      @keyframes float1 { 0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-12px) rotate(-4deg)} }
-      @keyframes float2 { 0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-20px) rotate(3deg)} }
-      @keyframes float3 { 0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-10px) rotate(-6deg)} }
-      @keyframes float4 { 0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-15px) rotate(5deg)} }
+      @keyframes wild0 { 0%,100%{transform:rotate(0deg) scale(1)} 40%{transform:rotate(20deg) scale(1.12)} 70%{transform:rotate(-10deg) scale(0.9)} }
+      @keyframes wild1 { 0%,100%{transform:rotate(0deg) scale(1)} 35%{transform:rotate(-22deg) scale(1.15)} 65%{transform:rotate(12deg) scale(0.88)} }
+      @keyframes wild2 { 0%,100%{transform:rotate(0deg) scale(1)} 50%{transform:rotate(28deg) scale(1.08)} 75%{transform:rotate(-8deg) scale(0.94)} }
+      @keyframes wild3 { 0%,100%{transform:rotate(0deg) scale(1)} 45%{transform:rotate(-18deg) scale(1.12)} 80%{transform:rotate(15deg) scale(0.87)} }
+      @keyframes wild4 { 0%,100%{transform:rotate(0deg) scale(1)} 25%{transform:rotate(22deg) scale(1.06)} 55%{transform:rotate(-15deg) scale(0.92)} }
+      @keyframes wild5 { 0%,100%{transform:rotate(0deg) scale(1)} 45%{transform:rotate(-25deg) scale(1.1)} 75%{transform:rotate(10deg) scale(0.95)} }
+      @keyframes wild6 { 0%,100%{transform:rotate(0deg) scale(1)} 30%{transform:rotate(24deg) scale(1.14)} 60%{transform:rotate(-18deg) scale(0.89)} }
+      @keyframes wild7 { 0%,100%{transform:rotate(0deg) scale(1)} 40%{transform:rotate(-20deg) scale(1.18)} 70%{transform:rotate(14deg) scale(0.84)} }
+      @keyframes shake { 0%,100%{transform:translate(0,0) rotate(0deg)} 12%{transform:translate(-7px,3px) rotate(-11deg)} 25%{transform:translate(7px,-4px) rotate(11deg)} 37%{transform:translate(-6px,6px) rotate(-9deg)} 50%{transform:translate(6px,-5px) rotate(10deg)} 62%{transform:translate(-7px,2px) rotate(-11deg)} 75%{transform:translate(7px,-2px) rotate(11deg)} 87%{transform:translate(-3px,3px) rotate(-6deg)} }
+      @keyframes floatIn { from{opacity:0;transform:scale(0.5) rotate(-15deg)} to{opacity:1;transform:scale(1) rotate(0deg)} }
       @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
       ::-webkit-scrollbar { width: 4px; }
       ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
@@ -1173,6 +1178,56 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   const [constellationModal, setConstellationModal] = useState(null);
   const [actionTarget, setActionTarget]       = useState(null);
   const [profileTarget, setProfileTarget]     = useState(null);
+  const [slots, setSlots] = useState(() => {
+    const pool = getPool(difficulty);
+    const els = [...pool].sort(() => Math.random() - 0.5).slice(0, 30);
+    return els.map(el => ({
+      el, phase: "idle", cycleKey: 0,
+      tx: (Math.random() - 0.5) * 200, ty: (Math.random() - 0.5) * 300,
+    }));
+  });
+  const slotsRef = useRef([]);
+  useEffect(() => { slotsRef.current = slots; }, [slots]);
+  const difficultyRef = useRef(difficulty);
+  useEffect(() => { difficultyRef.current = difficulty; }, [difficulty]);
+
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) { isFirstRender.current = false; return; }
+    const pool = getPool(difficulty);
+    const timers = [];
+    // shake each element individually with random spread (0–180ms)
+    for (let i = 0; i < 30; i++) {
+      const t = setTimeout(() => {
+        setSlots(prev => prev.map((s, si) => si === i ? { ...s, phase: "wiggle" } : s));
+      }, Math.floor(Math.random() * 180));
+      timers.push(t);
+    }
+    // fade all out after shaking finishes (spread 180ms + shake 400ms + buffer)
+    const tOut = setTimeout(() => {
+      setSlots(prev => prev.map(s => ({ ...s, phase: "out" })));
+    }, 650);
+    timers.push(tOut);
+    // stagger new elements in after fade completes
+    const order = Array.from({ length: 30 }, (_, i) => i).sort(() => Math.random() - 0.5);
+    order.forEach((slotIdx, step) => {
+      const t1 = setTimeout(() => {
+        const used = new Set(slotsRef.current.filter((_, i) => i !== slotIdx).map(s => s.el.symbol));
+        const avail = pool.filter(e => !used.has(e.symbol));
+        const src = avail.length ? avail : pool;
+        const newEl = src[Math.floor(Math.random() * src.length)];
+        setSlots(prev => prev.map((s, i) => i === slotIdx
+          ? { el: newEl, phase: "in", cycleKey: s.cycleKey + 1 }
+          : s));
+        const t2 = setTimeout(() => {
+          setSlots(prev => prev.map((s, i) => i === slotIdx ? { ...s, phase: "idle" } : s));
+        }, 600);
+        timers.push(t2);
+      }, 1050 + step * 100);
+      timers.push(t1);
+    });
+    return () => timers.forEach(clearTimeout);
+  }, [difficulty]);
 
   useEffect(() => {
     if (!adminUnlocked) return;
@@ -1181,6 +1236,48 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
     }, 10_000);
     return () => clearInterval(t);
   }, [adminUnlocked, adminUnlockTime]);
+
+  useEffect(() => {
+    const cycle = () => {
+      const pool = getPool(difficultyRef.current);
+      const cur = slotsRef.current;
+      const idles = cur.reduce((acc, s, i) => s.phase === "idle" ? [...acc, i] : acc, []);
+      if (!idles.length) return;
+      const idx = idles[Math.floor(Math.random() * idles.length)];
+      setSlots(prev => prev.map((s, i) => i === idx ? { ...s, phase: "out" } : s));
+      setTimeout(() => {
+        const used = new Set(slotsRef.current.map(s => s.el.symbol));
+        const avail = pool.filter(e => !used.has(e.symbol));
+        const src = avail.length ? avail : pool;
+        const newEl = src[Math.floor(Math.random() * src.length)];
+        setSlots(prev => prev.map((s, i) => i === idx
+          ? { el: newEl, phase: "in", cycleKey: s.cycleKey + 1 }
+          : s));
+        setTimeout(() => {
+          setSlots(prev => prev.map((s, i) => i === idx ? { ...s, phase: "idle" } : s));
+        }, 600);
+      }, 450);
+    };
+    const t = setInterval(cycle, 1500);
+    return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
+    const wander = () => {
+      setSlots(prev => {
+        const idles = prev.map((s, i) => s.phase === "idle" ? i : -1).filter(i => i >= 0);
+        if (idles.length === 0) return prev;
+        const picks = [...idles].sort(() => Math.random() - 0.5).slice(0, 3);
+        return prev.map((s, i) => picks.includes(i) ? {
+          ...s,
+          tx: (Math.random() - 0.5) * Math.min(window.innerWidth * 0.75, 380),
+          ty: (Math.random() - 0.5) * Math.min(window.innerHeight * 0.75, 520),
+        } : s);
+      });
+    };
+    const t = setInterval(wander, 500);
+    return () => clearInterval(t);
+  }, []);
 
   function handlePlayerTap(p) {
     setProfileTarget(p);
@@ -1212,24 +1309,39 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", fontFamily: "'Nunito'", padding: "2px 18px", overflowY: "auto" }}>
 
-      {/* Floating bg symbols — show elements from the rank's highest tier */}
-      {(() => {
-        const tierMap = { lv1: 1, lv2: 2, lv3: 3, lv4: 3, lv5: 4, lv6: 5 };
-        const topTier = tierMap[difficulty] ?? 1;
-        const tierPool = ELEMENTS.filter(e => e.tier === topTier);
-        const step = Math.max(1, Math.floor(tierPool.length / 5));
-        const els = Array.from({ length: 5 }, (_, i) => tierPool[(i * step) % tierPool.length]);
-        return els.map((el, i) => (
-          <div key={`${difficulty}-${i}`} style={{
+      {/* Floating bg symbols — 30 slots, elements cycle individually; wiggle+swap on level change */}
+      {slots.map((slot, i) => {
+        const left = (i * 37 + 3) % 92;
+        const top  = (i * 23 + 8) % 85;
+        const animIdx = i % 8;
+        const dur = 3.2 + (i % 5) * 0.7;
+        const dly = (i * 0.18) % 2.5;
+        const innerAnim = slot.phase === "in"
+          ? `floatIn 0.5s ease-out both, wild${animIdx} ${dur}s ease-in-out 0.5s infinite`
+          : slot.phase === "wiggle"
+          ? `shake 0.2s ease-in-out 2`
+          : `wild${animIdx} ${dur}s ease-in-out ${dly}s infinite`;
+        const frozen = slot.phase === "wiggle" || slot.phase === "out";
+        return (
+          <div key={i} style={{
             position: "fixed", pointerEvents: "none", zIndex: 0,
-            left: `${8 + i * 19}%`, top: `${12 + (i % 3) * 22}%`,
-            color: GC[el.group] || "#22d3ee", fontSize: 22,
-            fontFamily: "'Exo 2'", fontWeight: 900,
-            opacity: 0.12, animation: `float${i} ${3.5 + i * 0.6}s ease-in-out infinite`,
-            animationDelay: `${i * 0.4}s`,
-          }}>{el.symbol}</div>
-        ));
-      })()}
+            left: `${left}%`, top: `${top}%`,
+            opacity: slot.phase === "out" ? 0 : 0.18,
+            transition: slot.phase === "out" ? "opacity 0.35s ease-out" : "none",
+          }}>
+            <div style={{
+              transform: `translate(${slot.tx}px, ${slot.ty}px)`,
+              transition: frozen ? "none" : "transform 2s ease-in-out",
+            }}>
+              <div key={slot.cycleKey} style={{
+                color: GC[slot.el.group] || "#22d3ee",
+                fontSize: 16, fontFamily: "'Exo 2'", fontWeight: 900,
+                animation: innerAnim,
+              }}>{slot.el.symbol}</div>
+            </div>
+          </div>
+        );
+      })}
 
       {/* Title */}
       <div style={{ textAlign: "center", marginBottom: 26, position: "relative", zIndex: 1 }}>

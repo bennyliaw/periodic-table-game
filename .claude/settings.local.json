@@ -12,7 +12,11 @@
       "Bash(pkill -f \"vite\")",
       "Bash(open *)",
       "Bash(curl -s http://localhost:5173)",
-      "Bash(vercel --prod)"
+      "Bash(vercel --prod)",
+      "Bash(sort -t: -k4)",
+      "Read(/private/tmp/**)",
+      "Bash(cat /tmp/*)",
+      "Bash(cat /private/tmp/**)"
     ]
   }
 }
