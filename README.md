@@ -119,18 +119,16 @@ Quitting a round mid-way still awards the accumulated score to the player's tota
 
 ## Difficulty Levels
 
-| Level | Elements | Score multiplier | Unlock |
-|-------|----------|-----------------|--------|
-| 🥉 Cadet | 15 most common (H, O, Au, Fe…) | 0.2× | Always unlocked |
-| 🥈 Petty Officer | 31 elements — noble gases, halogens, metals | 0.4× | Always unlocked |
-| 🥇 Warrant Officer | 16 specialist heavy metals & transitions | 0.6× | Promotion Trial |
-| 🏆 Lieutenant | 47 elements — combined tiers 1–3 | 1× | Promotion Trial |
-| 👑 Captain | 82 elements — including rare metals | 1.3× | Promotion Trial |
-| ⚛️ Commodore | All 118 elements — full periodic table | 1.5× | Promotion Trial |
+| Level | Elements | ฿ per card | Unlock reward |
+|-------|----------|-----------|---------------|
+| 🥉 Cadet | 15 most common (H, O, Au, Fe…) | ฿ 2 | — (always unlocked) |
+| 🥈 Petty Officer | 31 elements — noble gases, halogens, metals | ฿ 4 | — (always unlocked) |
+| 🥇 Warrant Officer | 16 specialist heavy metals & transitions | ฿ 6 | ฿ 10,000 |
+| 🏆 Lieutenant | 47 elements — combined tiers 1–3 | ฿ 10 | ฿ 25,000 |
+| 👑 Captain | 82 elements — including rare metals | ฿ 15 | ฿ 50,000 |
+| ⚛️ Commodore | All 118 elements — full periodic table | ฿ 20 | ฿ 100,000 |
 
-Each rank card shows the element count and ฿ per card at a glance. The rank row shows 2.5 cards per screen — scroll to see all six.
-
-Passing a Promotion Trial unlocks the next rank and awards a one-time Berry bonus (lv3 +฿10k → lv6 +฿100k).
+Each rank card shows the element count and ฿ per card at a glance. The rank row shows 2.5 cards per screen — scroll to see all six. lv3–lv6 are locked until you pass a Promotion Trial at the previous rank.
 
 ## First Visit
 
