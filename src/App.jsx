@@ -1193,12 +1193,14 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", fontFamily: "'Nunito'", padding: "2px 18px", overflowY: "auto" }}>
 
-      {/* Floating bg symbols — pulled from current rank's pool */}
+      {/* Floating bg symbols — show elements from the rank's highest tier */}
       {(() => {
-        const pool = getPool(difficulty);
-        const step = Math.floor(pool.length / 5);
-        const symbols = Array.from({ length: 5 }, (_, i) => pool[i * step] || pool[i]);
-        return symbols.map((el, i) => (
+        const tierMap = { lv1: 1, lv2: 2, lv3: 3, lv4: 3, lv5: 4, lv6: 5 };
+        const topTier = tierMap[difficulty] ?? 1;
+        const tierPool = ELEMENTS.filter(e => e.tier === topTier);
+        const step = Math.max(1, Math.floor(tierPool.length / 5));
+        const els = Array.from({ length: 5 }, (_, i) => tierPool[(i * step) % tierPool.length]);
+        return els.map((el, i) => (
           <div key={`${difficulty}-${i}`} style={{
             position: "fixed", pointerEvents: "none", zIndex: 0,
             left: `${8 + i * 19}%`, top: `${12 + (i % 3) * 22}%`,
