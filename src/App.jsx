@@ -1562,14 +1562,8 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
                 {!unlocked && <span style={{ position: "absolute", top: 4, left: 5, fontSize: 9 }}>🔒</span>}
                 <div style={{ fontSize: 15, marginBottom: 2, textAlign: "center" }}>{d.icon}</div>
                 <div style={{ color: active && unlocked ? "#22d3ee" : "#475569", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 10, marginBottom: 3, textAlign: "center" }}>{d.label.replace(/^.{2}\s/, "")}</div>
-                {unlocked ? (
-                  <>
-                    <div style={{ color: active ? "#94a3b8" : "#64748b", fontSize: 10, lineHeight: 1.3, fontWeight: 600 }}>{d.line1}</div>
-                    <div style={{ color: active ? "#64748b" : "#475569", fontSize: 10, marginTop: 2, lineHeight: 1.3 }}>{d.line2}</div>
-                  </>
-                ) : (
-                  <div style={{ color: "#334155", fontSize: 9, lineHeight: 1.3, marginBottom: 2 }}>Complete training to unlock</div>
-                )}
+                <div style={{ color: active && unlocked ? "#94a3b8" : "#64748b", fontSize: 10, lineHeight: 1.3, fontWeight: 600 }}>{d.line1}</div>
+                <div style={{ color: active && unlocked ? "#64748b" : "#475569", fontSize: 10, marginTop: 2, lineHeight: 1.3 }}>{d.line2}</div>
                 <div style={{ display: "flex", gap: 3, marginTop: 4, flexWrap: "wrap", alignItems: "center" }}>
                   <span style={{ background: "rgba(13,26,45,0.7)", border: "1px solid #1e293b", borderRadius: 5, padding: "1px 4px", fontSize: 8, color: "#64748b" }}>
                     {d.elements} elements
@@ -1590,6 +1584,17 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
                     </span>
                   )}
                 </div>
+                {!unlocked && (() => {
+                  const bonus = UNLOCK_BONUS[d.id];
+                  return bonus ? (
+                    <div style={{ textAlign: "center", marginTop: 4 }}>
+                      <span style={{ display: "inline-block", background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)", borderRadius: 4, padding: "1px 5px", fontSize: 8, color: "#fbbf24", fontWeight: 700 }}>
+                        🎁 +฿{(bonus / 1000).toFixed(0).replace(/\.0$/, "")}k unlock reward
+                      </span>
+                    </div>
+                  ) : null;
+                })()}
+                {!unlocked && <div style={{ color: "#334155", fontSize: 9, lineHeight: 1.3, marginBottom: 2, marginTop: 3 }}>Complete training to unlock</div>}
                 {canAttempt && (
                   <div onClick={e => { e.stopPropagation(); onStartTrial(d.id); }}
                     style={{ marginTop: 5, width: "100%", padding: "3px 0",

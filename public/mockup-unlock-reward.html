@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Rank Card – Unlock Reward Mockups</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=Nunito:wght@400;600;700;800&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #070b14; font-family: 'Nunito', sans-serif; padding: 24px 18px 60px; }
+  h2 { color: #22d3ee; font-family: 'Exo 2', sans-serif; font-size: 14px; text-align: center; margin: 28px 0 14px; letter-spacing: 3px; text-transform: uppercase; }
+  h2:first-child { margin-top: 0; }
+  .grid { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding-bottom: 6px; }
+  .grid::-webkit-scrollbar { width: 0; }
+  .card {
+    flex: 0 0 calc((100% - 20px) / 3);
+    padding: 7px 5px;
+    text-align: left;
+    position: relative;
+    background: rgba(10,15,26,0.6);
+    border: 2px solid #1e293b;
+    border-radius: 14px;
+    opacity: 0.6;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+  }
+  .card .lock { position: absolute; top: 4px; left: 5px; font-size: 9px; }
+  .card .icon { font-size: 15px; margin-bottom: 2px; text-align: center; }
+  .card .label { color: #475569; font-family: 'Exo 2', sans-serif; font-weight: 700; font-size: 10px; margin-bottom: 3px; text-align: center; }
+  .card .hint { color: #334155; font-size: 9px; line-height: 1.3; margin-bottom: 2px; }
+  .badge-row { display: flex; gap: 3px; margin-top: 4px; flex-wrap: wrap; align-items: center; }
+  .badge {
+    background: rgba(13,26,45,0.7);
+    border: 1px solid #1e293b;
+    border-radius: 5px;
+    padding: 1px 4px;
+    font-size: 8px;
+    color: #64748b;
+  }
+  .badge-gold {
+    background: rgba(251,191,36,0.12);
+    border: 1px solid rgba(251,191,36,0.35);
+    color: #fbbf24;
+  }
+
+  /* ── Option A: top-right pill badge ── */
+  .optA-badge {
+    position: absolute;
+    top: -6px; right: -6px;
+    background: rgba(251,191,36,0.18);
+    border: 1px solid #fbbf24;
+    border-radius: 7px;
+    padding: 1px 5px;
+    font-size: 8px;
+    color: #fbbf24;
+    font-weight: 700;
+    white-space: nowrap;
+    backdrop-filter: blur(4px);
+  }
+
+  /* ── Option B: inline ribbon bar at bottom ── */
+  .optB-ribbon {
+    margin-top: auto;
+    width: 100%;
+    padding: 3px 0;
+    background: rgba(251,191,36,0.08);
+    border: 1px solid rgba(251,191,36,0.3);
+    border-radius: 5px;
+    font-size: 8px;
+    color: #fbbf24;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  /* ── Option C: yellow chip in badge row ── */
+  .optC-chip {
+    background: rgba(251,191,36,0.14);
+    border: 1px solid rgba(251,191,36,0.4);
+    border-radius: 5px;
+    padding: 1px 4px;
+    font-size: 8px;
+    color: #fbbf24;
+    font-weight: 700;
+  }
+
+  /* ── Option D: separate pill between stats and unlock hint ── */
+  .optD-pill {
+    text-align: center;
+    margin-top: 4px;
+  }
+  .optD-pill span {
+    display: inline-block;
+    background: rgba(251,191,36,0.12);
+    border: 1px solid rgba(251,191,36,0.3);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 8px;
+    color: #fbbf24;
+    font-weight: 700;
+  }
+
+  .label-note { color: #fbbf24; font-size: 9px; text-align: center; margin-top: 8px; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- ============ OPTION A: top-right floating badge ============ -->
+<h2>Option A — top‑right floating pill</h2>
+<div class="grid">
+  <!-- Cards for lv3..lv6 (locked) -->
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">🥇</div>
+    <div class="label">Warrant Officer</div>
+    <div class="hint">Complete training to unlock</div>
+    <div class="badge-row">
+      <span class="badge">16 elements</span>
+      <span class="badge">฿ 6/card</span>
+    </div>
+    <span class="optA-badge">฿10k</span>
+  </div>
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">🏆</div>
+    <div class="label">Lieutenant</div>
+    <div class="hint">Complete training to unlock</div>
+    <div class="badge-row">
+      <span class="badge">47 elements</span>
+      <span class="badge">฿ 10/card</span>
+    </div>
+    <span class="optA-badge">฿25k</span>
+  </div>
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">👑</div>
+    <div class="label">Captain</div>
+    <div class="hint">Complete training to unlock</div>
+    <div class="badge-row">
+      <span class="badge">82 elements</span>
+      <span class="badge">฿ 15/card</span>
+    </div>
+    <span class="optA-badge">฿50k</span>
+  </div>
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">⚛️</div>
+    <div class="label">Commodore</div>
+    <div class="hint">Complete training to unlock</div>
+    <div class="badge-row">
+      <span class="badge">118 elements</span>
+      <span class="badge">฿ 20/card</span>
+    </div>
+    <span class="optA-badge">฿100k</span>
+  </div>
+</div>
+<div class="label-note">🔒 Floating badge top‑right &nbsp;|&nbsp; Easy to spot, doesn't steal card space</div>
+
+<!-- ============ OPTION B: bottom ribbon bar ============ -->
+<h2>Option B — bottom ribbon bar</h2>
+<div class="grid">
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">🥇</div>
+    <div class="label">Warrant Officer</div>
+    <div class="hint">Complete training to unlock</div>
+    <div class="badge-row">
+      <span class="badge">16 elements</span>
+      <span class="badge">฿ 6/card</span>
+    </div>
+    <div class="optB-ribbon">🎁 Unlock reward +฿10k</div>
+  </div>
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">🏆</div>
+    <div class="label">Lieutenant</div>
+    <div class="hint">Complete training to unlock</div>
+    <div class="badge-row">
+      <span class="badge">47 elements</span>
+      <span class="badge">฿ 10/card</span>
+    </div>
+    <div class="optB-ribbon">🎁 Unlock reward +฿25k</div>
+  </div>
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">👑</div>
+    <div class="label">Captain</div>
+    <div class="hint">Complete training to unlock</div>
+    <div class="badge-row">
+      <span class="badge">82 elements</span>
+      <span class="badge">฿ 15/card</span>
+    </div>
+    <div class="optB-ribbon">🎁 Unlock reward +฿50k</div>
+  </div>
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">⚛️</div>
+    <div class="label">Commodore</div>
+    <div class="hint">Complete training to unlock</div>
+    <div class="badge-row">
+      <span class="badge">118 elements</span>
+      <span class="badge">฿ 20/card</span>
+    </div>
+    <div class="optB-ribbon">🎁 Unlock reward +฿100k</div>
+  </div>
+</div>
+<div class="label-note">⬇️ Pinned to bottom inside card &nbsp;|&nbsp; Clear call-out, pushes other content up slightly</div>
+
+<!-- ============ OPTION C: chip in the existing badge row ============ -->
+<h2>Option C — yellow chip in badge row</h2>
+<div class="grid">
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">🥇</div>
+    <div class="label">Warrant Officer</div>
+    <div class="hint">Complete training to unlock</div>
+    <div class="badge-row">
+      <span class="badge">16 elements</span>
+      <span class="badge">฿ 6/card</span>
+      <span class="optC-chip">+฿10k</span>
+    </div>
+  </div>
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">🏆</div>
+    <div class="label">Lieutenant</div>
+    <div class="hint">Complete training to unlock</div>
+    <div class="badge-row">
+      <span class="badge">47 elements</span>
+      <span class="badge">฿ 10/card</span>
+      <span class="optC-chip">+฿25k</span>
+    </div>
+  </div>
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">👑</div>
+    <div class="label">Captain</div>
+    <div class="hint">Complete training to unlock</div>
+    <div class="badge-row">
+      <span class="badge">82 elements</span>
+      <span class="badge">฿ 15/card</span>
+      <span class="optC-chip">+฿50k</span>
+    </div>
+  </div>
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">⚛️</div>
+    <div class="label">Commodore</div>
+    <div class="hint">Complete training to unlock</div>
+    <div class="badge-row">
+      <span class="badge">118 elements</span>
+      <span class="badge">฿ 20/card</span>
+      <span class="optC-chip">+฿100k</span>
+    </div>
+  </div>
+</div>
+<div class="label-note">🔶 Inline chip next to stats &nbsp;|&nbsp; Compact, reuses existing row (may wrap on small screens)</div>
+
+<!-- ============ OPTION D: pill above unlock hint ============ -->
+<h2>Option D — pill between stats and unlock hint</h2>
+<div class="grid">
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">🥇</div>
+    <div class="label">Warrant Officer</div>
+    <div class="badge-row">
+      <span class="badge">16 elements</span>
+      <span class="badge">฿ 6/card</span>
+    </div>
+    <div class="optD-pill"><span>🎁 +฿10k unlock reward</span></div>
+    <div class="hint" style="margin-top:3px;">Complete training to unlock</div>
+  </div>
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">🏆</div>
+    <div class="label">Lieutenant</div>
+    <div class="badge-row">
+      <span class="badge">47 elements</span>
+      <span class="badge">฿ 10/card</span>
+    </div>
+    <div class="optD-pill"><span>🎁 +฿25k unlock reward</span></div>
+    <div class="hint" style="margin-top:3px;">Complete training to unlock</div>
+  </div>
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">👑</div>
+    <div class="label">Captain</div>
+    <div class="badge-row">
+      <span class="badge">82 elements</span>
+      <span class="badge">฿ 15/card</span>
+    </div>
+    <div class="optD-pill"><span>🎁 +฿50k unlock reward</span></div>
+    <div class="hint" style="margin-top:3px;">Complete training to unlock</div>
+  </div>
+  <div class="card">
+    <span class="lock">🔒</span>
+    <div class="icon">⚛️</div>
+    <div class="label">Commodore</div>
+    <div class="badge-row">
+      <span class="badge">118 elements</span>
+      <span class="badge">฿ 20/card</span>
+    </div>
+    <div class="optD-pill"><span>🎁 +฿100k unlock reward</span></div>
+    <div class="hint" style="margin-top:3px;">Complete training to unlock</div>
+  </div>
+</div>
+<div class="label-note">📦 Centered pill between stats & hint &nbsp;|&nbsp; Visually separates "what you get" from "how to get it"</div>
+
+</body>
+</html>
