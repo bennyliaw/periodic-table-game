@@ -218,6 +218,7 @@ App (screen router + shared state)
 - Pool sizes: lv1=15 (tier 1), lv2=31 (tiers 1-2), lv3=16 (tier 3 only), lv4=47 (tiers 1-3), lv5=82 (tiers 1-4), lv6=118 (all)
 - `getLevelInfo(id)` — returns the LEVELS entry for a given ID
 - Rank selection row shows **3 cards** per screen width (`flex: "0 0 calc((100% - 20px) / 3)"`); scrollable to reach all 6; badges show full text ("15 elements", "฿ 2/card")
+- All rank cards (locked and unlocked) show `line1` + `line2` text from `LEVELS`; locked cards additionally show a `🎁 +฿Xk unlock reward` pill and "Complete training to unlock" footer
 
 **Scoring (Berry ฿ currency):**
 - `DIFF_MULT[difficulty]` multiplier applied to all earned points in Quiz, Scramble, and Speed Blast; Flash Cards unaffected
@@ -242,6 +243,7 @@ App (screen router + shared state)
 - Auto-submit in Type C when `typedInput.length === el.symbol.length` (handles 1-char symbols like H, O, C)
 - `PromotionTrialMode` holds `attemptKey` state; `TrialGame key={attemptKey}` remounts on retry
 - `wasUnlocked` captured at render time in App router and passed as prop (not re-derived after Supabase update)
+- **`useMemo` must be in the React import** — `PromotionTrialMode` uses it to generate questions; missing it causes a blank screen in production
 
 **Data:**
 - 118 elements in `ELEMENTS[]`, each with `{ name, symbol, number, group, tier }`
