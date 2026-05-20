@@ -1572,21 +1572,25 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
                 }}>
                 {!unlocked && (() => {
                   const bonus = UNLOCK_BONUS[d.id];
-                  const label = bonus ? `🔒 +฿${(bonus / 1000).toFixed(0).replace(/\.0$/, "")}k` : "🔒";
+                  const reward = bonus ? `Reward: ฿${(bonus / 1000).toFixed(0).replace(/\.0$/, "")}k` : null;
                   return (
                     <div style={{
-                      position: "absolute", top: -2, right: -22,
-                      width: 80,
-                      paddingTop: 1, paddingBottom: 1,
-                      background: "rgba(251,191,36,0.14)",
-                      border: "1px solid rgba(251,191,36,0.35)",
-                      color: "#fbbf24",
-                      fontSize: 7, fontWeight: 700,
+                      position: "absolute", top: 20, left: -42,
+                      width: 155,
+                      paddingTop: 5, paddingBottom: 5,
+                      background: "rgba(239,68,68,0.22)",
+                      border: "1px solid rgba(239,68,68,0.45)",
+                      color: "#fca5a5",
+                      fontSize: 9, fontWeight: 900,
                       textAlign: "center",
-                      transform: "rotate(45deg)",
+                      lineHeight: 1.3,
+                      transform: "rotate(-45deg)",
                       zIndex: 2,
                       pointerEvents: "none",
-                    }}>{label}</div>
+                    }}>
+                      <div style={{ letterSpacing: 3 }}>🔒 LOCKED</div>
+                      {reward && <div style={{ fontSize: 8.5, fontWeight: 700, color: "#fbbf24", opacity: 0.95 }}>{reward}</div>}
+                    </div>
                   );
                 })()}
                 <div style={{ fontSize: 15, marginBottom: 2, textAlign: "center" }}>{d.icon}</div>
