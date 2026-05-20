@@ -302,17 +302,24 @@ function usePlayers() {
     setActiveId(null);
   }
 
-  async function addPlayer({ name, age, icon, color, constellationHash }, roomIdOverride) {
+  async function addPlayer({ name, age, icon, color, gender, constellationHash }, roomIdOverride) {
     const id         = Date.now().toString();
     const targetRoom = roomIdOverride || roomId;
     const isFirst    = players.filter(p => p.room_id === targetRoom).length === 0;
     setActiveId(id);
     await supabase.from("eq_players").insert({
       id, room_id: targetRoom, name, age: age || null, icon, color, score: 0,
+      gender: gender || "male",
       is_admin: isFirst,
       constellation_hash: constellationHash || null,
       auth_reset: !constellationHash,
     });
+  }
+
+  async function updateProfile(id, { name, age, icon, gender }) {
+    await supabase.from("eq_players").update({
+      name, age: age || null, icon, gender: gender || "male",
+    }).eq("id", id);
   }
 
   async function updateScore(id, earned, newHighestLevel) {
@@ -384,7 +391,7 @@ function usePlayers() {
 
   const scores = Object.fromEntries(players.map(p => [p.id, p.score]));
   const activePlayer = players.find(p => p.id === activeId) || null;
-  return { players, scores, activePlayer, setActiveId, addPlayer, updateScore, updateMastery,
+  return { players, scores, activePlayer, setActiveId, addPlayer, updateProfile, updateScore, updateMastery,
            setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
            saveTrainingPass, saveTrialGrade, unlockLevel,
            roomId, joinRoom, loaded };
@@ -801,11 +808,12 @@ const RANK_BLURB = {
   lv6:   "You know all 118 elements. The Admirals await…",
 };
 
-function PlayerProfileCard({ p, score, isActive, onLogin, onSignOut, onClose }) {
+function PlayerProfileCard({ p, score, isActive, onLogin, onSignOut, onEditSave, onClose }) {
+  const [editing, setEditing] = useState(false);
   const level   = p.highest_level || null;
   const info    = level ? getLevelInfo(level) : null;
   const rankIcon = info ? info.icon : "🧹";
-  const rankName = info ? info.rank : "Chore Boy";
+  const rankName = info ? info.rank : (p.gender === "female" ? "Chore Girl" : "Chore Boy");
   const blurb    = RANK_BLURB[level];
 
   return (
@@ -863,15 +871,27 @@ function PlayerProfileCard({ p, score, isActive, onLogin, onSignOut, onClose }) 
               fontSize: 15, cursor: "pointer",
             }}>✅ Play as {p.name}</button>
           )}
-          {isActive && (
+          {isActive && (<>
+            <button onClick={() => setEditing(true)} style={{
+              padding: "14px", background: `${p.color}14`, border: `2px solid ${p.color}40`,
+              borderRadius: 14, color: p.color, fontFamily: "'Exo 2'", fontWeight: 700,
+              fontSize: 15, cursor: "pointer",
+            }}>✏️ Edit Profile</button>
             <button onClick={onSignOut} style={{
               padding: "14px", background: "#0a0f1a", border: "2px solid #334155",
               borderRadius: 14, color: "#64748b", fontFamily: "'Exo 2'", fontWeight: 700,
               fontSize: 15, cursor: "pointer",
             }}>Sign out</button>
-          )}
+          </>)}
         </div>
       </div>
+      {editing && (
+        <EditProfileModal
+          player={p}
+          onSave={updates => { onEditSave(updates); setEditing(false); }}
+          onCancel={() => setEditing(false)}
+        />
+      )}
     </div>
   );
 }
@@ -932,10 +952,128 @@ function PlayerChip({ p, isActive, score, rank, onTap, onLongPress }) {
   );
 }
 
+function EditProfileModal({ player, onSave, onCancel }) {
+  const color = player.color;
+  const [name, setName]         = useState(player.name || "");
+  const [age, setAge]           = useState(player.age != null ? String(player.age) : "");
+  const [gender, setGender]     = useState(player.gender || "male");
+  const [iconIdx, setIconIdx]   = useState(() => {
+    const i = PLAYER_ICONS.indexOf(player.icon);
+    return i >= 0 ? i : 0;
+  });
+  const [isCustom, setIsCustom] = useState(() => !PLAYER_ICONS.includes(player.icon));
+  const [customIcon, setCustomIcon] = useState(() => PLAYER_ICONS.includes(player.icon) ? "" : player.icon);
+  const selectedIcon = isCustom ? customIcon : PLAYER_ICONS[iconIdx];
+  const canSave = name.trim().length > 0 && selectedIcon.trim().length > 0;
+
+  function handleCustomChange(e) {
+    const segs = Intl.Segmenter
+      ? [...new Intl.Segmenter().segment(e.target.value)].map(s => s.segment)
+      : [...e.target.value];
+    setCustomIcon(segs[0] || "");
+  }
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "#070b14ee", zIndex: 600, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, overflowY: "auto" }}
+         onClick={onCancel}>
+      <div onClick={e => e.stopPropagation()} style={{
+        background: "#0a0f1a", border: `2px solid ${color}40`, borderRadius: 28,
+        padding: "28px 24px", width: "100%", maxWidth: 360, fontFamily: "'Nunito'",
+      }}>
+        <div style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20, marginBottom: 22, textAlign: "center" }}>
+          Edit Profile
+        </div>
+
+        {/* Icon picker */}
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 10, fontFamily: "'Exo 2'" }}>Icon</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8 }}>
+            {PLAYER_ICONS.map((icon, i) => (
+              <button key={i} onClick={() => { setIconIdx(i); setIsCustom(false); }} style={{
+                padding: 10, fontSize: 24,
+                background: !isCustom && iconIdx === i ? `${color}20` : "#111827",
+                border: `2px solid ${!isCustom && iconIdx === i ? color : "#1e293b"}`,
+                borderRadius: 12, cursor: "pointer",
+              }}>{icon}</button>
+            ))}
+          </div>
+          <button onClick={() => { setIsCustom(true); setCustomIcon(""); }} style={{
+            width: "100%", marginTop: 8, padding: "10px 16px",
+            background: isCustom ? `${color}18` : "#111827",
+            border: `2px solid ${isCustom ? color : "#1e293b"}`,
+            borderRadius: 12, cursor: "pointer",
+            color: isCustom ? color : "#475569",
+            fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 13,
+          }}>✏️  Custom Icon</button>
+          {isCustom && (
+            <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 12 }}>
+              <input value={customIcon} onChange={handleCustomChange} placeholder="Paste any emoji"
+                autoFocus
+                style={{ flex: 1, padding: "10px 14px", background: "#111827", border: `2px solid ${color}`, borderRadius: 12, color: "#e2e8f0", fontSize: 28, outline: "none", textAlign: "center" }} />
+              {customIcon && <div style={{ fontSize: 40, lineHeight: 1 }}>{customIcon}</div>}
+            </div>
+          )}
+        </div>
+
+        {/* Name */}
+        <div style={{ marginBottom: 12 }}>
+          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Name</div>
+          <input value={name} onChange={e => setName(e.target.value)}
+            placeholder="Enter name…"
+            style={{ width: "100%", padding: "13px 16px", background: "#111827", border: `2px solid ${name.trim() ? color : "#1e293b"}`, borderRadius: 14, color: "#e2e8f0", fontSize: 16, outline: "none", transition: "border-color 0.2s" }} />
+        </div>
+
+        {/* Age */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, fontFamily: "'Exo 2'", whiteSpace: "nowrap" }}>Age <span style={{ textTransform: "none", letterSpacing: 0, opacity: 0.6 }}>(opt)</span></div>
+          <input value={age} onChange={e => setAge(e.target.value.replace(/\D/g, "").slice(0, 2))}
+            placeholder="—"
+            style={{ width: 64, padding: "10px 12px", background: "#111827", border: "2px solid #1e293b", borderRadius: 12, color: "#e2e8f0", fontSize: 15, outline: "none", textAlign: "center" }} />
+        </div>
+
+        {/* Gender */}
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Gender</div>
+          <div style={{ display: "flex", gap: 8 }}>
+            {[["male", "♂ Male"], ["female", "♀ Female"]].map(([g, label]) => (
+              <button key={g} onClick={() => setGender(g)} style={{
+                flex: 1, padding: "10px 0",
+                background: gender === g ? `${color}18` : "#111827",
+                border: `2px solid ${gender === g ? color : "#1e293b"}`,
+                borderRadius: 12, color: gender === g ? color : "#475569",
+                fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 13, cursor: "pointer",
+                transition: "all 0.15s",
+              }}>{label}</button>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: 10 }}>
+          <button onClick={onCancel} style={{
+            flex: 1, padding: 14, background: "none", border: "2px solid #1e293b",
+            borderRadius: 14, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 14, cursor: "pointer",
+          }}>Cancel</button>
+          <button onClick={() => canSave && onSave({ name: name.trim(), age: age ? parseInt(age) : null, icon: selectedIcon, gender })}
+            disabled={!canSave}
+            style={{
+              flex: 2, padding: 14,
+              background: canSave ? `${color}18` : "#111827",
+              border: `2px solid ${canSave ? color : "#1e293b"}`,
+              borderRadius: 14, color: canSave ? color : "#334155",
+              fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15,
+              cursor: canSave ? "pointer" : "not-allowed", transition: "all 0.2s",
+            }}>Save Changes ✓</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AddPlayerModal({ players, roomId, onAdd, onCancel }) {
   const [step, setStep]                   = useState(1);
   const [name, setName]                   = useState("");
   const [age, setAge]                     = useState("");
+  const [gender, setGender]               = useState("male");
   const [iconIdx, setIconIdx]             = useState(0);
   const [isCustom, setIsCustom]           = useState(false);
   const [customIcon, setCustomIcon]       = useState("");
@@ -947,7 +1085,7 @@ function AddPlayerModal({ players, roomId, onAdd, onCancel }) {
 
   function handleAdd() {
     if (!canAdd) return;
-    onAdd({ name: name.trim(), age: age ? parseInt(age) : null, icon: selectedIcon, color, constellationHash });
+    onAdd({ name: name.trim(), age: age ? parseInt(age) : null, icon: selectedIcon, color, gender, constellationHash });
   }
 
   function handleCustomChange(e) {
@@ -1005,12 +1143,29 @@ function AddPlayerModal({ players, roomId, onAdd, onCancel }) {
               style={{ width: "100%", padding: "13px 16px", background: "#111827", border: `2px solid ${name.trim() ? color : "#1e293b"}`, borderRadius: 14, color: "#e2e8f0", fontSize: 16, outline: "none", transition: "border-color 0.2s" }} />
           </div>
 
-          {/* Age — compact inline */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+          {/* Age + Gender — inline row */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
             <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, fontFamily: "'Exo 2'", whiteSpace: "nowrap" }}>Age <span style={{ textTransform: "none", letterSpacing: 0, opacity: 0.6 }}>(opt)</span></div>
             <input value={age} onChange={e => setAge(e.target.value.replace(/\D/g, "").slice(0, 2))}
               placeholder="—"
               style={{ width: 64, padding: "10px 12px", background: "#111827", border: "2px solid #1e293b", borderRadius: 12, color: "#e2e8f0", fontSize: 15, outline: "none", textAlign: "center" }} />
+          </div>
+
+          {/* Gender */}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Gender</div>
+            <div style={{ display: "flex", gap: 8 }}>
+              {[["male", "♂ Male"], ["female", "♀ Female"]].map(([g, label]) => (
+                <button key={g} onClick={() => setGender(g)} style={{
+                  flex: 1, padding: "10px 0",
+                  background: gender === g ? `${color}18` : "#111827",
+                  border: `2px solid ${gender === g ? color : "#1e293b"}`,
+                  borderRadius: 12, color: gender === g ? color : "#475569",
+                  fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 13, cursor: "pointer",
+                  transition: "all 0.15s",
+                }}>{label}</button>
+              ))}
+            </div>
           </div>
 
           {/* Buttons */}
@@ -1259,7 +1414,7 @@ function RoomCodeBar({ roomId, onJoin }) {
 
 function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onAddPlayer, roomId, joinRoom,
                       difficulty, setDifficulty, onStart, onStartTrial, activePlayer,
-                      setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation }) {
+                      updateProfile, setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation }) {
   const [adminUnlocked, setAdminUnlocked]     = useState(false);
   const [adminUnlockTime, setAdminUnlockTime] = useState(0);
   const [constellationModal, setConstellationModal] = useState(null);
@@ -1711,6 +1866,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
           isActive={profileTarget.id === activeId}
           onLogin={() => handleProfileLogin(profileTarget)}
           onSignOut={handleProfileSignOut}
+          onEditSave={updates => updateProfile(profileTarget.id, updates)}
           onClose={() => setProfileTarget(null)}
         />
       )}
@@ -2782,7 +2938,7 @@ export default function ElementQuest() {
   useEffect(() => {
     if (pendingUpdate) updateServiceWorker(true);
   }, [pendingUpdate]);
-  const { players, scores, activePlayer, setActiveId, addPlayer, updateScore, updateMastery,
+  const { players, scores, activePlayer, setActiveId, addPlayer, updateProfile, updateScore, updateMastery,
           setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
           saveTrainingPass, saveTrialGrade, unlockLevel,
           roomId, joinRoom, loaded } = usePlayers();
@@ -2878,6 +3034,7 @@ export default function ElementQuest() {
           roomId={roomId} joinRoom={joinRoom}
           difficulty={difficulty} setDifficulty={setDifficulty}
           onStart={startGame} onStartTrial={startTrial}
+          updateProfile={updateProfile}
           setAdminStatus={setAdminStatus}
           deletePlayer={deletePlayer}
           resetPlayerAuth={resetPlayerAuth}
