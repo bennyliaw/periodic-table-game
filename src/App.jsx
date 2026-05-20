@@ -1419,7 +1419,10 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   const [adminUnlockTime, setAdminUnlockTime] = useState(0);
   const [constellationModal, setConstellationModal] = useState(null);
   const [actionTarget, setActionTarget]       = useState(null);
-  const [profileTarget, setProfileTarget]     = useState(null);
+  const [profileTargetId, setProfileTargetId] = useState(null);
+  const [hideAdults, setHideAdults]           = useState(false);
+  const displayedPlayers = hideAdults ? players.filter(p => !p.age || p.age < 18) : players;
+  const profileTarget = players.find(p => p.id === profileTargetId) ?? null;
   const [hintLevel, setHintLevel]             = useState(null); // level id to show tooltip for
   const hintTimerRef = useRef(null);
   const rankScrollRef = useRef(null);
@@ -1567,11 +1570,11 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   }, []);
 
   function handlePlayerTap(p) {
-    setProfileTarget(p);
+    setProfileTargetId(p.id);
   }
 
   function handleProfileLogin(p) {
-    setProfileTarget(null);
+    setProfileTargetId(null);
     if (!p.constellation_hash || p.auth_reset) {
       onSetActiveId(p.id);
       setConstellationModal({ mode: "setup", player: p, purpose: "login" });
@@ -1581,7 +1584,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   }
 
   function handleProfileSignOut() {
-    setProfileTarget(null);
+    setProfileTargetId(null);
     setActiveId(null);
   }
 
@@ -1666,7 +1669,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
       {/* Player Select */}
       <Section label="Who's Playing?">
         <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" }}>
-          {players.map(p => (
+          {displayedPlayers.map(p => (
             <PlayerChip key={p.id} p={p} isActive={activeId === p.id} score={scores[p.id] || 0}
               rank={p.highest_level || null}
               onTap={handlePlayerTap}
@@ -1682,6 +1685,20 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
           }}>
             <div style={{ fontSize: 26, marginBottom: 3, color: "#334155" }}>＋</div>
             <div style={{ color: "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 12 }}>Add Player</div>
+          </button>
+          <button onClick={() => setHideAdults(h => !h)} style={{
+            flex: "0 0 auto", padding: "14px 8px", textAlign: "center",
+            background: hideAdults ? "rgba(74,222,128,0.08)" : "rgba(10,15,26,0.6)",
+            border: `2px solid ${hideAdults ? "#4ade80" : "#1e293b"}`,
+            borderRadius: 18, cursor: "pointer", transition: "all 0.2s",
+            display: "flex", flexDirection: "column", alignItems: "center", gap: 2,
+          }}>
+            <div style={{ fontSize: 18, lineHeight: 1, color: hideAdults ? "#4ade80" : "#475569" }}>
+              {hideAdults ? "👶" : "👤"}
+            </div>
+            <div style={{ color: hideAdults ? "#4ade80" : "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 9, whiteSpace: "nowrap" }}>
+              {hideAdults ? "Kids only" : "All"}
+            </div>
           </button>
         </div>
         {!activeId && players.length > 0 && (
@@ -1744,7 +1761,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
                       pointerEvents: "none",
                     }}>
                       <div style={{ letterSpacing: 3 }}>🔒 LOCKED</div>
-                      {reward && <div style={{ fontSize: 8.5, fontWeight: 700, color: "#fbbf24", opacity: 0.95 }}>{reward}</div>}
+                      {reward && <div style={{ fontSize: 10.6, fontWeight: 700, color: "#fbbf24", opacity: 0.95 }}>{reward}</div>}
                     </div>
                   );
                 })()}
@@ -1866,8 +1883,8 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
           isActive={profileTarget.id === activeId}
           onLogin={() => handleProfileLogin(profileTarget)}
           onSignOut={handleProfileSignOut}
-          onEditSave={updates => updateProfile(profileTarget.id, updates)}
-          onClose={() => setProfileTarget(null)}
+          onEditSave={updates => updateProfile(profileTargetId, updates)}
+          onClose={() => setProfileTargetId(null)}
         />
       )}
 
