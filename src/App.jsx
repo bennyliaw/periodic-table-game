@@ -2324,7 +2324,22 @@ function ScrambleMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
     setDragIdx(null);
   }
 
+  function giveUp() {
+    if (feedback) return;
+    setTyped(el.name.toLowerCase());
+    streakRef.current = 0;
+    wrongRef.current += 1;
+    setStreak(0);
+    setFeedback("giveup");
+    playSound("wrong");
+    pendingRef.current = setTimeout(() => {
+      if (idx + 1 >= TOTAL) { onEnd(scoreRef.current, TOTAL - wrongRef.current, TOTAL); return; }
+      setIdx(i => i + 1);
+    }, 1400);
+  }
+
   function submit() {
+    if (feedback) return;
     if (typed.trim().toLowerCase() === el.name.toLowerCase()) {
       const earned = Math.round(((hint ? 5 : 10) + streakRef.current * 2) * (DIFF_MULT[difficulty] ?? 1));
       scoreRef.current += earned;
@@ -2412,18 +2427,30 @@ function ScrambleMode({ difficulty, onEnd, onHome, onQuit, playSound }) {
           />
           {hint && <div style={{ color: "#fbbf24", fontSize: 13, textAlign: "center", marginTop: 8 }}>💡 Starts with "{el.name[0]}", {el.name.length} letters</div>}
           {feedback === "correct" && <div style={{ color: "#4ade80", fontSize: 16, textAlign: "center", marginTop: 8, fontWeight: 800 }}>✨ Correct! +฿ {hint ? 5 : 10}</div>}
+          {feedback === "giveup" && <div style={{ color: "#64748b", fontSize: 15, textAlign: "center", marginTop: 8, fontWeight: 700 }}>👀 The answer was: <span style={{ color }}>{el.name}</span></div>}
         </div>
 
         <div style={{ display: "flex", gap: 10, width: "100%" }}>
-          {!hint && (
+          {!hint ? (
             <button onClick={() => setHint(true)} style={{ flex: 1, padding: 14, background: "#111827", border: "2px solid #1e293b", borderRadius: 14, color: "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13 }}>
               💡 Hint (−฿5)
             </button>
+          ) : (
+            <div style={{ flex: 1 }} />
           )}
           <button onClick={submit} style={{ flex: 2, padding: 14, background: "#081a2a", border: "2px solid #22d3ee", borderRadius: 14, color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15, boxShadow: "0 0 18px rgba(34,211,238,0.16)" }}>
             Submit ↵
           </button>
         </div>
+        <button onClick={giveUp} disabled={!!feedback}
+          style={{ marginTop: 6, padding: "8px 0", width: "100%", background: "none", border: "1px dashed #334155",
+                   borderRadius: 10, color: "#334155", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 12, cursor: "pointer",
+                   transition: "all 0.15s",
+                   opacity: feedback ? 0.3 : 1 }}
+          onMouseEnter={e => { if (!feedback) { e.target.style.color = "#64748b"; e.target.style.borderColor = "#64748b"; } }}
+          onMouseLeave={e => { e.target.style.color = "#334155"; e.target.style.borderColor = "#334155"; }}>
+          🥺 Give up
+        </button>
       </div>
       <QuitStrip onHome={() => onQuit(scoreRef.current)} />
     </div>
