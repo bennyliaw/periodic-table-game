@@ -382,11 +382,15 @@ function usePlayers() {
     const current = player.unlocked_levels ?? ["lv1", "lv2"];
     if (current.includes(levelId)) return;
     const bonus = UNLOCK_BONUS[levelId] ?? 0;
-    await supabase.from("eq_players").update({
+    const update = {
       unlocked_levels: [...current, levelId],
       score: (player.score ?? 0) + bonus,
       last_active: new Date().toISOString(),
-    }).eq("id", id);
+    };
+    const curr = LEVELS.findIndex(l => l.id === player.highest_level);
+    const next = LEVELS.findIndex(l => l.id === levelId);
+    if (next > curr) update.highest_level = levelId;
+    await supabase.from("eq_players").update(update).eq("id", id);
   }
 
   const scores = Object.fromEntries(players.map(p => [p.id, p.score]));
