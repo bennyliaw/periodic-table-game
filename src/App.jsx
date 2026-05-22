@@ -181,6 +181,15 @@ function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function toSubscript(str) {
   return String(str).replace(/[0-9]/g, n => "₀₁₂₃₄₅₆₇₈₉"[n]);
 }
+function toSuperscript(n) {
+  return String(n).replace(/-/g, "⁻").replace(/[0-9]/g, d => "⁰¹²³⁴⁵⁶⁷⁸⁹"[d]);
+}
+function formatAtomMass(amu) {
+  const g   = amu * 1.66054e-24;
+  const exp = Math.floor(Math.log10(g));
+  const m   = (g / Math.pow(10, exp)).toFixed(3);
+  return `${Number(amu).toFixed(3)} amu  ·  ${m} × 10${toSuperscript(exp)} g`;
+}
 
 function useSound() {
   const ctxRef = useRef(null);
@@ -2261,7 +2270,7 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onQuit,
                         ["Symbol",    el.symbol],
                         ["Number",    el.number],
                         ["Group",     el.group.replace(/-/g, " ")],
-                        ["Mass",      factsRow.atomic_mass ? `${factsRow.atomic_mass} u` : "—"],
+                        ["Mass",      factsRow.atomic_mass ? formatAtomMass(factsRow.atomic_mass) : "—"],
                         ["Electrons", factsRow.electron_config || "—"],
                       ].map(([k, v]) => (
                         <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "5px 0", borderBottom: "1px solid #1e293b" }}>
