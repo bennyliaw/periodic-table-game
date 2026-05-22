@@ -261,6 +261,7 @@ App (screen router + shared state)
 - [x] **All 118 elements** — tiers 1–5, 6 difficulty levels (lv1 Cadet → lv6 Commodore), One Piece Marine rank system
 - [x] **Rank badge on player chip** — 🧹 Chore Boy → 🥉🥈🥇🏆👑⚛️ based on `highest_level` field
 - [x] **Supabase migration** — `highest_level text` and `last_active timestamptz` columns added to `eq_players`
+- [ ] **Enriched flashcards** — `eq_element_facts` table needed (see SQL below); `scripts/element_facts.json` to be generated via Claude Code then imported with `scripts/import_element_facts.py`
 - [ ] **Consider: lv3 Warrant Officer pool** — currently tier 3 only (16 elements, specialist track); consider whether it should be cumulative tiers 1–3 like Lieutenant. Revisit after kids play it.
 - [x] **Level unlock system** — lv3–lv6 locked; unlock via Promotion Trial (30 questions, 60s). Training badges (🔵💜💫) tracked per mode per level. Supabase columns: `unlocked_levels`, `training_passes`, `trial_grades` (jsonb). Unlock bonuses: lv3=+10k, lv4=+25k, lv5=+50k, lv6=+100k Berry. Berry (฿) replaces "pts" in all UI. Speed Blast 30s; Scramble 10 questions. Prereqs: 75% pool mastery + Pass in all 4 modes at previous level.
 - [ ] **Atomic number quiz** — third game axis beyond name↔symbol
@@ -295,6 +296,35 @@ When the task involves:
 - Anything I flag as "complex" or "critical"
 
 → Consult the advisor before writing any code, not just when stuck.
+
+---
+
+## Supabase SQL migrations
+
+Run these in Supabase → SQL Editor when setting up or adding features.
+
+### `eq_element_facts` table (enriched flashcards)
+
+```sql
+CREATE TABLE eq_element_facts (
+  symbol          TEXT PRIMARY KEY,
+  original_name   TEXT,
+  atomic_mass     NUMERIC,
+  electron_config TEXT,
+  image_url       TEXT,
+  image_caption   TEXT,
+  compounds       JSONB,
+  facts           JSONB,
+  generated_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE eq_element_facts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "public read" ON eq_element_facts FOR SELECT USING (true);
+```
+
+After creating the table:
+1. Generate `scripts/element_facts.json` via Claude Code (10–15 elements per prompt, append each batch)
+2. `cd scripts && pip install -r requirements.txt && python import_element_facts.py`
 
 ---
 
