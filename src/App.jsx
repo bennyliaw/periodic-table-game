@@ -2080,12 +2080,13 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onQuit,
   const [score, setScore]  = useState(0);
   const [factIdx, setFactIdx]   = useState(0);
   const [overlay, setOverlay]   = useState(null);
+  const [cardSide, setCardSide] = useState(() => Math.random() < 0.5 ? "name" : "symbol");
 
   const el       = deck[idx];
   const color    = el ? (GC[el.group] || "#60a5fa") : "#22d3ee";
   const factsRow = el && elementFacts ? elementFacts.get(el.symbol) : null;
 
-  useEffect(() => { setFactIdx(0); setOverlay(null); }, [idx]);
+  useEffect(() => { setFactIdx(0); setOverlay(null); setCardSide(Math.random() < 0.5 ? "name" : "symbol"); }, [idx]);
 
   function openOverlay(name) {
     const key = `${el.symbol}-${name}`;
@@ -2193,13 +2194,23 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onQuit,
 
           {!flipped ? (
             <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10 }}>
-              <div style={{ color: "#e2e8f0", fontSize: 34, fontFamily: "'Exo 2'", fontWeight: 800, textAlign: "center", padding: "0 24px" }}>{el.name}</div>
-              <div style={{ color: "#1e293b", fontSize: 13, marginTop: 8, fontStyle: "italic" }}>tap to reveal →</div>
+              {cardSide === "name" ? (
+                <>
+                  <div style={{ color: "#e2e8f0", fontSize: 34, fontFamily: "'Exo 2'", fontWeight: 800, textAlign: "center", padding: "0 24px" }}>{el.name}</div>
+                  <div style={{ color: "#1e293b", fontSize: 13, marginTop: 8, fontStyle: "italic" }}>tap to reveal symbol →</div>
+                </>
+              ) : (
+                <>
+                  <div style={{ color, fontSize: 54, fontFamily: "'Exo 2'", fontWeight: 900, lineHeight: 1, textShadow: `0 0 28px ${color}` }}>{el.symbol}</div>
+                  <div style={{ color: "#1e293b", fontSize: 13, marginTop: 8, fontStyle: "italic" }}>tap to reveal name →</div>
+                </>
+              )}
             </div>
           ) : (
             <>
               <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
                 <div style={{ color, fontSize: 88, fontFamily: "'Exo 2'", fontWeight: 900, lineHeight: 1, textShadow: `0 0 40px ${color}` }}>{el.symbol}</div>
+                <div style={{ color: "#94a3b8", fontSize: 16, fontFamily: "'Exo 2'", fontWeight: 600, marginTop: 2 }}>{el.name}</div>
                 <div style={{ color: "#334155", fontSize: 12, textTransform: "capitalize", letterSpacing: 1, marginTop: 4 }}>{el.group.replace(/-/g, " ")}</div>
               </div>
 
@@ -2208,12 +2219,12 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onQuit,
                   <div style={{ height: 1, background: "#1e293b", margin: "8px 0 7px" }} />
                   {factsRow.facts && factsRow.facts.length > 0 && (
                     <div style={{ display: "flex", alignItems: "flex-start", gap: 4, marginBottom: 6 }}>
-                      <div style={{ flex: 1, color: "#94a3b8", fontSize: 12, fontStyle: "italic", lineHeight: 1.35 }}>
+                      <div style={{ flex: 1, color: "#94a3b8", fontSize: 14, fontStyle: "italic", lineHeight: 1.4 }}>
                         💡 {factsRow.facts[factIdx % factsRow.facts.length]?.text}
                       </div>
                       {factsRow.facts.length > 1 && (
                         <button onClick={e => { e.stopPropagation(); setFactIdx(i => (i + 1) % factsRow.facts.length); }}
-                          style={{ background: "none", border: "none", color: "#475569", fontSize: 14, cursor: "pointer", padding: "0 2px", flexShrink: 0, lineHeight: 1 }}>›</button>
+                          style={{ background: "none", border: "none", color: "#64748b", fontSize: 22, cursor: "pointer", padding: "0 4px", flexShrink: 0, lineHeight: 1 }}>›</button>
                       )}
                     </div>
                   )}
