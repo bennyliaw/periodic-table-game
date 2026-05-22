@@ -46,6 +46,27 @@ alter table eq_players add column training_passes  jsonb default '{}'::jsonb;
 alter table eq_players add column trial_grades     jsonb default '{}'::jsonb;
 ```
 
+For enriched flashcards (fun facts, electron diagrams, photos, compounds), also run:
+
+```sql
+create table eq_element_facts (
+  symbol          text primary key,
+  original_name   text,
+  atomic_mass     numeric,
+  electron_config text,
+  image_url       text,
+  image_caption   text,
+  compounds       jsonb,
+  facts           jsonb,
+  generated_at    timestamptz default now()
+);
+
+alter table eq_element_facts enable row level security;
+create policy "public read" on eq_element_facts for select using (true);
+```
+
+Then generate `scripts/element_facts.json` via Claude Code and run `python scripts/import_element_facts.py` to populate it.
+
 Then go to **Project Settings → API** and copy your Project URL and `anon public` key into a `.env.local` file in the project root:
 
 ```
@@ -183,6 +204,7 @@ Any INSERT (new player) or UPDATE (score change) in that room is broadcast to al
 - [x] All 118 elements across 6 difficulty levels (One Piece Marine ranks: Cadet → Commodore)
 - [x] Rank badge on player chip based on highest level completed
 - [x] Level unlock system — lv3–lv6 locked; earn training badges then attempt Promotion Trial to unlock
+- [ ] Enriched flashcards — fun facts, element info, electron shell diagram, photo & compounds (table ready; awaiting data population)
 - [ ] Atomic number quiz mode
 - [ ] Multiplayer — real-time head-to-head
 
