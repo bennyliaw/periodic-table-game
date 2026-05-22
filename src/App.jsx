@@ -178,6 +178,10 @@ const PHRASES = {
 
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
+function toSubscript(str) {
+  return String(str).replace(/[0-9]/g, n => "₀₁₂₃₄₅₆₇₈₉"[n]);
+}
+
 function useSound() {
   const ctxRef = useRef(null);
   const mutedRef = useRef(false);
@@ -242,6 +246,10 @@ function useSound() {
         break;
       case "flip":
         tone(880, "sine", 0.06, t, 0.12);
+        break;
+      case "kaching":
+        tone(880,  "triangle", 0.08, t,        0.15);
+        tone(1320, "sine",     0.10, t + 0.06, 0.12);
         break;
     }
   }
@@ -399,6 +407,17 @@ function usePlayers() {
            setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
            saveTrainingPass, saveTrialGrade, unlockLevel,
            roomId, joinRoom, loaded };
+}
+
+function useElementFacts() {
+  const [facts, setFacts] = useState(null);
+  useEffect(() => {
+    supabase.from("eq_element_facts").select("*")
+      .then(({ data }) => {
+        if (data) setFacts(new Map(data.map(r => [r.symbol, r])));
+      });
+  }, []);
+  return facts;
 }
 
 // ═══════════════════════════════════════════
@@ -2022,22 +2041,67 @@ function ModeCard({ icon, label, desc, onClick, extra, badge }) {
 // ═══════════════════════════════════════════
 // FLASH CARD MODE
 // ═══════════════════════════════════════════
-function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onQuit, onHome, playSound }) {
-  const masteredRef           = useRef([...masteredElements]);
-  const sessionMasteredRef    = useRef(new Set());
-  const [deck, setDeck]       = useState(() => getFlashDeck(difficulty, masteredElements));
-  const [idx, setIdx]         = useState(0);
-  const [flipped, setFlipped] = useState(false);
-  const [sessionDone, setSessionDone] = useState(false);
-  const scoreRef              = useRef(0);
-  const [score, setScore]     = useState(0);
+function ElectronShell({ config, symbol, color }) {
+  const shells = (config || "").split(",").map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n) && n > 0);
+  if (!shells.length) shells.push(1);
+  const n = shells.length;
+  const cx = 80, cy = 80;
+  const radii = n === 1 ? [35] : shells.map((_, i) => 14 + i * (54 / (n - 1)));
+  return (
+    <svg width={160} height={160} viewBox="0 0 160 160">
+      {shells.map((count, si) => {
+        const r = radii[si];
+        const dotR = count > 16 ? 2 : count > 8 ? 2.5 : 3;
+        return (
+          <g key={si}>
+            <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth={0.75} opacity={0.3} />
+            {Array.from({ length: count }).map((_, ei) => {
+              const angle = (2 * Math.PI * ei) / count - Math.PI / 2;
+              return <circle key={ei} cx={cx + r * Math.cos(angle)} cy={cy + r * Math.sin(angle)} r={dotR} fill={color} opacity={0.9} />;
+            })}
+          </g>
+        );
+      })}
+      <circle cx={cx} cy={cy} r={11} fill={color + "22"} stroke={color} strokeWidth={1.5} />
+      <text x={cx} y={cy + 4} textAnchor="middle" fontSize={9} fill={color} fontFamily="'Exo 2'" fontWeight="700">{symbol}</text>
+    </svg>
+  );
+}
 
-  const el    = deck[idx];
-  const color = el ? (GC[el.group] || "#60a5fa") : "#22d3ee";
+function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onQuit, onHome, playSound, elementFacts, onBonus }) {
+  const masteredRef        = useRef([...masteredElements]);
+  const sessionMasteredRef = useRef(new Set());
+  const exploredRef        = useRef(new Set());
+  const [deck, setDeck]    = useState(() => getFlashDeck(difficulty, masteredElements));
+  const [idx, setIdx]      = useState(0);
+  const [flipped, setFlipped]     = useState(false);
+  const [sessionDone, setSessionDone] = useState(false);
+  const scoreRef = useRef(0);
+  const [score, setScore]  = useState(0);
+  const [factIdx, setFactIdx]   = useState(0);
+  const [overlay, setOverlay]   = useState(null);
+
+  const el       = deck[idx];
+  const color    = el ? (GC[el.group] || "#60a5fa") : "#22d3ee";
+  const factsRow = el && elementFacts ? elementFacts.get(el.symbol) : null;
+
+  useEffect(() => { setFactIdx(0); setOverlay(null); }, [idx]);
+
+  function openOverlay(name) {
+    const key = `${el.symbol}-${name}`;
+    if (!exploredRef.current.has(key)) {
+      exploredRef.current.add(key);
+      playSound("kaching");
+      scoreRef.current += 1;
+      setScore(scoreRef.current);
+      onBonus(1);
+    }
+    setOverlay(name);
+  }
 
   function calcMasteryArgs() {
-    const pool   = getPool(difficulty);
-    const prior  = new Set(masteredElements);
+    const pool  = getPool(difficulty);
+    const prior = new Set(masteredElements);
     const totalMastered = pool.filter(e => prior.has(e.symbol) || sessionMasteredRef.current.has(e.symbol)).length;
     return [totalMastered, pool.length];
   }
@@ -2051,12 +2115,12 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onQuit,
       }
       scoreRef.current += 5;
       setScore(scoreRef.current);
-      playSound("correct");
+      playSound("kaching");
       if (idx + 1 >= deck.length) { setSessionDone(true); return; }
     } else {
       scoreRef.current += 1;
       setScore(scoreRef.current);
-      playSound("flip");
+      playSound("kaching");
       setDeck(prev => [...prev, el]);
     }
     setIdx(i => i + 1);
@@ -2095,36 +2159,150 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onQuit,
     );
   }
 
+  const cardH = factsRow ? 322 : 270;
+  const overlayTitles = { info: "Element Info", electron: "Electron Shells", photo: "Photo", compound: "Compounds" };
+  const iconRow = [
+    { key: "info",     icon: "ℹ️"  },
+    { key: "electron", icon: "⚛️"  },
+    { key: "photo",    icon: "📷"  },
+    { key: "compound", icon: "🧪"  },
+  ];
+
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", display: "flex", flexDirection: "column", alignItems: "center", padding: "10px 20px", fontFamily: "'Nunito'" }}>
       <Header title="🃏 Flash Cards" score={score} idx={idx} total={deck.length} />
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", maxWidth: 380 }}>
-        {/* The Card */}
-        <div onClick={() => { setFlipped(f => !f); playSound("flip"); }} style={{
-          width: "100%", height: 270,
-          background: "#0a0f1a",
-          border: `3px solid ${color}`,
-          boxShadow: `0 0 55px ${color}2a, inset 0 0 30px ${color}08`,
-          borderRadius: 28,
-          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-          cursor: "pointer", gap: 10, marginBottom: 28, userSelect: "none",
-        }}>
-          <div style={{ color, fontSize: 12, opacity: 0.45, fontFamily: "'Exo 2'", fontWeight: 600 }}>#{el.number}</div>
+        {/* Card */}
+        <div
+          onClick={() => { if (overlay) return; setFlipped(f => !f); playSound("flip"); }}
+          style={{
+            position: "relative",
+            width: "100%", height: cardH,
+            background: "#0a0f1a",
+            border: `3px solid ${color}`,
+            boxShadow: `0 0 55px ${color}2a, inset 0 0 30px ${color}08`,
+            borderRadius: 28,
+            display: "flex", flexDirection: "column", alignItems: "center",
+            cursor: overlay ? "default" : "pointer",
+            padding: "12px 16px",
+            marginBottom: 28, userSelect: "none",
+          }}
+        >
+          <div style={{ width: "100%", textAlign: "right", color, fontSize: 12, opacity: 0.45, fontFamily: "'Exo 2'", fontWeight: 600 }}>#{el.number}</div>
+
           {!flipped ? (
-            <>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10 }}>
               <div style={{ color: "#e2e8f0", fontSize: 34, fontFamily: "'Exo 2'", fontWeight: 800, textAlign: "center", padding: "0 24px" }}>{el.name}</div>
-              <div style={{ color: "#1e293b", fontSize: 13, marginTop: 18, fontStyle: "italic" }}>tap to reveal →</div>
-            </>
+              <div style={{ color: "#1e293b", fontSize: 13, marginTop: 8, fontStyle: "italic" }}>tap to reveal →</div>
+            </div>
           ) : (
             <>
-              <div style={{ color, fontSize: 94, fontFamily: "'Exo 2'", fontWeight: 900, lineHeight: 1, textShadow: `0 0 40px ${color}` }}>{el.symbol}</div>
-              <div style={{ color: "#334155", fontSize: 12, textTransform: "capitalize", letterSpacing: 1 }}>{el.group.replace(/-/g, " ")}</div>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ color, fontSize: 88, fontFamily: "'Exo 2'", fontWeight: 900, lineHeight: 1, textShadow: `0 0 40px ${color}` }}>{el.symbol}</div>
+                <div style={{ color: "#334155", fontSize: 12, textTransform: "capitalize", letterSpacing: 1, marginTop: 4 }}>{el.group.replace(/-/g, " ")}</div>
+              </div>
+
+              {factsRow && (
+                <div style={{ width: "100%" }}>
+                  <div style={{ height: 1, background: "#1e293b", margin: "8px 0 7px" }} />
+                  {factsRow.facts && factsRow.facts.length > 0 && (
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: 4, marginBottom: 6 }}>
+                      <div style={{ flex: 1, color: "#94a3b8", fontSize: 12, fontStyle: "italic", lineHeight: 1.35 }}>
+                        💡 {factsRow.facts[factIdx % factsRow.facts.length]?.text}
+                      </div>
+                      {factsRow.facts.length > 1 && (
+                        <button onClick={e => { e.stopPropagation(); setFactIdx(i => (i + 1) % factsRow.facts.length); }}
+                          style={{ background: "none", border: "none", color: "#475569", fontSize: 14, cursor: "pointer", padding: "0 2px", flexShrink: 0, lineHeight: 1 }}>›</button>
+                      )}
+                    </div>
+                  )}
+                  <div style={{ display: "flex", gap: 4, justifyContent: "flex-end" }}>
+                    {iconRow.map(({ key, icon }) => {
+                      const used = exploredRef.current.has(`${el.symbol}-${key}`);
+                      return (
+                        <button key={key} onClick={e => { e.stopPropagation(); openOverlay(key); }}
+                          style={{ background: "none", border: "none", cursor: "pointer", fontSize: 20, opacity: used ? 0.3 : 1, padding: 3, borderRadius: 6, transition: "opacity 0.2s" }}>
+                          {icon}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Overlays */}
+              {overlay && (
+                <div onClick={e => e.stopPropagation()}
+                  style={{ position: "absolute", inset: 0, zIndex: 10, background: "#0a1322", border: `2px solid ${color}40`, borderRadius: 26, padding: "14px 16px", display: "flex", flexDirection: "column" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                    <span style={{ color: "#94a3b8", fontSize: 11, fontFamily: "'Exo 2'", fontWeight: 700, letterSpacing: 1, textTransform: "uppercase" }}>
+                      {overlayTitles[overlay]}
+                    </span>
+                    <button onClick={() => setOverlay(null)} style={{ background: "none", border: "none", color: "#475569", fontSize: 18, cursor: "pointer", lineHeight: 1, padding: 0 }}>✕</button>
+                  </div>
+
+                  {overlay === "info" && (
+                    <div style={{ flex: 1, overflowY: "auto" }}>
+                      {[
+                        ["Name",      el.name],
+                        ["Original",  factsRow.original_name || el.name],
+                        ["Symbol",    el.symbol],
+                        ["Number",    el.number],
+                        ["Group",     el.group.replace(/-/g, " ")],
+                        ["Mass",      factsRow.atomic_mass ? `${factsRow.atomic_mass} u` : "—"],
+                        ["Electrons", factsRow.electron_config || "—"],
+                      ].map(([k, v]) => (
+                        <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "5px 0", borderBottom: "1px solid #1e293b" }}>
+                          <span style={{ color: "#475569", fontSize: 12 }}>{k}</span>
+                          <span style={{ color: "#e2e8f0", fontSize: 12, textTransform: k === "Group" ? "capitalize" : "none" }}>{v}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {overlay === "electron" && (
+                    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                      <ElectronShell config={factsRow.electron_config} symbol={el.symbol} color={color} />
+                      <div style={{ color: "#64748b", fontSize: 11 }}>{factsRow.electron_config}</div>
+                    </div>
+                  )}
+
+                  {overlay === "photo" && (
+                    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                      {factsRow.image_url ? (
+                        <>
+                          <img src={factsRow.image_url} alt={el.name}
+                            style={{ maxWidth: "100%", maxHeight: 180, borderRadius: 10, objectFit: "cover" }}
+                            onError={e => { e.target.style.display = "none"; }} />
+                          {factsRow.image_caption && (
+                            <div style={{ color: "#64748b", fontSize: 11, textAlign: "center", fontStyle: "italic" }}>{factsRow.image_caption}</div>
+                          )}
+                        </>
+                      ) : (
+                        <div style={{ color: "#475569", fontSize: 13 }}>No image available</div>
+                      )}
+                    </div>
+                  )}
+
+                  {overlay === "compound" && (
+                    <div style={{ flex: 1, overflowY: "auto" }}>
+                      {(factsRow.compounds || []).map((c, i) => (
+                        <div key={i} style={{ display: "flex", gap: 8, padding: "6px 0", borderBottom: "1px solid #1e293b", alignItems: "baseline" }}>
+                          <span style={{ color, fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13, minWidth: 58 }}>{toSubscript(c.formula)}</span>
+                          <span style={{ color: "#e2e8f0", fontSize: 12, minWidth: 70 }}>{c.name}</span>
+                          <span style={{ color: "#64748b", fontSize: 11, flex: 1 }}>{c.use}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </>
           )}
         </div>
 
-        {flipped ? (
+        {flipped && !overlay ? (
           <div style={{ display: "flex", gap: 14, width: "100%" }}>
             <button onClick={() => next("again")} style={{ flex: 1, padding: 16, background: "#160a0a", border: "2px solid #ef4444", borderRadius: 18, color: "#ef4444", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13 }}>
               📖 Show again later +฿1
@@ -2133,9 +2311,9 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onQuit,
               ✅ Mark done +฿5
             </button>
           </div>
-        ) : (
+        ) : !flipped ? (
           <div style={{ color: "#1e293b", fontSize: 14 }}>Tap the card to flip</div>
-        )}
+        ) : null}
       </div>
       <QuitStrip onHome={() => onQuit(scoreRef.current, ...calcMasteryArgs())} />
     </div>
@@ -2990,6 +3168,7 @@ export default function ElementQuest() {
           setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
           saveTrainingPass, saveTrialGrade, unlockLevel,
           roomId, joinRoom, loaded } = usePlayers();
+  const elementFacts = useElementFacts();
 
   function handleJoinRoom(code) {
     joinRoom(code);
@@ -3095,6 +3274,8 @@ export default function ElementQuest() {
           onEnd={makeEndRound("flashcard")} onQuit={flashcardQuit}
           masteredElements={activePlayer?.mastered_elements || []}
           onMastery={symbols => updateMastery(activePlayer.id, symbols)}
+          elementFacts={elementFacts}
+          onBonus={earned => { if (activePlayer) updateScore(activePlayer.id, earned); }}
         />
       )}
       {screen === "game" && mode === "quiz"      && <QuizMode      key={gameKey} {...gp} onEnd={makeEndRound("quiz")} />}
