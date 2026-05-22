@@ -7,32 +7,68 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Hydrogen_discharge_tube.jpg/960px-Hydrogen_discharge_tube.jpg",
     "image_caption": "Hydrogen glowing purple in a discharge tube",
     "compounds": [
-      { "formula": "H2O",  "name": "Water",               "use": "Essential for all life on Earth" },
-      { "formula": "H2O2", "name": "Hydrogen peroxide",   "use": "Disinfects wounds and bleaches hair" },
-      { "formula": "HCl",  "name": "Hydrochloric acid",   "use": "Found in your stomach to digest food" },
-      { "formula": "NH3",  "name": "Ammonia",             "use": "Used in fertilisers to grow crops" },
-      { "formula": "CH4",  "name": "Methane",             "use": "Natural gas used for cooking and heating" }
+      {
+        "formula": "H2O",
+        "name": "Water",
+        "use": "Essential for all life on Earth"
+      },
+      {
+        "formula": "H2O2",
+        "name": "Hydrogen peroxide",
+        "use": "Disinfects wounds and bleaches hair"
+      },
+      {
+        "formula": "HCl",
+        "name": "Hydrochloric acid",
+        "use": "Found in your stomach to digest food"
+      },
+      {
+        "formula": "NH3",
+        "name": "Ammonia",
+        "use": "Used in fertilisers to grow crops"
+      },
+      {
+        "formula": "CH4",
+        "name": "Methane",
+        "use": "Natural gas used for cooking and heating"
+      }
     ],
     "facts": [
-      { "text": "Hydrogen is the lightest element and makes up about 75% of all matter in the universe — stars like our Sun are mostly hydrogen." },
-      { "text": "When hydrogen burns, the only thing it produces is water, making it one of the cleanest fuels possible." },
-      { "text": "There is more hydrogen in a glass of water than in a glass of pure hydrogen gas!" },
-      { "text": "The Hindenburg airship was filled with hydrogen, which caused it to catch fire spectacularly in 1937." }
+      {
+        "text": "Hydrogen is the lightest element and makes up about 75% of all matter in the universe — stars like our Sun are mostly hydrogen."
+      },
+      {
+        "text": "When hydrogen burns, the only thing it produces is water, making it one of the cleanest fuels possible."
+      },
+      {
+        "text": "There is more hydrogen in a glass of water than in a glass of pure hydrogen gas!"
+      },
+      {
+        "text": "The Hindenburg airship was filled with hydrogen, which caused it to catch fire spectacularly in 1937."
+      }
     ]
   },
   {
     "symbol": "He",
     "original_name": null,
-    "atomic_mass": 4.00,
+    "atomic_mass": 4,
     "electron_config": "2",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Helium_discharge_tube.jpg/960px-Helium_discharge_tube.jpg",
     "image_caption": "Helium glowing orange-red in a discharge tube",
     "compounds": [],
     "facts": [
-      { "text": "Helium was discovered in the Sun before it was found on Earth — its name comes from 'Helios', the Greek god of the Sun." },
-      { "text": "Helium is so light that if you release a helium balloon, it flies into space and is gone forever." },
-      { "text": "Unlike every other substance, liquid helium never freezes solid — it stays liquid all the way down to absolute zero." },
-      { "text": "Breathing helium makes your voice squeaky because sound travels faster through it than through regular air." }
+      {
+        "text": "Helium was discovered in the Sun before it was found on Earth — its name comes from 'Helios', the Greek god of the Sun."
+      },
+      {
+        "text": "Helium is so light that if you release a helium balloon, it flies into space and is gone forever."
+      },
+      {
+        "text": "Unlike every other substance, liquid helium never freezes solid — it stays liquid all the way down to absolute zero."
+      },
+      {
+        "text": "Breathing helium makes your voice squeaky because sound travels faster through it than through regular air."
+      }
     ]
   },
   {
@@ -43,38 +79,94 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Graphite-and-diamond-with-scale.jpg/960px-Graphite-and-diamond-with-scale.jpg",
     "image_caption": "Graphite (left) and diamond (right) — both are pure carbon",
     "compounds": [
-      { "formula": "CO2",     "name": "Carbon dioxide",  "use": "What you breathe out; plants absorb it to grow" },
-      { "formula": "CH4",     "name": "Methane",         "use": "Natural gas used for cooking and heating" },
-      { "formula": "C6H12O6", "name": "Glucose",         "use": "The sugar your body burns for energy" },
-      { "formula": "CaCO3",   "name": "Limestone",       "use": "Makes up seashells, chalk, and entire cliffs" },
-      { "formula": "CO",      "name": "Carbon monoxide", "use": "Deadly gas from car exhausts and faulty heaters" }
+      {
+        "formula": "CO2",
+        "name": "Carbon dioxide",
+        "use": "What you breathe out; plants absorb it to grow"
+      },
+      {
+        "formula": "CH4",
+        "name": "Methane",
+        "use": "Natural gas used for cooking and heating"
+      },
+      {
+        "formula": "C6H12O6",
+        "name": "Glucose",
+        "use": "The sugar your body burns for energy"
+      },
+      {
+        "formula": "CaCO3",
+        "name": "Limestone",
+        "use": "Makes up seashells, chalk, and entire cliffs"
+      },
+      {
+        "formula": "CO",
+        "name": "Carbon monoxide",
+        "use": "Deadly gas from car exhausts and faulty heaters"
+      }
     ],
     "facts": [
-      { "text": "Carbon is the basis of all life — every living thing on Earth is built from carbon chains." },
-      { "text": "Diamond and graphite (pencil 'lead') are both made of pure carbon, just arranged differently." },
-      { "text": "Scientists use radioactive carbon-14 to calculate the age of ancient bones and fossils — a technique called carbon dating." },
-      { "text": "A single carbon atom can bond to four other atoms at once, which is why carbon can build millions of different molecules." }
+      {
+        "text": "Carbon is the basis of all life — every living thing on Earth is built from carbon chains."
+      },
+      {
+        "text": "Diamond and graphite (pencil 'lead') are both made of pure carbon, just arranged differently."
+      },
+      {
+        "text": "Scientists use radioactive carbon-14 to calculate the age of ancient bones and fossils — a technique called carbon dating."
+      },
+      {
+        "text": "A single carbon atom can bond to four other atoms at once, which is why carbon can build millions of different molecules."
+      }
     ]
   },
   {
     "symbol": "O",
     "original_name": null,
-    "atomic_mass": 16.00,
+    "atomic_mass": 16,
     "electron_config": "2, 6",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Liquid_oxygen_in_a_beaker_%28cropped_and_retouched%29.jpg/960px-Liquid_oxygen_in_a_beaker_%28cropped_and_retouched%29.jpg",
     "image_caption": "Liquid oxygen glowing pale blue in a beaker",
     "compounds": [
-      { "formula": "H2O",  "name": "Water",          "use": "Essential for all life" },
-      { "formula": "CO2",  "name": "Carbon dioxide", "use": "Breathed out; used by plants" },
-      { "formula": "Fe2O3","name": "Rust",            "use": "Formed when iron meets oxygen and water" },
-      { "formula": "SiO2", "name": "Silicon dioxide", "use": "Makes up sand and glass" },
-      { "formula": "O3",   "name": "Ozone",           "use": "Layer in the atmosphere that shields us from UV rays" }
+      {
+        "formula": "H2O",
+        "name": "Water",
+        "use": "Essential for all life"
+      },
+      {
+        "formula": "CO2",
+        "name": "Carbon dioxide",
+        "use": "Breathed out; used by plants"
+      },
+      {
+        "formula": "Fe2O3",
+        "name": "Rust",
+        "use": "Formed when iron meets oxygen and water"
+      },
+      {
+        "formula": "SiO2",
+        "name": "Silicon dioxide",
+        "use": "Makes up sand and glass"
+      },
+      {
+        "formula": "O3",
+        "name": "Ozone",
+        "use": "Layer in the atmosphere that shields us from UV rays"
+      }
     ],
     "facts": [
-      { "text": "Oxygen makes up 21% of the air we breathe, and liquid oxygen is a beautiful pale blue colour." },
-      { "text": "Without oxygen, fire cannot burn — it needs oxygen to keep going." },
-      { "text": "Your blood looks red because the iron in haemoglobin carries oxygen molecules around your body." },
-      { "text": "Oxygen was discovered in 1774 and was first called 'dephlogisticated air' — a name that thankfully did not stick." }
+      {
+        "text": "Oxygen makes up 21% of the air we breathe, and liquid oxygen is a beautiful pale blue colour."
+      },
+      {
+        "text": "Without oxygen, fire cannot burn — it needs oxygen to keep going."
+      },
+      {
+        "text": "Your blood looks red because the iron in haemoglobin carries oxygen molecules around your body."
+      },
+      {
+        "text": "Oxygen was discovered in 1774 and was first called 'dephlogisticated air' — a name that thankfully did not stick."
+      }
     ]
   },
   {
@@ -85,17 +177,45 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Fluessiger_Stickstoff.jpg/960px-Fluessiger_Stickstoff.jpg",
     "image_caption": "Liquid nitrogen pouring at −196°C",
     "compounds": [
-      { "formula": "NH3",  "name": "Ammonia",          "use": "Fertilisers that feed most of the world's crops" },
-      { "formula": "NO2",  "name": "Nitrogen dioxide", "use": "Causes city smog and acid rain" },
-      { "formula": "N2O",  "name": "Laughing gas",     "use": "Used at the dentist as a mild anaesthetic" },
-      { "formula": "HNO3", "name": "Nitric acid",      "use": "Used to manufacture fertilisers and explosives" },
-      { "formula": "NaN3", "name": "Sodium azide",     "use": "Inflates car airbags in a crash" }
+      {
+        "formula": "NH3",
+        "name": "Ammonia",
+        "use": "Fertilisers that feed most of the world's crops"
+      },
+      {
+        "formula": "NO2",
+        "name": "Nitrogen dioxide",
+        "use": "Causes city smog and acid rain"
+      },
+      {
+        "formula": "N2O",
+        "name": "Laughing gas",
+        "use": "Used at the dentist as a mild anaesthetic"
+      },
+      {
+        "formula": "HNO3",
+        "name": "Nitric acid",
+        "use": "Used to manufacture fertilisers and explosives"
+      },
+      {
+        "formula": "NaN3",
+        "name": "Sodium azide",
+        "use": "Inflates car airbags in a crash"
+      }
     ],
     "facts": [
-      { "text": "Nitrogen makes up 78% of the air around you, but your body cannot use it directly from the air." },
-      { "text": "Liquid nitrogen is so cold (−196°C) that it instantly freezes anything it touches." },
-      { "text": "Plants need nitrogen to grow, which is why farmers spread nitrogen-rich fertilisers on their fields." },
-      { "text": "Lightning bolts convert nitrogen gas into a form that dissolves in rain, giving plants a natural fertiliser from the sky." }
+      {
+        "text": "Nitrogen makes up 78% of the air around you, but your body cannot use it directly from the air."
+      },
+      {
+        "text": "Liquid nitrogen is so cold (−196°C) that it instantly freezes anything it touches."
+      },
+      {
+        "text": "Plants need nitrogen to grow, which is why farmers spread nitrogen-rich fertilisers on their fields."
+      },
+      {
+        "text": "Lightning bolts convert nitrogen gas into a form that dissolves in rain, giving plants a natural fertiliser from the sky."
+      }
     ]
   },
   {
@@ -106,16 +226,40 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Gold-crystals.jpg/960px-Gold-crystals.jpg",
     "image_caption": "Pure gold crystals",
     "compounds": [
-      { "formula": "AuCl3",  "name": "Gold chloride",    "use": "Used to stain glass red and in photography" },
-      { "formula": "AuCN",   "name": "Gold cyanide",     "use": "Used in gold plating jewellery and electronics" },
-      { "formula": "HAuCl4", "name": "Chloroauric acid", "use": "Used to test the purity of acids" },
-      { "formula": "Au2S3",  "name": "Gold sulfide",     "use": "Found in some gold ore deposits" }
+      {
+        "formula": "AuCl3",
+        "name": "Gold chloride",
+        "use": "Used to stain glass red and in photography"
+      },
+      {
+        "formula": "AuCN",
+        "name": "Gold cyanide",
+        "use": "Used in gold plating jewellery and electronics"
+      },
+      {
+        "formula": "HAuCl4",
+        "name": "Chloroauric acid",
+        "use": "Used to test the purity of acids"
+      },
+      {
+        "formula": "Au2S3",
+        "name": "Gold sulfide",
+        "use": "Found in some gold ore deposits"
+      }
     ],
     "facts": [
-      { "text": "Gold never rusts or tarnishes — a gold coin buried 3,000 years ago still shines as brightly as the day it was made." },
-      { "text": "All the gold ever mined in human history would fit inside about 3.5 Olympic swimming pools." },
-      { "text": "Gold is so stretchy that 1 gram can be hammered into a sheet 1 square metre wide, thinner than a human hair." },
-      { "text": "Your smartphone contains tiny amounts of gold in its circuit board because gold conducts electricity reliably without corroding." }
+      {
+        "text": "Gold never rusts or tarnishes — a gold coin buried 3,000 years ago still shines as brightly as the day it was made."
+      },
+      {
+        "text": "All the gold ever mined in human history would fit inside about 3.5 Olympic swimming pools."
+      },
+      {
+        "text": "Gold is so stretchy that 1 gram can be hammered into a sheet 1 square metre wide, thinner than a human hair."
+      },
+      {
+        "text": "Your smartphone contains tiny amounts of gold in its circuit board because gold conducts electricity reliably without corroding."
+      }
     ]
   },
   {
@@ -126,17 +270,45 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Silver_crystal.jpg/960px-Silver_crystal.jpg",
     "image_caption": "Pure silver crystal",
     "compounds": [
-      { "formula": "AgCl",  "name": "Silver chloride",  "use": "Light-sensitive compound used in old photography" },
-      { "formula": "AgNO3", "name": "Silver nitrate",   "use": "Used in medicine and to make mirrors" },
-      { "formula": "Ag2S",  "name": "Silver sulfide",   "use": "The black tarnish that forms on silverware" },
-      { "formula": "AgI",   "name": "Silver iodide",    "use": "Sprayed into clouds to help make rain" },
-      { "formula": "AgBr",  "name": "Silver bromide",   "use": "Used in X-ray film to capture images" }
+      {
+        "formula": "AgCl",
+        "name": "Silver chloride",
+        "use": "Light-sensitive compound used in old photography"
+      },
+      {
+        "formula": "AgNO3",
+        "name": "Silver nitrate",
+        "use": "Used in medicine and to make mirrors"
+      },
+      {
+        "formula": "Ag2S",
+        "name": "Silver sulfide",
+        "use": "The black tarnish that forms on silverware"
+      },
+      {
+        "formula": "AgI",
+        "name": "Silver iodide",
+        "use": "Sprayed into clouds to help make rain"
+      },
+      {
+        "formula": "AgBr",
+        "name": "Silver bromide",
+        "use": "Used in X-ray film to capture images"
+      }
     ],
     "facts": [
-      { "text": "Silver conducts electricity better than any other metal, though gold is more commonly used in electronics because silver tarnishes." },
-      { "text": "Before refrigerators, people put silver coins in milk to keep it fresh — silver ions kill bacteria." },
-      { "text": "Film photography worked by exposing silver compounds to light, which turned dark where light hit them — creating the image." },
-      { "text": "The country Argentina is named after silver — early Spanish explorers believed the region was filled with silver deposits." }
+      {
+        "text": "Silver conducts electricity better than any other metal, though gold is more commonly used in electronics because silver tarnishes."
+      },
+      {
+        "text": "Before refrigerators, people put silver coins in milk to keep it fresh — silver ions kill bacteria."
+      },
+      {
+        "text": "Film photography worked by exposing silver compounds to light, which turned dark where light hit them — creating the image."
+      },
+      {
+        "text": "The country Argentina is named after silver — early Spanish explorers believed the region was filled with silver deposits."
+      }
     ]
   },
   {
@@ -147,17 +319,45 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Iron_electrolytic_and_1cm3_cube.jpg/960px-Iron_electrolytic_and_1cm3_cube.jpg",
     "image_caption": "Electrolytic iron and a 1cm³ iron cube",
     "compounds": [
-      { "formula": "Fe2O3", "name": "Iron oxide (rust)", "use": "The red pigment in rust and some paints" },
-      { "formula": "Fe3O4", "name": "Magnetite",         "use": "A natural magnet found in rocks" },
-      { "formula": "FeSO4", "name": "Iron sulfate",      "use": "Used in iron supplements and fertilisers" },
-      { "formula": "FeCl3", "name": "Iron chloride",     "use": "Used to purify drinking water" },
-      { "formula": "FeS2",  "name": "Pyrite",            "use": "Known as 'fool's gold' for its golden shine" }
+      {
+        "formula": "Fe2O3",
+        "name": "Iron oxide (rust)",
+        "use": "The red pigment in rust and some paints"
+      },
+      {
+        "formula": "Fe3O4",
+        "name": "Magnetite",
+        "use": "A natural magnet found in rocks"
+      },
+      {
+        "formula": "FeSO4",
+        "name": "Iron sulfate",
+        "use": "Used in iron supplements and fertilisers"
+      },
+      {
+        "formula": "FeCl3",
+        "name": "Iron chloride",
+        "use": "Used to purify drinking water"
+      },
+      {
+        "formula": "FeS2",
+        "name": "Pyrite",
+        "use": "Known as 'fool's gold' for its golden shine"
+      }
     ],
     "facts": [
-      { "text": "Iron is the most common element in the entire Earth by mass — the core of our planet is a giant ball of solid and liquid iron." },
-      { "text": "Your blood is red because of iron — the iron in haemoglobin grabs oxygen in your lungs and carries it to every cell in your body." },
-      { "text": "The Iron Age began around 1200 BC when humans discovered how to smelt iron, allowing them to make far stronger tools than bronze." },
-      { "text": "Iron is the only everyday element you can pick up with a magnet." }
+      {
+        "text": "Iron is the most common element in the entire Earth by mass — the core of our planet is a giant ball of solid and liquid iron."
+      },
+      {
+        "text": "Your blood is red because of iron — the iron in haemoglobin grabs oxygen in your lungs and carries it to every cell in your body."
+      },
+      {
+        "text": "The Iron Age began around 1200 BC when humans discovered how to smelt iron, allowing them to make far stronger tools than bronze."
+      },
+      {
+        "text": "Iron is the only everyday element you can pick up with a magnet."
+      }
     ]
   },
   {
@@ -168,38 +368,94 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/NatCopper.jpg/960px-NatCopper.jpg",
     "image_caption": "Native copper specimen",
     "compounds": [
-      { "formula": "CuSO4",  "name": "Copper sulfate",    "use": "Vivid blue crystals used to treat fungal diseases in crops" },
-      { "formula": "CuO",    "name": "Copper oxide",      "use": "Black powder used in ceramics and as a pigment" },
-      { "formula": "CuCO3",  "name": "Copper carbonate",  "use": "The green patina that forms on old copper roofs and statues" },
-      { "formula": "CuCl2",  "name": "Copper chloride",   "use": "Used in fireworks to create green flames" },
-      { "formula": "Cu2O",   "name": "Cuprite",           "use": "Red copper ore found in mines" }
+      {
+        "formula": "CuSO4",
+        "name": "Copper sulfate",
+        "use": "Vivid blue crystals used to treat fungal diseases in crops"
+      },
+      {
+        "formula": "CuO",
+        "name": "Copper oxide",
+        "use": "Black powder used in ceramics and as a pigment"
+      },
+      {
+        "formula": "CuCO3",
+        "name": "Copper carbonate",
+        "use": "The green patina that forms on old copper roofs and statues"
+      },
+      {
+        "formula": "CuCl2",
+        "name": "Copper chloride",
+        "use": "Used in fireworks to create green flames"
+      },
+      {
+        "formula": "Cu2O",
+        "name": "Cuprite",
+        "use": "Red copper ore found in mines"
+      }
     ],
     "facts": [
-      { "text": "The Statue of Liberty is made of copper — its famous green colour developed slowly as the copper reacted with air and rain over decades." },
-      { "text": "Copper was one of the first metals ever used by humans, more than 10,000 years ago." },
-      { "text": "Copper kills bacteria — that is why door handles and railings in many hospitals are made of copper to reduce germ spreading." },
-      { "text": "Almost all the electric wires in your home are made of copper because it conducts electricity nearly as well as silver but costs far less." }
+      {
+        "text": "The Statue of Liberty is made of copper — its famous green colour developed slowly as the copper reacted with air and rain over decades."
+      },
+      {
+        "text": "Copper was one of the first metals ever used by humans, more than 10,000 years ago."
+      },
+      {
+        "text": "Copper kills bacteria — that is why door handles and railings in many hospitals are made of copper to reduce germ spreading."
+      },
+      {
+        "text": "Almost all the electric wires in your home are made of copper because it conducts electricity nearly as well as silver but costs far less."
+      }
     ]
   },
   {
     "symbol": "Pb",
     "original_name": "Plumbum",
-    "atomic_mass": 207.20,
+    "atomic_mass": 207.2,
     "electron_config": "2, 8, 18, 32, 18, 4",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Lead_electrolytic_and_1cm3_cube.jpg/960px-Lead_electrolytic_and_1cm3_cube.jpg",
     "image_caption": "Electrolytic lead and a 1cm³ lead cube",
     "compounds": [
-      { "formula": "PbO2",  "name": "Lead dioxide",   "use": "Key component inside car batteries" },
-      { "formula": "PbSO4", "name": "Lead sulfate",   "use": "Also found in rechargeable car batteries" },
-      { "formula": "Pb3O4", "name": "Red lead",       "use": "Historic bright-red paint used on iron bridges" },
-      { "formula": "PbS",   "name": "Galena",         "use": "The main natural lead ore, mined for thousands of years" },
-      { "formula": "PbCl2", "name": "Lead chloride",  "use": "Used to make certain types of glass" }
+      {
+        "formula": "PbO2",
+        "name": "Lead dioxide",
+        "use": "Key component inside car batteries"
+      },
+      {
+        "formula": "PbSO4",
+        "name": "Lead sulfate",
+        "use": "Also found in rechargeable car batteries"
+      },
+      {
+        "formula": "Pb3O4",
+        "name": "Red lead",
+        "use": "Historic bright-red paint used on iron bridges"
+      },
+      {
+        "formula": "PbS",
+        "name": "Galena",
+        "use": "The main natural lead ore, mined for thousands of years"
+      },
+      {
+        "formula": "PbCl2",
+        "name": "Lead chloride",
+        "use": "Used to make certain types of glass"
+      }
     ],
     "facts": [
-      { "text": "The word 'plumber' comes from plumbum — the Romans used lead pipes to carry water across their cities." },
-      { "text": "Lead is so soft and dense that you can scratch it with your fingernail, yet it blocks X-rays and radiation." },
-      { "text": "Lead was once added to paint and petrol, but was banned when scientists discovered it causes serious brain damage." },
-      { "text": "A typical car battery contains about 8 kg of lead — cars still use lead-acid batteries to start the engine." }
+      {
+        "text": "The word 'plumber' comes from plumbum — the Romans used lead pipes to carry water across their cities."
+      },
+      {
+        "text": "Lead is so soft and dense that you can scratch it with your fingernail, yet it blocks X-rays and radiation."
+      },
+      {
+        "text": "Lead was once added to paint and petrol, but was banned when scientists discovered it causes serious brain damage."
+      },
+      {
+        "text": "A typical car battery contains about 8 kg of lead — cars still use lead-acid batteries to start the engine."
+      }
     ]
   },
   {
@@ -210,38 +466,94 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Na_%28Sodium%29.jpg/960px-Na_%28Sodium%29.jpg",
     "image_caption": "Pure sodium metal stored under mineral oil",
     "compounds": [
-      { "formula": "NaCl",   "name": "Table salt",    "use": "Flavours and preserves food worldwide" },
-      { "formula": "NaOH",   "name": "Caustic soda",  "use": "Makes soap and unclog drains" },
-      { "formula": "NaHCO3", "name": "Baking soda",   "use": "Makes cakes and bread rise when heated" },
-      { "formula": "Na2CO3", "name": "Washing soda",  "use": "Used in glass-making and laundry detergent" },
-      { "formula": "NaF",    "name": "Sodium fluoride","use": "Added to toothpaste to protect teeth" }
+      {
+        "formula": "NaCl",
+        "name": "Table salt",
+        "use": "Flavours and preserves food worldwide"
+      },
+      {
+        "formula": "NaOH",
+        "name": "Caustic soda",
+        "use": "Makes soap and unclog drains"
+      },
+      {
+        "formula": "NaHCO3",
+        "name": "Baking soda",
+        "use": "Makes cakes and bread rise when heated"
+      },
+      {
+        "formula": "Na2CO3",
+        "name": "Washing soda",
+        "use": "Used in glass-making and laundry detergent"
+      },
+      {
+        "formula": "NaF",
+        "name": "Sodium fluoride",
+        "use": "Added to toothpaste to protect teeth"
+      }
     ],
     "facts": [
-      { "text": "Pure sodium explodes violently when it touches water, releasing hydrogen gas and a huge burst of heat." },
-      { "text": "Your nerves use sodium ions to send electrical signals — without sodium you could not feel, move, or think." },
-      { "text": "Salt was so valuable in ancient Rome that soldiers were sometimes paid in it — that is where the word 'salary' comes from." },
-      { "text": "The orange glow of old street lamps comes from sodium — sodium atoms produce a brilliant orange-yellow light when heated." }
+      {
+        "text": "Pure sodium explodes violently when it touches water, releasing hydrogen gas and a huge burst of heat."
+      },
+      {
+        "text": "Your nerves use sodium ions to send electrical signals — without sodium you could not feel, move, or think."
+      },
+      {
+        "text": "Salt was so valuable in ancient Rome that soldiers were sometimes paid in it — that is where the word 'salary' comes from."
+      },
+      {
+        "text": "The orange glow of old street lamps comes from sodium — sodium atoms produce a brilliant orange-yellow light when heated."
+      }
     ]
   },
   {
     "symbol": "K",
     "original_name": "Kalium",
-    "atomic_mass": 39.10,
+    "atomic_mass": 39.1,
     "electron_config": "2, 8, 8, 1",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Potassium-2.jpg",
     "image_caption": "Potassium metal pearls stored in paraffin oil",
     "compounds": [
-      { "formula": "KCl",  "name": "Potassium chloride", "use": "Used as a salt substitute for people on low-sodium diets" },
-      { "formula": "KOH",  "name": "Potassium hydroxide","use": "Makes liquid soap and biodiesel" },
-      { "formula": "KNO3", "name": "Potassium nitrate",  "use": "Key ingredient in gunpowder and fireworks" },
-      { "formula": "K2CO3","name": "Potash",             "use": "Used in making glass and soap for centuries" },
-      { "formula": "KI",   "name": "Potassium iodide",   "use": "Added to table salt to prevent iodine deficiency" }
+      {
+        "formula": "KCl",
+        "name": "Potassium chloride",
+        "use": "Used as a salt substitute for people on low-sodium diets"
+      },
+      {
+        "formula": "KOH",
+        "name": "Potassium hydroxide",
+        "use": "Makes liquid soap and biodiesel"
+      },
+      {
+        "formula": "KNO3",
+        "name": "Potassium nitrate",
+        "use": "Key ingredient in gunpowder and fireworks"
+      },
+      {
+        "formula": "K2CO3",
+        "name": "Potash",
+        "use": "Used in making glass and soap for centuries"
+      },
+      {
+        "formula": "KI",
+        "name": "Potassium iodide",
+        "use": "Added to table salt to prevent iodine deficiency"
+      }
     ],
     "facts": [
-      { "text": "Bananas contain potassium, which helps your muscles work properly — including the most important one, your heart." },
-      { "text": "Potassium reacts even more violently with water than sodium, skidding across the surface while burning with a lilac flame." },
-      { "text": "Your body needs potassium and sodium together to control the balance of fluids inside and outside every cell." },
-      { "text": "Gunpowder contains potassium nitrate — it has been used in weapons and fireworks for over a thousand years." }
+      {
+        "text": "Bananas contain potassium, which helps your muscles work properly — including the most important one, your heart."
+      },
+      {
+        "text": "Potassium reacts even more violently with water than sodium, skidding across the surface while burning with a lilac flame."
+      },
+      {
+        "text": "Your body needs potassium and sodium together to control the balance of fluids inside and outside every cell."
+      },
+      {
+        "text": "Gunpowder contains potassium nitrate — it has been used in weapons and fireworks for over a thousand years."
+      }
     ]
   },
   {
@@ -252,17 +564,45 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Calcium_unter_Argon_Schutzgasatmosph%C3%A4re.jpg/960px-Calcium_unter_Argon_Schutzgasatmosph%C3%A4re.jpg",
     "image_caption": "Calcium crystals stored under argon gas",
     "compounds": [
-      { "formula": "CaCO3",   "name": "Calcium carbonate", "use": "Makes up limestone, chalk, marble, and seashells" },
-      { "formula": "CaO",     "name": "Quicklime",         "use": "Used in cement, steel-making, and water treatment" },
-      { "formula": "Ca(OH)2", "name": "Slaked lime",       "use": "Added to soil to reduce acidity for farming" },
-      { "formula": "CaSO4",   "name": "Gypsum",            "use": "Used to make plaster of Paris and drywall" },
-      { "formula": "CaF2",    "name": "Fluorite",          "use": "Used in making glass and as a flux in steel production" }
+      {
+        "formula": "CaCO3",
+        "name": "Calcium carbonate",
+        "use": "Makes up limestone, chalk, marble, and seashells"
+      },
+      {
+        "formula": "CaO",
+        "name": "Quicklime",
+        "use": "Used in cement, steel-making, and water treatment"
+      },
+      {
+        "formula": "Ca(OH)2",
+        "name": "Slaked lime",
+        "use": "Added to soil to reduce acidity for farming"
+      },
+      {
+        "formula": "CaSO4",
+        "name": "Gypsum",
+        "use": "Used to make plaster of Paris and drywall"
+      },
+      {
+        "formula": "CaF2",
+        "name": "Fluorite",
+        "use": "Used in making glass and as a flux in steel production"
+      }
     ],
     "facts": [
-      { "text": "Calcium is the most abundant mineral in your body — 99% of it lives in your bones and teeth, making them hard." },
-      { "text": "Seashells, chalk, marble, and limestone cliffs are all made of exactly the same compound: calcium carbonate." },
-      { "text": "Milk is rich in calcium because baby animals need it to build strong bones quickly while they are growing." },
-      { "text": "Calcium fizzes slowly when you drop it in water, releasing hydrogen gas bubbles — similar to sodium but much calmer." }
+      {
+        "text": "Calcium is the most abundant mineral in your body — 99% of it lives in your bones and teeth, making them hard."
+      },
+      {
+        "text": "Seashells, chalk, marble, and limestone cliffs are all made of exactly the same compound: calcium carbonate."
+      },
+      {
+        "text": "Milk is rich in calcium because baby animals need it to build strong bones quickly while they are growing."
+      },
+      {
+        "text": "Calcium fizzes slowly when you drop it in water, releasing hydrogen gas bubbles — similar to sodium but much calmer."
+      }
     ]
   },
   {
@@ -273,38 +613,3586 @@
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/49/Chlorine_in_bottle.jpg",
     "image_caption": "Chlorine gas — a yellow-green toxic gas",
     "compounds": [
-      { "formula": "NaCl",  "name": "Table salt",         "use": "Flavours food — completely safe in this form" },
-      { "formula": "HCl",   "name": "Hydrochloric acid",  "use": "In your stomach to digest food and kill bacteria" },
-      { "formula": "NaOCl", "name": "Bleach",             "use": "Disinfects swimming pools and water supplies" },
-      { "formula": "PVC",   "name": "Polyvinyl chloride", "use": "Common plastic used in pipes, flooring, and clothing" },
-      { "formula": "CHCl3", "name": "Chloroform",         "use": "Once used as an anaesthetic in 19th-century surgery" }
+      {
+        "formula": "NaCl",
+        "name": "Table salt",
+        "use": "Flavours food — completely safe in this form"
+      },
+      {
+        "formula": "HCl",
+        "name": "Hydrochloric acid",
+        "use": "In your stomach to digest food and kill bacteria"
+      },
+      {
+        "formula": "NaOCl",
+        "name": "Bleach",
+        "use": "Disinfects swimming pools and water supplies"
+      },
+      {
+        "formula": "PVC",
+        "name": "Polyvinyl chloride",
+        "use": "Common plastic used in pipes, flooring, and clothing"
+      },
+      {
+        "formula": "CHCl3",
+        "name": "Chloroform",
+        "use": "Once used as an anaesthetic in 19th-century surgery"
+      }
     ],
     "facts": [
-      { "text": "Swimming pools smell of chlorine because it is added to kill harmful bacteria — without it, pools would be dangerous to swim in." },
-      { "text": "The chlorine in table salt is completely harmless — chlorine is only dangerous as a pure gas." },
-      { "text": "Chlorine gas was used as a chemical weapon in World War I — soldiers described its smell as a mix of pineapple and pepper." },
-      { "text": "Your stomach produces hydrochloric acid to digest food — the same type of acid used to dissolve metals in chemistry labs." }
+      {
+        "text": "Swimming pools smell of chlorine because it is added to kill harmful bacteria — without it, pools would be dangerous to swim in."
+      },
+      {
+        "text": "The chlorine in table salt is completely harmless — chlorine is only dangerous as a pure gas."
+      },
+      {
+        "text": "Chlorine gas was used as a chemical weapon in World War I — soldiers described its smell as a mix of pineapple and pepper."
+      },
+      {
+        "text": "Your stomach produces hydrochloric acid to digest food — the same type of acid used to dissolve metals in chemistry labs."
+      }
     ]
   },
   {
     "symbol": "F",
     "original_name": null,
-    "atomic_mass": 19.00,
+    "atomic_mass": 19,
     "electron_config": "2, 7",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Fluoro_liquido_a_-196%C2%B0C_1.jpg/960px-Fluoro_liquido_a_-196%C2%B0C_1.jpg",
     "image_caption": "Liquid fluorine at extremely low temperature",
     "compounds": [
-      { "formula": "HF",    "name": "Hydrofluoric acid", "use": "Etches glass and is used to make microchips" },
-      { "formula": "NaF",   "name": "Sodium fluoride",   "use": "Added to toothpaste to harden tooth enamel" },
-      { "formula": "CaF2",  "name": "Fluorite",          "use": "Natural mineral used in making steel and glass" },
-      { "formula": "PTFE",  "name": "Teflon",            "use": "Non-stick coating on frying pans" },
-      { "formula": "SF6",   "name": "Sulphur hexafluoride", "use": "Makes your voice extremely deep — the opposite of helium!" }
+      {
+        "formula": "HF",
+        "name": "Hydrofluoric acid",
+        "use": "Etches glass and is used to make microchips"
+      },
+      {
+        "formula": "NaF",
+        "name": "Sodium fluoride",
+        "use": "Added to toothpaste to harden tooth enamel"
+      },
+      {
+        "formula": "CaF2",
+        "name": "Fluorite",
+        "use": "Natural mineral used in making steel and glass"
+      },
+      {
+        "formula": "PTFE",
+        "name": "Teflon",
+        "use": "Non-stick coating on frying pans"
+      },
+      {
+        "formula": "SF6",
+        "name": "Sulphur hexafluoride",
+        "use": "Makes your voice extremely deep — the opposite of helium!"
+      }
     ],
     "facts": [
-      { "text": "Fluorine is the most reactive element on the periodic table — it attacks almost every substance, including glass and most metals." },
-      { "text": "Fluoride is added to toothpaste and tap water in many countries because it makes tooth enamel much harder and more resistant to decay." },
-      { "text": "Teflon, the non-stick coating on frying pans, contains fluorine — it is one of the very few materials that fluorine cannot destroy." },
-      { "text": "Fluorine gas is so dangerous that even a tiny leak can be fatal — it is one of the most carefully handled substances in chemistry." }
+      {
+        "text": "Fluorine is the most reactive element on the periodic table — it attacks almost every substance, including glass and most metals."
+      },
+      {
+        "text": "Fluoride is added to toothpaste and tap water in many countries because it makes tooth enamel much harder and more resistant to decay."
+      },
+      {
+        "text": "Teflon, the non-stick coating on frying pans, contains fluorine — it is one of the very few materials that fluorine cannot destroy."
+      },
+      {
+        "text": "Fluorine gas is so dangerous that even a tiny leak can be fatal — it is one of the most carefully handled substances in chemistry."
+      }
+    ]
+  },
+  {
+    "symbol": "Li",
+    "original_name": null,
+    "atomic_mass": 6.94,
+    "electron_config": "2, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Lithiumcut_cropped.jpg/960px-Lithiumcut_cropped.jpg",
+    "image_caption": "A freshly cut piece of lithium showing its silvery-white metallic surface before it tarnishes in air.",
+    "compounds": [
+      {
+        "formula": "Li2CO3",
+        "name": "Lithium carbonate",
+        "use": "Used as a medicine to treat bipolar disorder"
+      },
+      {
+        "formula": "LiOH",
+        "name": "Lithium hydroxide",
+        "use": "Used in spacecraft and submarines to scrub CO₂ from the air"
+      },
+      {
+        "formula": "LiCoO2",
+        "name": "Lithium cobalt oxide",
+        "use": "The material inside the rechargeable battery in your phone"
+      },
+      {
+        "formula": "LiCl",
+        "name": "Lithium chloride",
+        "use": "Used to dry out air in industrial dehumidifiers"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Lithium is so light it can float on water — and it's the lightest of all metals, lighter than most woods!"
+      },
+      {
+        "text": "Every rechargeable phone, laptop, and electric car battery relies on lithium to store energy."
+      },
+      {
+        "text": "Lithium burns with a brilliant crimson-red flame, which is why it's used in some fireworks and flares."
+      },
+      {
+        "text": "Lithium was one of the three elements created in the Big Bang — along with hydrogen and helium — making it almost as old as the universe itself."
+      }
+    ]
+  },
+  {
+    "symbol": "B",
+    "original_name": null,
+    "atomic_mass": 10.81,
+    "electron_config": "2, 3",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Boron_R105.jpg/960px-Boron_R105.jpg",
+    "image_caption": "Crystalline boron, one of the hardest elements, appearing as lustrous dark gray chips.",
+    "compounds": [
+      {
+        "formula": "B2O3",
+        "name": "Boron trioxide",
+        "use": "Key ingredient in heat-resistant borosilicate glass (like Pyrex)"
+      },
+      {
+        "formula": "Na2B4O7",
+        "name": "Borax",
+        "use": "Used in laundry detergent and as a household cleaning agent"
+      },
+      {
+        "formula": "BN",
+        "name": "Boron nitride",
+        "use": "An ultra-hard material used in cutting tools and armour"
+      },
+      {
+        "formula": "H3BO3",
+        "name": "Boric acid",
+        "use": "A mild antiseptic used in eyewashes and insect killers"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Crystalline boron is one of the hardest elements — almost as hard as diamond, and it can scratch most metals."
+      },
+      {
+        "text": "Boron is used in the control rods of nuclear reactors because it absorbs neutrons and keeps chain reactions in check."
+      },
+      {
+        "text": "The mineral borax (a boron compound) has been mined for over 4,000 years and was used by ancient goldsmiths to clean and join metals."
+      },
+      {
+        "text": "Boron fibres are stronger than steel by weight and are woven into high-performance aircraft parts and sports equipment."
+      }
+    ]
+  },
+  {
+    "symbol": "Ne",
+    "original_name": null,
+    "atomic_mass": 20.18,
+    "electron_config": "2, 8",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Neon_discharge_tube.jpg/960px-Neon_discharge_tube.jpg",
+    "image_caption": "Neon glowing its iconic orange-red colour inside a glass discharge tube.",
+    "compounds": [],
+    "facts": [
+      {
+        "text": "The famous glow of 'neon signs' is actually neon — the orange-red colour is pure neon, while other colours use different gases."
+      },
+      {
+        "text": "Neon is the fourth most abundant element in the universe but is extremely rare on Earth — most escaped into space long ago."
+      },
+      {
+        "text": "Neon was discovered in 1898, just a few weeks after krypton, when scientists cooled air until it turned liquid and boiled off the different gases one by one."
+      },
+      {
+        "text": "Like all noble gases, neon refuses to react with anything — its outer electron shell is completely full and perfectly satisfied."
+      }
+    ]
+  },
+  {
+    "symbol": "Mg",
+    "original_name": null,
+    "atomic_mass": 24.31,
+    "electron_config": "2, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/CSIRO_ScienceImage_2893_Crystalised_magnesium.jpg/960px-CSIRO_ScienceImage_2893_Crystalised_magnesium.jpg",
+    "image_caption": "Crystallised magnesium showing its shiny, silvery metallic appearance.",
+    "compounds": [
+      {
+        "formula": "MgO",
+        "name": "Magnesium oxide",
+        "use": "Used in heartburn tablets to neutralise stomach acid"
+      },
+      {
+        "formula": "MgSO4",
+        "name": "Epsom salt",
+        "use": "Dissolved in bath water to soothe sore muscles"
+      },
+      {
+        "formula": "Mg(OH)2",
+        "name": "Milk of magnesia",
+        "use": "A common medicine for indigestion and constipation"
+      },
+      {
+        "formula": "MgCl2",
+        "name": "Magnesium chloride",
+        "use": "Sprinkled on icy roads to melt ice in winter"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Magnesium burns with an incredibly bright white flame — so bright it was used in old camera flash bulbs and emergency flares."
+      },
+      {
+        "text": "Every green plant on Earth owes its colour to magnesium — it sits right at the centre of every chlorophyll molecule."
+      },
+      {
+        "text": "Magnesium is the eighth most abundant element in Earth's crust and is found in over 60 different minerals."
+      },
+      {
+        "text": "Racing cars, aircraft, and laptops use magnesium alloys because magnesium is two-thirds lighter than aluminium but still very strong."
+      }
+    ]
+  },
+  {
+    "symbol": "Al",
+    "original_name": null,
+    "atomic_mass": 26.98,
+    "electron_config": "2, 8, 3",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Aluminium-4.jpg/960px-Aluminium-4.jpg",
+    "image_caption": "Pure aluminium metal showing its characteristic silvery-white lustrous surface.",
+    "compounds": [
+      {
+        "formula": "Al2O3",
+        "name": "Aluminium oxide",
+        "use": "Found in rubies and sapphires — the colour comes from tiny impurities"
+      },
+      {
+        "formula": "Al(OH)3",
+        "name": "Aluminium hydroxide",
+        "use": "Used in antacid medicines to settle upset stomachs"
+      },
+      {
+        "formula": "AlCl3",
+        "name": "Aluminium chloride",
+        "use": "The active ingredient in most antiperspirant deodorants"
+      },
+      {
+        "formula": "Al2(SO4)3",
+        "name": "Alum",
+        "use": "Used for centuries to fix dye to fabric and purify drinking water"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Aluminium is the most abundant metal in Earth's crust — about 8% of all rocks and soil contain it."
+      },
+      {
+        "text": "In the 1800s, aluminium was more precious than gold because it was so hard to extract; the tip of the Washington Monument is capped with aluminium."
+      },
+      {
+        "text": "A recycled aluminium can uses 95% less energy to make than a brand-new one — recycling aluminium really does make a huge difference."
+      },
+      {
+        "text": "Aluminium is so light that a cube the size of a football only weighs about as much as a bag of sugar."
+      }
+    ]
+  },
+  {
+    "symbol": "Si",
+    "original_name": null,
+    "atomic_mass": 28.09,
+    "electron_config": "2, 8, 4",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/SiliconCroda.jpg/960px-SiliconCroda.jpg",
+    "image_caption": "A chunk of ultra-pure crystalline silicon with its distinctive metallic blue-grey sheen.",
+    "compounds": [
+      {
+        "formula": "SiO2",
+        "name": "Silicon dioxide",
+        "use": "Makes up sand, quartz, and glass"
+      },
+      {
+        "formula": "SiC",
+        "name": "Silicon carbide",
+        "use": "An extremely hard material used in grinding wheels and bulletproof vests"
+      },
+      {
+        "formula": "Na2SiO3",
+        "name": "Sodium silicate",
+        "use": "Known as 'water glass', used as an adhesive and fire retardant"
+      },
+      {
+        "formula": "Si3N4",
+        "name": "Silicon nitride",
+        "use": "Used in high-temperature engine parts and cutting tools"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Silicon is the foundation of modern computers — tiny silicon chips smaller than your fingernail can contain billions of transistors."
+      },
+      {
+        "text": "Silicon is the second most abundant element in Earth's crust, making up about 28% of it — mostly as sand and quartz."
+      },
+      {
+        "text": "Sand (silicon dioxide) can be transformed into glass by melting it — your window and phone screen both started life as sand."
+      },
+      {
+        "text": "Silicon Valley in California got its name because so many computer chip companies set up there in the 1970s and 80s."
+      }
+    ]
+  },
+  {
+    "symbol": "P",
+    "original_name": null,
+    "atomic_mass": 30.97,
+    "electron_config": "2, 8, 5",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Wei%C3%9Fer_Phosphor.JPG/960px-Wei%C3%9Fer_Phosphor.JPG",
+    "image_caption": "White phosphorus, a waxy, translucent solid that glows faintly in the dark and ignites in air.",
+    "compounds": [
+      {
+        "formula": "P4O10",
+        "name": "Phosphorus pentoxide",
+        "use": "A powerful drying agent used in chemical labs"
+      },
+      {
+        "formula": "H3PO4",
+        "name": "Phosphoric acid",
+        "use": "Gives cola drinks their sharp, tangy taste"
+      },
+      {
+        "formula": "Ca3(PO4)2",
+        "name": "Calcium phosphate",
+        "use": "The mineral that makes your bones and teeth hard"
+      },
+      {
+        "formula": "ATP",
+        "name": "Adenosine triphosphate",
+        "use": "The molecule all living cells use to store and release energy"
+      }
+    ],
+    "facts": [
+      {
+        "text": "White phosphorus glows faintly in the dark — this eerie glow gave it its name, from the Greek word for 'light-bearing'."
+      },
+      {
+        "text": "Phosphorus is absolutely essential for life — it forms the backbone of DNA and is the 'P' in ATP, the energy currency of every living cell."
+      },
+      {
+        "text": "Phosphorus was first isolated in 1669 by a German alchemist boiling down enormous quantities of urine, hoping to find gold — he got a glowing substance instead."
+      },
+      {
+        "text": "The 'strike anywhere' matches work because they contain red phosphorus, which ignites with just a little friction and heat."
+      }
+    ]
+  },
+  {
+    "symbol": "S",
+    "original_name": null,
+    "atomic_mass": 32.06,
+    "electron_config": "2, 8, 6",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Sulfur_-_El_Desierto_mine%2C_San_Pablo_de_Napa%2C_Daniel_Campos_Province%2C_Potos%C3%AD%2C_Bolivia.jpg/960px-Sulfur_-_El_Desierto_mine%2C_San_Pablo_de_Napa%2C_Daniel_Campos_Province%2C_Potos%C3%AD%2C_Bolivia.jpg",
+    "image_caption": "Bright yellow sulfur crystals from a volcanic mine in Bolivia.",
+    "compounds": [
+      {
+        "formula": "H2SO4",
+        "name": "Sulfuric acid",
+        "use": "The most widely produced industrial chemical — used to make fertilisers, batteries, and many other products"
+      },
+      {
+        "formula": "SO2",
+        "name": "Sulfur dioxide",
+        "use": "Released by volcanoes and burning coal; causes acid rain"
+      },
+      {
+        "formula": "H2S",
+        "name": "Hydrogen sulfide",
+        "use": "The gas that makes rotten eggs smell so awful"
+      },
+      {
+        "formula": "FeS2",
+        "name": "Iron pyrite",
+        "use": "Known as 'fool's gold' because its golden colour tricked many prospectors"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Sulfur is the reason rotten eggs smell so horrible — bacteria release tiny amounts of hydrogen sulfide gas as they break down proteins."
+      },
+      {
+        "text": "Ancient peoples called sulfur 'brimstone' and it appears in the Bible — the fires of hell were imagined to burn with its choking smell."
+      },
+      {
+        "text": "Sulfur is bright yellow and is found in huge deposits around volcanoes — some craters look like they are filled with powdered sunshine."
+      },
+      {
+        "text": "Your body contains about 140 grams of sulfur — it's found in two essential amino acids that build your proteins and hair."
+      }
+    ]
+  },
+  {
+    "symbol": "Ar",
+    "original_name": null,
+    "atomic_mass": 39.95,
+    "electron_config": "2, 8, 8",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Argon_discharge_tube.jpg/960px-Argon_discharge_tube.jpg",
+    "image_caption": "Argon glowing violet-purple inside a glass discharge tube when electricity passes through it.",
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Argon makes up about 1% of the air you breathe — every breath you take contains more argon than carbon dioxide."
+      },
+      {
+        "text": "Argon gets its name from the Greek word 'argos', meaning 'lazy' or 'inactive', because it refuses to react with almost anything."
+      },
+      {
+        "text": "Argon is pumped between the panes of double-glazed windows because it conducts heat poorly, keeping homes warmer in winter."
+      },
+      {
+        "text": "Museum conservators fill display cases with argon to protect ancient documents and artefacts, because argon won't react with or damage them."
+      }
+    ]
+  },
+  {
+    "symbol": "Zn",
+    "original_name": null,
+    "atomic_mass": 65.38,
+    "electron_config": "2, 8, 18, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Zinc_fragment_sublimed_and_1cm3_cube.jpg/960px-Zinc_fragment_sublimed_and_1cm3_cube.jpg",
+    "image_caption": "A sublimed zinc fragment and a 1 cm³ reference cube showing zinc's silvery-grey metallic appearance.",
+    "compounds": [
+      {
+        "formula": "ZnO",
+        "name": "Zinc oxide",
+        "use": "The white ingredient in sunscreen that blocks UV rays"
+      },
+      {
+        "formula": "ZnS",
+        "name": "Zinc sulfide",
+        "use": "Used to make glow-in-the-dark paint and watch dials"
+      },
+      {
+        "formula": "ZnSO4",
+        "name": "Zinc sulfate",
+        "use": "Added to fertilisers and used to treat zinc deficiency in people"
+      },
+      {
+        "formula": "ZnCl2",
+        "name": "Zinc chloride",
+        "use": "Used in dry-cell batteries and as a flux for soldering metals"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Zinc is used to coat steel in a process called galvanising — the zinc layer rusts away first, sacrificing itself to protect the steel underneath."
+      },
+      {
+        "text": "Your body needs zinc to heal wounds, fight infections, and even to taste and smell properly — it's in many cold and flu remedies."
+      },
+      {
+        "text": "Brass, one of the most useful alloys in history (used in trumpets, door handles, and old coins), is simply copper mixed with zinc."
+      },
+      {
+        "text": "Most of the 'copper' one-cent coins produced in the USA since 1983 are actually 97.5% zinc with just a thin copper coating."
+      }
+    ]
+  },
+  {
+    "symbol": "Br",
+    "original_name": null,
+    "atomic_mass": 79.9,
+    "electron_config": "2, 8, 18, 7",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Bromine_vial_in_acrylic_cube.jpg/960px-Bromine_vial_in_acrylic_cube.jpg",
+    "image_caption": "A sealed vial of bromine encased in an acrylic cube, showing its deep reddish-brown colour.",
+    "compounds": [
+      {
+        "formula": "NaBr",
+        "name": "Sodium bromide",
+        "use": "Used in swimming pools and hot tubs to kill bacteria"
+      },
+      {
+        "formula": "AgBr",
+        "name": "Silver bromide",
+        "use": "The light-sensitive chemical that made photographic film work"
+      },
+      {
+        "formula": "CH2Br2",
+        "name": "Dibromomethane",
+        "use": "Used as a solvent in chemical research labs"
+      },
+      {
+        "formula": "KBr",
+        "name": "Potassium bromide",
+        "use": "Historically used as a sedative and anti-seizure medicine"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Bromine is one of only two elements that is a liquid at room temperature (the other is mercury) — it's a dark reddish-brown, fuming liquid."
+      },
+      {
+        "text": "Bromine has a horrible, choking smell — its name comes from the Greek word 'bromos', meaning 'stench'."
+      },
+      {
+        "text": "The ancient Phoenicians extracted a purple dye called Tyrian purple from sea snails; it gets its colour from a bromine-containing molecule and was so expensive it was reserved for royalty."
+      },
+      {
+        "text": "Bromine compounds were once used as flame retardants in electronics and furniture foam, though many have since been phased out due to environmental concerns."
+      }
+    ]
+  },
+  {
+    "symbol": "Kr",
+    "original_name": null,
+    "atomic_mass": 83.8,
+    "electron_config": "2, 8, 18, 8",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Krypton_discharge_tube.jpg/960px-Krypton_discharge_tube.jpg",
+    "image_caption": "Krypton glowing white inside a glass discharge tube.",
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Krypton's name comes from the Greek word 'kryptos', meaning 'hidden' — the same root as Superman's home planet Krypton!"
+      },
+      {
+        "text": "From 1960 to 1983, the official definition of one metre was based on the wavelength of orange-red light emitted by krypton-86 atoms."
+      },
+      {
+        "text": "Krypton is used in high-powered camera flash lamps and airport runway lights because it produces an extremely bright, white light."
+      },
+      {
+        "text": "Krypton was discovered in 1898 by boiling down liquid air — there was so little of it that it took processing enormous amounts of air to collect just a tiny sample."
+      }
+    ]
+  },
+  {
+    "symbol": "Sn",
+    "original_name": "Stannum",
+    "atomic_mass": 118.71,
+    "electron_config": "2, 8, 18, 18, 4",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Sn-Alpha-Beta.jpg/960px-Sn-Alpha-Beta.jpg",
+    "image_caption": "Alpha tin (grey powder, left) and beta tin (shiny metal, right) — two very different forms of the same element.",
+    "compounds": [
+      {
+        "formula": "SnO2",
+        "name": "Tin dioxide",
+        "use": "Used in glass coatings that conduct electricity, found in touchscreens"
+      },
+      {
+        "formula": "SnCl2",
+        "name": "Tin chloride",
+        "use": "Used as a food preservative and as a reducing agent in chemistry"
+      },
+      {
+        "formula": "Sn(OH)2",
+        "name": "Tin hydroxide",
+        "use": "Used in some dental cements and as a mordant in dyeing fabric"
+      },
+      {
+        "formula": "Sn3(PO4)2",
+        "name": "Tin phosphate",
+        "use": "Used in corrosion-resistant coatings for metal surfaces"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Tin has been used by humans for over 5,000 years — bronze (tin + copper) was so important it defined an entire age of human history, the Bronze Age."
+      },
+      {
+        "text": "In very cold weather, tin slowly crumbles into grey powder in a process called 'tin pest' — this may have contributed to the failure of Napoleon's army in the Russian winter, as tin buttons on uniforms disintegrated."
+      },
+      {
+        "text": "Tin's chemical symbol Sn comes from its Latin name 'Stannum' — and the element stannum gave its name to the English county Cornwall, once a major tin-mining region."
+      },
+      {
+        "text": "The 'tin can' used for food preservation since the 1800s is actually a steel can with only a thin tin coating — but tin resists corrosion well enough to keep food safe for years."
+      }
+    ]
+  },
+  {
+    "symbol": "I",
+    "original_name": null,
+    "atomic_mass": 126.9,
+    "electron_config": "2, 8, 18, 18, 7",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Sample_of_iodine.jpg/960px-Sample_of_iodine.jpg",
+    "image_caption": "A sample of solid iodine showing its lustrous dark grey-black crystalline form.",
+    "compounds": [
+      {
+        "formula": "KI",
+        "name": "Potassium iodide",
+        "use": "Added to table salt to prevent iodine deficiency and thyroid disease"
+      },
+      {
+        "formula": "I2",
+        "name": "Iodine solution",
+        "use": "Used as an antiseptic to clean wounds and kill bacteria"
+      },
+      {
+        "formula": "NaIO3",
+        "name": "Sodium iodate",
+        "use": "Used to iodise salt and as a disinfectant in water treatment"
+      },
+      {
+        "formula": "AgI",
+        "name": "Silver iodide",
+        "use": "Used in cloud seeding to encourage rainfall and in some photographic films"
+      }
+    ],
+    "facts": [
+      {
+        "text": "When solid iodine is heated, it skips the liquid phase entirely and turns straight into a beautiful purple-violet vapour — a process called sublimation."
+      },
+      {
+        "text": "Iodine is essential for your thyroid gland, which controls your growth and metabolism — a lack of iodine causes a swelling of the throat called a goitre."
+      },
+      {
+        "text": "The brown antiseptic liquid used to clean cuts is an iodine solution — iodine kills bacteria by attacking their proteins and DNA."
+      },
+      {
+        "text": "Your body contains only about 15–20 milligrams of iodine, but without it you cannot make the hormones that control your body's energy use."
+      }
+    ]
+  },
+  {
+    "symbol": "Xe",
+    "original_name": null,
+    "atomic_mass": 131.29,
+    "electron_config": "2, 8, 18, 18, 8",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Xenon_discharge_tube.jpg/960px-Xenon_discharge_tube.jpg",
+    "image_caption": "Xenon glowing blue-white inside a glass discharge tube.",
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Xenon was the first noble gas ever made into a chemical compound — in 1962 a chemist made xenon tetrafluoride, shocking the scientific world which believed noble gases could never react."
+      },
+      {
+        "text": "Xenon is used in the super-bright headlights of luxury cars and in the powerful flash lamps used to pump lasers."
+      },
+      {
+        "text": "NASA uses xenon as the propellant in ion thrusters on spacecraft — electric fields shoot xenon ions out at enormous speed to gently push the craft through space."
+      },
+      {
+        "text": "Xenon is present in Earth's atmosphere in tiny amounts — only about 90 parts per billion — making it one of the rarest stable gases on our planet."
+      }
+    ]
+  },
+  {
+    "symbol": "Hg",
+    "original_name": "Hydrargyrum",
+    "atomic_mass": 200.59,
+    "electron_config": "2, 8, 18, 32, 18, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Pouring_liquid_mercury_bionerd.jpg/960px-Pouring_liquid_mercury_bionerd.jpg",
+    "image_caption": "Liquid mercury being poured, showing its extraordinary mirror-like silvery surface.",
+    "compounds": [
+      {
+        "formula": "HgS",
+        "name": "Cinnabar",
+        "use": "The bright red mineral ore of mercury, used as a pigment for thousands of years"
+      },
+      {
+        "formula": "HgCl2",
+        "name": "Mercury chloride",
+        "use": "A powerful disinfectant historically used in medicine, now mostly avoided due to toxicity"
+      },
+      {
+        "formula": "Hg2Cl2",
+        "name": "Calomel",
+        "use": "Used in old medicine and as a reference electrode in chemistry"
+      },
+      {
+        "formula": "HgO",
+        "name": "Mercury oxide",
+        "use": "Used in some specialised batteries; its decomposition was used by Lavoisier to discover oxygen"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Mercury is the only metal that is liquid at room temperature — you can pour it like water, but it's so dense that a cannonball would float on its surface!"
+      },
+      {
+        "text": "Ancient Chinese emperors drank mercury compounds believing it would grant immortality — it actually poisoned them, possibly contributing to the death of the first emperor Qin Shi Huang."
+      },
+      {
+        "text": "The phrase 'mad as a hatter' is real — hat-makers in the 1800s used mercury nitrate to treat felt, and the mercury fumes caused brain damage, tremors, and erratic behaviour."
+      },
+      {
+        "text": "Mercury's chemical symbol Hg comes from its Latin name 'hydrargyrum', meaning 'water silver' — a perfect description of its silvery, flowing appearance."
+      }
+    ]
+  },
+  {
+    "symbol": "Be",
+    "original_name": null,
+    "atomic_mass": 9.01,
+    "electron_config": "2, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Be-140g.jpg/960px-Be-140g.jpg",
+    "image_caption": "A 140-gram chunk of pure beryllium metal",
+    "compounds": [
+      {
+        "formula": "BeO",
+        "name": "Beryllium oxide",
+        "use": "Used in rocket nozzles and heat shields because it can withstand extreme temperatures"
+      },
+      {
+        "formula": "BeSO4",
+        "name": "Beryllium sulfate",
+        "use": "Used in laboratory research and some X-ray equipment"
+      },
+      {
+        "formula": "BeCl2",
+        "name": "Beryllium chloride",
+        "use": "Used as a catalyst in industrial chemical reactions"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Beryllium is so light that a golf ball-sized chunk weighs less than a ping-pong ball — it's one of the lightest metals that can handle real heat."
+      },
+      {
+        "text": "The James Webb Space Telescope's giant golden mirrors are made from beryllium coated in gold, because beryllium stays perfectly stiff even in the freezing cold of space."
+      },
+      {
+        "text": "Beryllium is dangerously toxic if you breathe in its dust, so scientists have to handle it very carefully with special protective equipment."
+      },
+      {
+        "text": "Emeralds and aquamarines are both beryllium minerals — the green colour of an emerald comes from chromium atoms sitting inside a beryllium crystal."
+      }
+    ]
+  },
+  {
+    "symbol": "Sc",
+    "original_name": null,
+    "atomic_mass": 44.96,
+    "electron_config": "2, 8, 9, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Scandium_sublimed_dendritic_and_1cm3_cube.jpg/960px-Scandium_sublimed_dendritic_and_1cm3_cube.jpg",
+    "image_caption": "Sublimed scandium dendrites next to a 1 cm³ reference cube",
+    "compounds": [
+      {
+        "formula": "Sc2O3",
+        "name": "Scandium oxide",
+        "use": "Used to make high-intensity stadium lighting that looks like natural daylight"
+      },
+      {
+        "formula": "ScCl3",
+        "name": "Scandium chloride",
+        "use": "Used in chemical research and as a catalyst"
+      },
+      {
+        "formula": "ScAl",
+        "name": "Scandium-aluminium alloy",
+        "use": "Used in high-performance baseball bats, bicycle frames, and aerospace parts because it is very strong and light"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Scandium was predicted to exist by Dmitri Mendeleev before it was discovered — he called it 'eka-boron' and described its properties almost perfectly."
+      },
+      {
+        "text": "The Soviet Union secretly stockpiled scandium during the Cold War to make ultra-strong aluminium alloys for military aircraft."
+      },
+      {
+        "text": "Despite being a rare metal, scandium is actually more common in Earth's crust than lead — it's just very spread out and hard to collect."
+      },
+      {
+        "text": "High-intensity lights in sports stadiums often use scandium iodide, which produces a bright white light that perfectly mimics sunshine."
+      }
+    ]
+  },
+  {
+    "symbol": "Ti",
+    "original_name": null,
+    "atomic_mass": 47.87,
+    "electron_config": "2, 8, 10, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Titan-crystal_bar.JPG/960px-Titan-crystal_bar.JPG",
+    "image_caption": "A crystal bar of pure titanium metal",
+    "compounds": [
+      {
+        "formula": "TiO2",
+        "name": "Titanium dioxide",
+        "use": "White pigment used in paint, sunscreen, and to make paper brilliantly white"
+      },
+      {
+        "formula": "TiCl4",
+        "name": "Titanium tetrachloride",
+        "use": "Used to make other titanium compounds and as a catalyst in plastic production"
+      },
+      {
+        "formula": "TiN",
+        "name": "Titanium nitride",
+        "use": "Extremely hard gold-coloured coating used on drill bits and surgical tools"
+      },
+      {
+        "formula": "TiC",
+        "name": "Titanium carbide",
+        "use": "One of the hardest materials known, used in cutting tools and armour"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Titanium is as strong as steel but 45% lighter, which is why it is used in fighter jets, spacecraft, and racing bicycles."
+      },
+      {
+        "text": "Your body accepts titanium completely — surgeons use titanium screws, plates, and artificial hip joints because bone grows right onto the metal."
+      },
+      {
+        "text": "The SR-71 Blackbird, the fastest air-breathing plane ever built, was made mostly from titanium because it got so hot at top speed that aluminium would melt."
+      },
+      {
+        "text": "Titanium was named after the Titans of Greek mythology — giants of enormous strength — which suits a metal famous for its incredible strength-to-weight ratio."
+      }
+    ]
+  },
+  {
+    "symbol": "V",
+    "original_name": null,
+    "atomic_mass": 50.94,
+    "electron_config": "2, 8, 11, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Vanadium_crystal_bar_and_1cm3_cube.jpg/960px-Vanadium_crystal_bar_and_1cm3_cube.jpg",
+    "image_caption": "A vanadium crystal bar next to a 1 cm³ reference cube",
+    "compounds": [
+      {
+        "formula": "V2O5",
+        "name": "Vanadium pentoxide",
+        "use": "Key component in giant rechargeable flow batteries that store energy from wind and solar farms"
+      },
+      {
+        "formula": "VO2",
+        "name": "Vanadium dioxide",
+        "use": "Smart window coating that automatically blocks heat when it gets too hot"
+      },
+      {
+        "formula": "VCl3",
+        "name": "Vanadium trichloride",
+        "use": "Used as a catalyst in manufacturing and chemical research"
+      },
+      {
+        "formula": "V2O3",
+        "name": "Vanadium trioxide",
+        "use": "Used in making special steel alloys"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Vanadium is named after Vanadis, the Norse goddess of beauty — its many vividly coloured compounds (yellow, orange, blue, green) made it seem poetic to the chemist who discovered it."
+      },
+      {
+        "text": "Adding a tiny amount of vanadium to steel makes it dramatically stronger — the steel in car chassis, tools, and crankshafts often contains vanadium."
+      },
+      {
+        "text": "Some sea creatures called sea squirts concentrate vanadium in their blood at levels a million times higher than in the surrounding seawater, though scientists are still figuring out why."
+      },
+      {
+        "text": "Vanadium flow batteries can store huge amounts of electricity — some are as big as a house and can power a whole neighbourhood."
+      }
+    ]
+  },
+  {
+    "symbol": "Cr",
+    "original_name": null,
+    "atomic_mass": 52,
+    "electron_config": "2, 8, 13, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Chromium_crystals_and_1cm3_cube.jpg/960px-Chromium_crystals_and_1cm3_cube.jpg",
+    "image_caption": "Chromium crystals next to a 1 cm³ reference cube",
+    "compounds": [
+      {
+        "formula": "Cr2O3",
+        "name": "Chromium oxide",
+        "use": "Green pigment used in paints and to give glass a green colour"
+      },
+      {
+        "formula": "CrO3",
+        "name": "Chromium trioxide",
+        "use": "Used in chrome plating baths to coat metal parts with shiny protective chromium"
+      },
+      {
+        "formula": "K2Cr2O7",
+        "name": "Potassium dichromate",
+        "use": "Used in leather tanning and photography"
+      },
+      {
+        "formula": "FeCr2O4",
+        "name": "Chromite",
+        "use": "The main ore mineral from which chromium is extracted"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Chromium's name comes from the Greek word for colour — its compounds appear in almost every colour of the rainbow, from bright red to deep green."
+      },
+      {
+        "text": "Rubies are red because they contain a tiny amount of chromium — pure aluminium oxide would be colourless, but chromium turns it deep red."
+      },
+      {
+        "text": "Stainless steel gets its rust-resistant superpower from chromium — adding at least 10.5% chromium causes a thin invisible shield of chromium oxide to form on the surface."
+      },
+      {
+        "text": "Chrome-plated bumpers and taps get their mirror-bright finish from a thin layer of chromium deposited by passing electricity through a chemical bath."
+      }
+    ]
+  },
+  {
+    "symbol": "Mn",
+    "original_name": null,
+    "atomic_mass": 54.94,
+    "electron_config": "2, 8, 13, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Manganese_electrolytic_and_1cm3_cube.jpg/960px-Manganese_electrolytic_and_1cm3_cube.jpg",
+    "image_caption": "Electrolytic manganese metal next to a 1 cm³ reference cube",
+    "compounds": [
+      {
+        "formula": "MnO2",
+        "name": "Manganese dioxide",
+        "use": "The black powder inside ordinary AA batteries that makes them work"
+      },
+      {
+        "formula": "KMnO4",
+        "name": "Potassium permanganate",
+        "use": "A deep purple disinfectant used to treat water and skin infections"
+      },
+      {
+        "formula": "MnSO4",
+        "name": "Manganese sulfate",
+        "use": "Added to fertilisers because plants need tiny amounts of manganese to grow"
+      },
+      {
+        "formula": "Mn3O4",
+        "name": "Manganese tetroxide",
+        "use": "Used in making ferrite magnets and in the steel industry"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Manganese nodules — lumpy black rocks loaded with manganese — litter the deep ocean floor, and there is enough of them to supply the world for thousands of years."
+      },
+      {
+        "text": "Ancient cave painters used manganese dioxide as a black pigment more than 30,000 years ago — making it one of the oldest materials used by humans as art."
+      },
+      {
+        "text": "Steel without manganese would be brittle and crack easily — virtually all steel produced today contains a small amount of manganese to keep it tough."
+      },
+      {
+        "text": "Your brain needs manganese to work properly — it helps make enzymes that protect brain cells from damage, though too much can actually be toxic."
+      }
+    ]
+  },
+  {
+    "symbol": "Co",
+    "original_name": null,
+    "atomic_mass": 58.93,
+    "electron_config": "2, 8, 15, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Kobalt_electrolytic_and_1cm3_cube.jpg/960px-Kobalt_electrolytic_and_1cm3_cube.jpg",
+    "image_caption": "Electrolytic cobalt next to a 1 cm³ reference cube",
+    "compounds": [
+      {
+        "formula": "CoO",
+        "name": "Cobalt oxide",
+        "use": "Deep blue colouring used in glass, ceramics, and pottery for thousands of years"
+      },
+      {
+        "formula": "CoCl2",
+        "name": "Cobalt chloride",
+        "use": "Used in weather-indicator cards that turn from blue (dry) to pink (humid)"
+      },
+      {
+        "formula": "LiCoO2",
+        "name": "Lithium cobalt oxide",
+        "use": "The material inside the rechargeable battery of almost every smartphone and laptop"
+      },
+      {
+        "formula": "Co3O4",
+        "name": "Cobalt oxide",
+        "use": "Used in rechargeable batteries and as a catalyst for splitting water in solar energy research"
+      }
+    ],
+    "facts": [
+      {
+        "text": "The word 'cobalt' comes from the German word 'Kobold', meaning goblin — medieval miners blamed mischievous goblins when cobalt ores made them sick while they were trying to smelt silver."
+      },
+      {
+        "text": "Cobalt is the element inside vitamin B12 — it sits right at the centre of the molecule, making cobalt the only metal that is essential in human vitamins."
+      },
+      {
+        "text": "The brilliant blue colour in ancient Egyptian glass and Chinese Ming dynasty porcelain both come from cobalt, showing it was valued across cultures for thousands of years."
+      },
+      {
+        "text": "More than half the world's cobalt comes from the Democratic Republic of Congo, making it one of the most geographically concentrated critical minerals on Earth."
+      }
+    ]
+  },
+  {
+    "symbol": "Ni",
+    "original_name": null,
+    "atomic_mass": 58.69,
+    "electron_config": "2, 8, 16, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Nickel_electrolytic_and_1cm3_cube.jpg/960px-Nickel_electrolytic_and_1cm3_cube.jpg",
+    "image_caption": "Electrolytic nickel next to a 1 cm³ reference cube",
+    "compounds": [
+      {
+        "formula": "NiO",
+        "name": "Nickel oxide",
+        "use": "Used in ceramics and as a catalyst in chemical production"
+      },
+      {
+        "formula": "NiCl2",
+        "name": "Nickel chloride",
+        "use": "Used in nickel plating baths to coat metal objects with a hard, shiny protective layer"
+      },
+      {
+        "formula": "Ni(CO)4",
+        "name": "Nickel carbonyl",
+        "use": "Highly toxic intermediate used in the Mond process to purify nickel metal"
+      },
+      {
+        "formula": "NiSO4",
+        "name": "Nickel sulfate",
+        "use": "Used in electroplating and in making nickel-based batteries"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Nickel got its name from the German 'Kupfernickel', meaning 'devil's copper' — miners were fooled by nickel ores that looked like copper but yielded no copper at all."
+      },
+      {
+        "text": "Earth's core is thought to be made largely of iron and nickel — the same mix found in most metallic meteorites, which are fragments of other planets' cores."
+      },
+      {
+        "text": "The US five-cent coin is called a 'nickel' but only contains 25% nickel — the rest is copper. Pure nickel coins were used earlier in history."
+      },
+      {
+        "text": "Nickel is strongly magnetic at room temperature, just like iron and cobalt — it is one of only three elements that are naturally magnetic."
+      }
+    ]
+  },
+  {
+    "symbol": "Ga",
+    "original_name": null,
+    "atomic_mass": 69.72,
+    "electron_config": "2, 8, 18, 3",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Gallium_bar_cracked_open_to_show_crystal_structure_with_scale_1.png/960px-Gallium_bar_cracked_open_to_show_crystal_structure_with_scale_1.png",
+    "image_caption": "A gallium bar cracked open to reveal its crystalline interior",
+    "compounds": [
+      {
+        "formula": "GaAs",
+        "name": "Gallium arsenide",
+        "use": "Semiconductor used in solar cells, LED lights, and the chips inside mobile phones"
+      },
+      {
+        "formula": "GaN",
+        "name": "Gallium nitride",
+        "use": "Used in blue and white LEDs, Blu-ray disc lasers, and highly efficient phone chargers"
+      },
+      {
+        "formula": "Ga2O3",
+        "name": "Gallium oxide",
+        "use": "Next-generation semiconductor material for ultra-efficient power electronics"
+      },
+      {
+        "formula": "GaCl3",
+        "name": "Gallium chloride",
+        "use": "Used in chemical research and as a catalyst"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Gallium melts at just 29.8°C — it will melt in your hand on a warm day, turning from a silver solid to a shiny liquid right on your palm."
+      },
+      {
+        "text": "Gallium was one of the elements predicted by Mendeleev before it was discovered — he called it 'eka-aluminium' and guessed its properties almost exactly."
+      },
+      {
+        "text": "The blue and white LEDs that light up your phone screen and LED light bulbs rely on gallium compounds — the invention earned the 2014 Nobel Prize in Physics."
+      },
+      {
+        "text": "Gallium expands when it freezes (like water), which is unusual for metals — this means you should never store liquid gallium in a sealed glass container."
+      }
+    ]
+  },
+  {
+    "symbol": "Ge",
+    "original_name": null,
+    "atomic_mass": 72.63,
+    "electron_config": "2, 8, 18, 4",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Polycrystalline-germanium.jpg/960px-Polycrystalline-germanium.jpg",
+    "image_caption": "Polycrystalline germanium showing its distinctive metallic grey lustre",
+    "compounds": [
+      {
+        "formula": "GeO2",
+        "name": "Germanium dioxide",
+        "use": "Used to make the glass in fibre-optic cables that carry internet data around the world"
+      },
+      {
+        "formula": "GeCl4",
+        "name": "Germanium tetrachloride",
+        "use": "Key intermediate in making ultra-pure germanium for electronics and fibre optics"
+      },
+      {
+        "formula": "GeH4",
+        "name": "Germane",
+        "use": "Used in chemical vapour deposition to grow thin semiconductor films"
+      },
+      {
+        "formula": "ZnGeP2",
+        "name": "Zinc germanium phosphide",
+        "use": "Used in infrared lasers for military and medical imaging"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Germanium was another element that Mendeleev predicted — he called it 'eka-silicon' in 1871, and when it was discovered in 1886, its properties matched his predictions so closely that it proved his periodic table was right."
+      },
+      {
+        "text": "The very first transistor ever built, in 1947, was made from germanium — this invention started the entire electronics revolution that gave us computers and smartphones."
+      },
+      {
+        "text": "Germanium is transparent to infrared light, even though it looks like a shiny grey metal — this makes it perfect for night-vision goggles and thermal cameras."
+      },
+      {
+        "text": "Named after Germany (Germania in Latin), germanium was discovered by German chemist Clemens Winkler in 1886."
+      }
+    ]
+  },
+  {
+    "symbol": "As",
+    "original_name": null,
+    "atomic_mass": 74.92,
+    "electron_config": "2, 8, 18, 5",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Arsen_1a.jpg/960px-Arsen_1a.jpg",
+    "image_caption": "A sample of grey metallic arsenic",
+    "compounds": [
+      {
+        "formula": "As2O3",
+        "name": "Arsenic trioxide",
+        "use": "Used in very small, carefully controlled doses to treat a specific type of leukaemia"
+      },
+      {
+        "formula": "GaAs",
+        "name": "Gallium arsenide",
+        "use": "Semiconductor used in solar cells and the chips inside mobile phones"
+      },
+      {
+        "formula": "As2S3",
+        "name": "Arsenic trisulfide",
+        "use": "Used as a yellow pigment (orpiment) in ancient art and as an infrared optical material"
+      },
+      {
+        "formula": "CaHAsO3",
+        "name": "Calcium arsenite",
+        "use": "Formerly used as a pesticide, now mostly banned due to toxicity"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Arsenic was the poison of choice for murderers throughout history and was nicknamed 'inheritance powder' in Renaissance Italy because it helped heirs speed up their inheritance — it was nearly undetectable until the 1830s."
+      },
+      {
+        "text": "Napoleon Bonaparte may have been slowly poisoned by arsenic from the green wallpaper in his damp St Helena bedroom — the damp caused mould to convert arsenic-based dye into toxic gas."
+      },
+      {
+        "text": "Despite its deadly reputation, arsenic compounds are used today as targeted cancer treatments — arsenic trioxide can put a certain type of leukaemia into remission."
+      },
+      {
+        "text": "Arsenic occurs naturally in groundwater in parts of Bangladesh and West Bengal, affecting millions of people — it is one of the world's largest environmental health crises."
+      }
+    ]
+  },
+  {
+    "symbol": "Sr",
+    "original_name": null,
+    "atomic_mass": 87.62,
+    "electron_config": "2, 8, 18, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Strontium_destilled_crystals.jpg/960px-Strontium_destilled_crystals.jpg",
+    "image_caption": "Distilled strontium crystals with a freshly cut, shiny surface",
+    "compounds": [
+      {
+        "formula": "SrCO3",
+        "name": "Strontium carbonate",
+        "use": "The red colour in fireworks and emergency flares — strontium burns with a brilliant crimson flame"
+      },
+      {
+        "formula": "SrSO4",
+        "name": "Strontium sulfate",
+        "use": "The main mineral ore of strontium (celestite); also used in drilling fluids for oil wells"
+      },
+      {
+        "formula": "SrCl2",
+        "name": "Strontium chloride",
+        "use": "Used in toothpaste for sensitive teeth to reduce pain"
+      },
+      {
+        "formula": "SrTiO3",
+        "name": "Strontium titanate",
+        "use": "Synthetic diamond simulant with even more sparkle than real diamond"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Strontium gives fireworks and flares their vivid red colour — every bright crimson burst you see in a firework display contains a strontium compound."
+      },
+      {
+        "text": "Strontium-90, a radioactive isotope produced in nuclear explosions, was a major health concern during Cold War nuclear testing because the body mistakes it for calcium and stores it in bones."
+      },
+      {
+        "text": "Strontium was named after Strontian, a small village in Scotland, where the mineral strontianite was first discovered in a lead mine in 1790."
+      },
+      {
+        "text": "Strontium titanate can be cut into gemstones that sparkle more brilliantly than diamonds, though it is softer and scratches more easily."
+      }
+    ]
+  },
+  {
+    "symbol": "Ba",
+    "original_name": null,
+    "atomic_mass": 137.33,
+    "electron_config": "2, 8, 18, 18, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Barium_unter_Argon_Schutzgas_Atmosph%C3%A4re.jpg/960px-Barium_unter_Argon_Schutzgas_Atmosph%C3%A4re.jpg",
+    "image_caption": "Barium metal stored under argon gas to prevent it reacting with air",
+    "compounds": [
+      {
+        "formula": "BaSO4",
+        "name": "Barium sulfate",
+        "use": "Drunk as a 'barium meal' before X-rays of the gut — it is opaque to X-rays and shows the shape of the digestive tract"
+      },
+      {
+        "formula": "BaCO3",
+        "name": "Barium carbonate",
+        "use": "Used in making specialty glass, ceramics, and rat poison"
+      },
+      {
+        "formula": "BaO",
+        "name": "Barium oxide",
+        "use": "Used in cathode ray tube glass and as a drying agent in laboratories"
+      },
+      {
+        "formula": "BaCl2",
+        "name": "Barium chloride",
+        "use": "Used in water treatment, fireworks (green colour), and making other barium compounds"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Barium's name comes from the Greek 'barys', meaning heavy — barium sulfate is so dense that doctors use it to make the inside of your stomach visible on an X-ray."
+      },
+      {
+        "text": "Barium burns with a vivid green flame — you can spot it in fireworks displays as the bright apple-green bursts."
+      },
+      {
+        "text": "Pure barium metal is so reactive it catches fire spontaneously in air and reacts violently with water, so it must always be stored under oil or inert gas."
+      },
+      {
+        "text": "Barium is used in vacuum tubes — getters made of barium absorb the last traces of gas inside the tube, keeping the vacuum perfect."
+      }
+    ]
+  },
+  {
+    "symbol": "W",
+    "original_name": "Wolfram",
+    "atomic_mass": 183.84,
+    "electron_config": "2, 8, 18, 32, 12, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Wolfram_evaporated_crystals_and_1cm3_cube.jpg/960px-Wolfram_evaporated_crystals_and_1cm3_cube.jpg",
+    "image_caption": "Evaporated tungsten (Wolfram) crystals next to a 1 cm³ reference cube",
+    "compounds": [
+      {
+        "formula": "WO3",
+        "name": "Tungsten trioxide",
+        "use": "Used in smart windows that can be electronically switched from clear to tinted blue"
+      },
+      {
+        "formula": "WC",
+        "name": "Tungsten carbide",
+        "use": "Extremely hard material used in drill bits, cutting tools, and the tips of ball-point pens"
+      },
+      {
+        "formula": "WS2",
+        "name": "Tungsten disulfide",
+        "use": "Dry lubricant used in spacecraft and high-temperature machinery"
+      },
+      {
+        "formula": "NaWO4",
+        "name": "Sodium tungstate",
+        "use": "Used as a flame retardant and in making tungsten-based pigments"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Tungsten's chemical symbol is W because its German name is Wolfram — German scientists discovered it first, and Wolfram is still the official name in many European languages."
+      },
+      {
+        "text": "Tungsten has the highest melting point of any metal — 3,422°C — which is why old-fashioned light bulb filaments were made from it; it glows white-hot without melting."
+      },
+      {
+        "text": "A golf club driver with a tiny tungsten weight in just the right place can add metres to your drive — engineers use its extreme density to fine-tune the balance of sports equipment."
+      },
+      {
+        "text": "Tungsten is so dense that a cube the size of a tennis ball would weigh about 4 kg — nearly as heavy as a bag of sugar."
+      }
+    ]
+  },
+  {
+    "symbol": "Pt",
+    "original_name": null,
+    "atomic_mass": 195.08,
+    "electron_config": "2, 8, 18, 32, 17, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Platinum_crystals.jpg/960px-Platinum_crystals.jpg",
+    "image_caption": "Pure platinum crystals showing the metal's characteristic grey-white sheen",
+    "compounds": [
+      {
+        "formula": "PtCl2",
+        "name": "Platinum chloride",
+        "use": "Starting material for making other platinum compounds used in chemistry and medicine"
+      },
+      {
+        "formula": "H2PtCl6",
+        "name": "Chloroplatinic acid",
+        "use": "Used to make platinum catalysts for fuel cells and chemical production"
+      },
+      {
+        "formula": "cis-Pt(NH3)2Cl2",
+        "name": "Cisplatin",
+        "use": "Powerful chemotherapy drug used to treat testicular, ovarian, and lung cancers"
+      },
+      {
+        "formula": "PtO2",
+        "name": "Platinum oxide",
+        "use": "Catalyst used in hydrogenation reactions in the pharmaceutical and food industries"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Platinum is rarer than gold — all the platinum ever mined in history would fit inside your living room, forming a cube about 8 metres on each side."
+      },
+      {
+        "text": "The catalytic converter in a car's exhaust pipe contains platinum — it triggers reactions that turn poisonous gases like carbon monoxide into harmless carbon dioxide and water."
+      },
+      {
+        "text": "From 1889 to 2019, the official definition of one kilogram was based on a platinum-iridium cylinder kept in a vault near Paris — the world's unit of mass was literally a platinum object."
+      },
+      {
+        "text": "Platinum is so chemically unreactive that it can be worn as jewellery for decades without tarnishing — even strong acids leave it completely untouched."
+      }
+    ]
+  },
+  {
+    "symbol": "Ra",
+    "original_name": null,
+    "atomic_mass": 226.03,
+    "electron_config": "2, 8, 18, 32, 18, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Radium226.jpg/960px-Radium226.jpg",
+    "image_caption": "A sample of radium-226 metal, which glows faintly blue due to its radioactivity",
+    "compounds": [
+      {
+        "formula": "RaCl2",
+        "name": "Radium chloride",
+        "use": "The compound Marie Curie first isolated to identify radium; historically used in cancer radiation therapy"
+      },
+      {
+        "formula": "RaBr2",
+        "name": "Radium bromide",
+        "use": "Used in early radiation therapy and scientific research in the early 1900s"
+      },
+      {
+        "formula": "RaSO4",
+        "name": "Radium sulfate",
+        "use": "Extremely insoluble salt used in early studies of radioactivity"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Marie Curie discovered radium in 1898, working in a leaky shed in Paris — she processed tonnes of pitchblende ore by hand, not knowing the radiation was slowly making her fatally ill."
+      },
+      {
+        "text": "Radium glows blue in the dark because its radiation excites the air molecules around it — early 20th-century watch dials were painted with radium so soldiers could read them at night."
+      },
+      {
+        "text": "The 'Radium Girls' were factory workers in the 1920s who painted watch dials with radium paint and were told to lick their brushes to a fine point — many died of radiation poisoning, and their case changed workplace safety laws forever."
+      },
+      {
+        "text": "Marie Curie won two Nobel Prizes — one in Physics and one in Chemistry — making her the first person ever to win in two different sciences, and she remains the only woman to have done so."
+      }
+    ]
+  },
+  {
+    "symbol": "U",
+    "original_name": null,
+    "atomic_mass": 238.03,
+    "electron_config": "2, 8, 18, 32, 21, 9, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/HEUraniumC.jpg/960px-HEUraniumC.jpg",
+    "image_caption": "Highly enriched uranium metal showing its characteristic silvery surface",
+    "compounds": [
+      {
+        "formula": "UO2",
+        "name": "Uranium dioxide",
+        "use": "The ceramic fuel pellets loaded into nuclear power reactor fuel rods to generate electricity"
+      },
+      {
+        "formula": "UF6",
+        "name": "Uranium hexafluoride",
+        "use": "The gas used in centrifuges to enrich uranium — separating U-235 from U-238 for reactor fuel or weapons"
+      },
+      {
+        "formula": "U3O8",
+        "name": "Triuranium octoxide",
+        "use": "Yellowcake — the concentrated uranium ore powder shipped from uranium mines"
+      },
+      {
+        "formula": "UO2(NO3)2",
+        "name": "Uranyl nitrate",
+        "use": "Used in nuclear fuel reprocessing and as a stain in electron microscopy"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Uranium was named after the planet Uranus, which had just been discovered eight years earlier — it was the first element to be named after a planet."
+      },
+      {
+        "text": "A single uranium fuel pellet the size of your thumb contains as much energy as 17,000 cubic feet of natural gas, 1,780 pounds of coal, or 149 gallons of oil — making nuclear power incredibly energy-dense."
+      },
+      {
+        "text": "Uranium was used as an orange-yellow glass colourant for over a century before anyone knew it was radioactive — antique 'Vaseline glass' glows green under ultraviolet light because of its uranium content."
+      },
+      {
+        "text": "Uranium is actually one of the most common heavy elements in Earth's crust — it is more abundant than silver, and the heat it produces as it slowly decays is one reason the inside of the Earth stays hot."
+      }
+    ]
+  },
+  {
+    "symbol": "Se",
+    "original_name": null,
+    "atomic_mass": 78.97,
+    "electron_config": "2, 8, 18, 6",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/SeBlackRed.jpg/960px-SeBlackRed.jpg",
+    "image_caption": "Selenium in its black amorphous and red crystalline forms",
+    "compounds": [
+      {
+        "formula": "H2SeO4",
+        "name": "Selenic acid",
+        "use": "Used in some electroplating processes"
+      },
+      {
+        "formula": "SeO2",
+        "name": "Selenium dioxide",
+        "use": "Used to tint glass red and amber"
+      },
+      {
+        "formula": "Na2SeO3",
+        "name": "Sodium selenite",
+        "use": "Added to animal feed and vitamins in tiny amounts"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Selenium is an essential nutrient — your body needs tiny amounts of it to make antioxidant proteins that protect your cells from damage."
+      },
+      {
+        "text": "Selenium conducts electricity much better in bright light than in the dark, so early photocopiers and solar cells used it to detect light."
+      },
+      {
+        "text": "Brazil nuts are by far the richest food source of selenium — just two nuts can give you your entire recommended daily amount."
+      },
+      {
+        "text": "Selenium was discovered in 1817 and named after Selene, the Greek goddess of the Moon, because it was found alongside the element tellurium, named for the Earth."
+      }
+    ]
+  },
+  {
+    "symbol": "Rb",
+    "original_name": null,
+    "atomic_mass": 85.47,
+    "electron_config": "2, 8, 18, 8, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Rb5.JPG/960px-Rb5.JPG",
+    "image_caption": "Rubidium metal sample stored under mineral oil",
+    "compounds": [
+      {
+        "formula": "RbCl",
+        "name": "Rubidium chloride",
+        "use": "Used in biochemical research as a tracer"
+      },
+      {
+        "formula": "Rb2CO3",
+        "name": "Rubidium carbonate",
+        "use": "Used in making speciality optical glass"
+      },
+      {
+        "formula": "RbOH",
+        "name": "Rubidium hydroxide",
+        "use": "Used in some laboratory experiments"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Rubidium is so reactive that it bursts into a purplish-red flame the instant it touches air — it must be stored sealed in dry mineral oil or argon gas."
+      },
+      {
+        "text": "Rubidium atomic clocks are used in GPS satellites to keep time accurate to a billionth of a second, helping your phone's maps pinpoint your exact location."
+      },
+      {
+        "text": "Rubidium melts at just 39°C — barely above room temperature — so a nugget of it would melt in a warm room on a summer's day."
+      },
+      {
+        "text": "It was discovered in 1861 using a brand-new technique called spectroscopy, where scientists identify elements by the unique colours their flames produce."
+      }
+    ]
+  },
+  {
+    "symbol": "Y",
+    "original_name": null,
+    "atomic_mass": 88.91,
+    "electron_config": "2, 8, 18, 9, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Yttrium_sublimed_dendritic_and_1cm3_cube.jpg/960px-Yttrium_sublimed_dendritic_and_1cm3_cube.jpg",
+    "image_caption": "Yttrium — dendritic crystals and a 1 cm³ cube",
+    "compounds": [
+      {
+        "formula": "Y2O3",
+        "name": "Yttrium oxide",
+        "use": "Used to make the red colour in old colour TV screens"
+      },
+      {
+        "formula": "YBa2Cu3O7",
+        "name": "YBCO",
+        "use": "A superconductor that works at relatively high temperatures"
+      },
+      {
+        "formula": "Y3Al5O12",
+        "name": "YAG",
+        "use": "Used in powerful surgical and industrial lasers"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Yttrium is named after Ytterby, a small village in Sweden — the quarry there was so packed with rare minerals that four elements were eventually named after it."
+      },
+      {
+        "text": "The bright red phosphor in old colour television sets was made from yttrium oxide — without it, TVs could not display vivid reds."
+      },
+      {
+        "text": "Yttrium is used to make YAG lasers that surgeons use to zap kidney stones and remove tumours without cutting a single stitch."
+      },
+      {
+        "text": "It is classed as a rare earth metal even though it is actually more abundant in the Earth's crust than lead."
+      }
+    ]
+  },
+  {
+    "symbol": "Zr",
+    "original_name": null,
+    "atomic_mass": 91.22,
+    "electron_config": "2, 8, 18, 10, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Zirconium_crystal_bar_and_1cm3_cube.jpg/960px-Zirconium_crystal_bar_and_1cm3_cube.jpg",
+    "image_caption": "Zirconium crystal bar and a 1 cm³ cube",
+    "compounds": [
+      {
+        "formula": "ZrO2",
+        "name": "Zirconia",
+        "use": "Used as a diamond simulant in jewellery and in ceramic knife blades"
+      },
+      {
+        "formula": "ZrSiO4",
+        "name": "Zircon",
+        "use": "A gemstone and the mineral used to date ancient rocks"
+      },
+      {
+        "formula": "ZrCl4",
+        "name": "Zirconium chloride",
+        "use": "Used in chemical synthesis and as a catalyst"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Cubic zirconia — a man-made form of zirconium dioxide — is one of the most popular diamond substitutes in jewellery because it sparkles almost as brilliantly but costs a fraction of the price."
+      },
+      {
+        "text": "Zirconium is used to coat the fuel rods inside nuclear reactors because it barely absorbs neutrons, letting the chain reaction keep going."
+      },
+      {
+        "text": "Zircon crystals are the oldest objects ever found on Earth — some have been dated to 4.4 billion years old, only 100 million years after the planet formed."
+      },
+      {
+        "text": "Zirconium metal burns with a brilliant white flame and is used in military flares and fireworks to create dazzling white sparks."
+      }
+    ]
+  },
+  {
+    "symbol": "Nb",
+    "original_name": "Niobium",
+    "atomic_mass": 92.91,
+    "electron_config": "2, 8, 18, 12, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Niobium_crystals_and_1cm3_cube.jpg/960px-Niobium_crystals_and_1cm3_cube.jpg",
+    "image_caption": "Niobium crystals and a 1 cm³ cube",
+    "compounds": [
+      {
+        "formula": "Nb2O5",
+        "name": "Niobium pentoxide",
+        "use": "Used to make high-refractive-index glass for camera lenses"
+      },
+      {
+        "formula": "NbC",
+        "name": "Niobium carbide",
+        "use": "Added to steel to make it harder and stronger"
+      },
+      {
+        "formula": "LiNbO3",
+        "name": "Lithium niobate",
+        "use": "Used in mobile phone components to filter radio signals"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Niobium is named after Niobe from Greek mythology, daughter of Tantalus — it was named this way because niobium was always found alongside tantalum in nature."
+      },
+      {
+        "text": "Adding a tiny amount of niobium to steel makes it dramatically stronger — most of the steel used in car bodies and pipelines today contains niobium."
+      },
+      {
+        "text": "Niobium becomes a superconductor at very low temperatures, carrying electricity with zero resistance, and is used in the powerful magnets inside MRI scanners."
+      },
+      {
+        "text": "Brazil produces about 90% of the world's niobium — a single mine there supplies most of the steel industry's needs worldwide."
+      }
+    ]
+  },
+  {
+    "symbol": "Mo",
+    "original_name": null,
+    "atomic_mass": 95.95,
+    "electron_config": "2, 8, 18, 13, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Molybdenum_crystaline_fragment_and_1cm3_cube.jpg/960px-Molybdenum_crystaline_fragment_and_1cm3_cube.jpg",
+    "image_caption": "Molybdenum crystalline fragment and a 1 cm³ cube",
+    "compounds": [
+      {
+        "formula": "MoS2",
+        "name": "Molybdenite",
+        "use": "Slippery lubricant used in engines and machinery"
+      },
+      {
+        "formula": "MoO3",
+        "name": "Molybdenum trioxide",
+        "use": "Used as a catalyst in refining petroleum"
+      },
+      {
+        "formula": "Na2MoO4",
+        "name": "Sodium molybdate",
+        "use": "Fertiliser additive for plants that cannot grow without molybdenum"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Molybdenum has one of the highest melting points of any element at 2,623°C — making it vital for jet engine parts and rocket nozzles that must survive extreme heat."
+      },
+      {
+        "text": "All living things need molybdenum in tiny amounts — it sits at the active centre of enzymes that help bacteria fix nitrogen from the air into soil."
+      },
+      {
+        "text": "Molybdenum disulfide is a brilliant solid lubricant — slipperier than graphite — and is used to lubricate machinery in space where liquid oils would evaporate."
+      },
+      {
+        "text": "It was named from the Greek word for lead ('molybdos') because its main ore, molybdenite, was often confused with graphite and lead ore by early miners."
+      }
+    ]
+  },
+  {
+    "symbol": "Tc",
+    "original_name": null,
+    "atomic_mass": 98,
+    "electron_config": "2, 8, 18, 13, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Technetium-sample-cropped.jpg/960px-Technetium-sample-cropped.jpg",
+    "image_caption": "Technetium-99 electroplated onto gold foil",
+    "compounds": [
+      {
+        "formula": "TcO4-",
+        "name": "Pertechnetate ion",
+        "use": "Used in nuclear medicine as a radioactive tracer to scan organs"
+      },
+      {
+        "formula": "Tc2O7",
+        "name": "Technetium heptoxide",
+        "use": "Intermediate used in preparing technetium compounds for research"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Technetium was the very first element to be made artificially — it does not exist naturally on Earth because all its atoms are radioactive and have long since decayed away."
+      },
+      {
+        "text": "It was created in 1937 by bombarding molybdenum with neutrons in a particle accelerator — scientists had predicted a gap in the periodic table where it should be, and they finally filled it."
+      },
+      {
+        "text": "Despite being radioactive, a form of technetium called Tc-99m is used in millions of medical scans every year — injected into patients, it travels to specific organs and emits gamma rays that cameras can detect."
+      },
+      {
+        "text": "Technetium is so rare that the total amount ever produced in laboratories worldwide would barely fill a teaspoon."
+      }
+    ]
+  },
+  {
+    "symbol": "Ru",
+    "original_name": null,
+    "atomic_mass": 101.07,
+    "electron_config": "2, 8, 18, 15, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Ruthenium_a_half_bar.jpg/960px-Ruthenium_a_half_bar.jpg",
+    "image_caption": "A half-bar of ruthenium metal",
+    "compounds": [
+      {
+        "formula": "RuO2",
+        "name": "Ruthenium dioxide",
+        "use": "Coating on electrodes used to produce chlorine gas industrially"
+      },
+      {
+        "formula": "RuO4",
+        "name": "Ruthenium tetroxide",
+        "use": "Used in chemistry labs to oxidise organic compounds"
+      },
+      {
+        "formula": "Ru(bpy)3",
+        "name": "Ruthenium bipyridyl",
+        "use": "Key dye used in early prototype solar cells"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Ruthenium is named after Ruthenia, the Latin name for Russia, as it was discovered in ores from the Ural Mountains in 1844."
+      },
+      {
+        "text": "Adding just a trace of ruthenium to titanium or platinum makes those metals dramatically harder and more resistant to wear — a gram of ruthenium can toughen kilograms of other metal."
+      },
+      {
+        "text": "Ruthenium is one of the rarest elements on Earth, found mainly as a by-product when processing nickel and copper ores, making it precious and expensive."
+      },
+      {
+        "text": "Hard disk drives in computers use a thin ruthenium layer to increase the density of magnetic storage, allowing more data to fit on a smaller disk."
+      }
+    ]
+  },
+  {
+    "symbol": "Rh",
+    "original_name": null,
+    "atomic_mass": 102.91,
+    "electron_config": "2, 8, 18, 16, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Rhodium_powder_pressed_melted.jpg/960px-Rhodium_powder_pressed_melted.jpg",
+    "image_caption": "Rhodium powder, pressed pellet, and melted bead",
+    "compounds": [
+      {
+        "formula": "RhCl3",
+        "name": "Rhodium chloride",
+        "use": "Starting material for making rhodium catalysts in chemistry"
+      },
+      {
+        "formula": "Rh2O3",
+        "name": "Rhodium oxide",
+        "use": "Used in some high-temperature catalytic applications"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Rhodium is one of the rarest and most expensive metals on Earth — at times it has cost more than ten times the price of gold."
+      },
+      {
+        "text": "The catalytic converter in a car's exhaust system contains a tiny amount of rhodium that converts poisonous carbon monoxide and nitrogen oxides into harmless gases."
+      },
+      {
+        "text": "Rhodium is so shiny and resistant to tarnish that jewellery and silverware are often given a thin rhodium plating to keep them bright and scratch-free."
+      },
+      {
+        "text": "It was discovered in 1803 and named after the Greek word for rose ('rhodon') because some of its dissolved compounds are a striking rose-red colour."
+      }
+    ]
+  },
+  {
+    "symbol": "Pd",
+    "original_name": null,
+    "atomic_mass": 106.42,
+    "electron_config": "2, 8, 18, 18",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Palladium_%2846_Pd%29.jpg/960px-Palladium_%2846_Pd%29.jpg",
+    "image_caption": "A sample of palladium metal",
+    "compounds": [
+      {
+        "formula": "PdCl2",
+        "name": "Palladium chloride",
+        "use": "Used as a catalyst in organic chemistry and in tests for carbon monoxide leaks"
+      },
+      {
+        "formula": "Pd(OAc)2",
+        "name": "Palladium acetate",
+        "use": "Catalyst used to build complex carbon molecules in pharmaceuticals"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Palladium can absorb up to 900 times its own volume of hydrogen gas — scientists are exploring this remarkable property for storing hydrogen fuel in clean-energy vehicles."
+      },
+      {
+        "text": "Like rhodium, palladium is a key metal inside catalytic converters, helping to break down harmful pollutants in car exhaust into less harmful gases."
+      },
+      {
+        "text": "Palladium is named after the asteroid Pallas, which was discovered just before the metal in 1803 — its discoverer William Wollaston loved the connection between science and astronomy."
+      },
+      {
+        "text": "Palladium is used in dentistry as an alloy for crowns and bridges because it is strong, non-toxic, and does not corrode inside the mouth."
+      }
+    ]
+  },
+  {
+    "symbol": "Cd",
+    "original_name": null,
+    "atomic_mass": 112.41,
+    "electron_config": "2, 8, 18, 18, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Cadmium-crystal_bar.jpg/960px-Cadmium-crystal_bar.jpg",
+    "image_caption": "A crystalline cadmium bar",
+    "compounds": [
+      {
+        "formula": "CdS",
+        "name": "Cadmium sulfide",
+        "use": "Brilliant yellow pigment once used in paints and plastics"
+      },
+      {
+        "formula": "CdTe",
+        "name": "Cadmium telluride",
+        "use": "Used in thin-film solar panels to convert sunlight to electricity"
+      },
+      {
+        "formula": "CdSe",
+        "name": "Cadmium selenide",
+        "use": "Used in quantum dot LED displays and biological imaging"
+      },
+      {
+        "formula": "NiCd",
+        "name": "Nickel-cadmium",
+        "use": "Rechargeable batteries used in power tools and older electronics"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Cadmium is extremely toxic — it accumulates in the body over a lifetime and can cause kidney failure and a painful bone disease called Itai-itai ('ouch-ouch') disease, first seen in Japan."
+      },
+      {
+        "text": "The vivid yellow and orange pigments made from cadmium sulfide were beloved by 20th-century artists, including Henri Matisse, for their brilliant, stable colours."
+      },
+      {
+        "text": "Cadmium-telluride solar panels are now one of the cheapest types of solar technology, helping to bring down the cost of renewable electricity worldwide."
+      },
+      {
+        "text": "Cadmium was discovered in 1817 as an impurity in zinc carbonate — it is nearly always found alongside zinc in nature, since their atoms are very similar in size."
+      }
+    ]
+  },
+  {
+    "symbol": "In",
+    "original_name": null,
+    "atomic_mass": 114.82,
+    "electron_config": "2, 8, 18, 18, 3",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Indium.jpg/960px-Indium.jpg",
+    "image_caption": "A pure indium metal sample",
+    "compounds": [
+      {
+        "formula": "In2O3",
+        "name": "Indium oxide",
+        "use": "Key ingredient in ITO — the transparent conductor coating every touchscreen"
+      },
+      {
+        "formula": "InP",
+        "name": "Indium phosphide",
+        "use": "Used in high-speed electronics and fibre-optic laser diodes"
+      },
+      {
+        "formula": "InAs",
+        "name": "Indium arsenide",
+        "use": "Used in infrared detectors and night-vision cameras"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Indium tin oxide (ITO) is the invisible conducting film on every smartphone, tablet, and touchscreen — without indium, modern touchscreens would not work."
+      },
+      {
+        "text": "Indium is so soft you can scratch it with a fingernail, and when you bend a rod of pure indium it makes a distinctive crackling sound called a 'tin cry'."
+      },
+      {
+        "text": "It was discovered in 1863 and named after the deep indigo-blue colour it produces in a flame — one of the most beautiful colours in spectroscopy at the time."
+      },
+      {
+        "text": "Indium is mainly extracted as a by-product of zinc smelting; the entire world's annual production would fit inside a modest garden shed."
+      }
+    ]
+  },
+  {
+    "symbol": "Sb",
+    "original_name": "Stibium",
+    "atomic_mass": 121.76,
+    "electron_config": "2, 8, 18, 18, 5",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Antimony-4.jpg/960px-Antimony-4.jpg",
+    "image_caption": "Antimony metal showing its characteristic lustre",
+    "compounds": [
+      {
+        "formula": "Sb2O3",
+        "name": "Antimony trioxide",
+        "use": "Flame retardant added to plastics, textiles, and electronics"
+      },
+      {
+        "formula": "SbS3",
+        "name": "Antimony sulfide",
+        "use": "Once used in ancient eye cosmetics (kohl); used in matches and pyrotechnics"
+      },
+      {
+        "formula": "SbCl3",
+        "name": "Antimony chloride",
+        "use": "Used as a mordant in dyeing fabrics and in some laboratory processes"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Ancient Egyptians used black antimony sulfide as kohl eyeliner — archaeologists have found antimony-based cosmetics in tombs over 5,000 years old."
+      },
+      {
+        "text": "Antimony trioxide is one of the most widely used flame retardants in the world — it is blended into plastics to make electronic gadgets and furniture less likely to catch fire."
+      },
+      {
+        "text": "Type metal — used to cast the movable type that printed books for centuries — was an alloy of lead and antimony, because antimony expands slightly on cooling and makes crisp, sharp letters."
+      },
+      {
+        "text": "Its symbol Sb comes from its Latin name 'stibium', which has been used since ancient times, while the English name 'antimony' may derive from Greek words meaning 'not alone' — it is rarely found pure in nature."
+      }
+    ]
+  },
+  {
+    "symbol": "Te",
+    "original_name": null,
+    "atomic_mass": 127.6,
+    "electron_config": "2, 8, 18, 18, 6",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Tellurium2.jpg/960px-Tellurium2.jpg",
+    "image_caption": "Crystalline tellurium showing its metallic lustre",
+    "compounds": [
+      {
+        "formula": "CdTe",
+        "name": "Cadmium telluride",
+        "use": "Used in thin-film solar panels"
+      },
+      {
+        "formula": "Bi2Te3",
+        "name": "Bismuth telluride",
+        "use": "Thermoelectric material that converts heat directly into electricity"
+      },
+      {
+        "formula": "H2Te",
+        "name": "Hydrogen telluride",
+        "use": "An extremely foul-smelling gas used in some semiconductor research"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Tellurium is named after Tellus, the Latin name for Earth — it was the partner element to selenium, which is named after the Moon."
+      },
+      {
+        "text": "Pure tellurium has a garlic-like smell, and people who handle it absorb trace amounts through their skin that can make their breath smell strongly of garlic for weeks."
+      },
+      {
+        "text": "Bismuth telluride is a thermoelectric material that can turn a temperature difference directly into electricity — small devices using it power remote scientific sensors without any moving parts."
+      },
+      {
+        "text": "Tellurium is one of the rarest stable elements on Earth — it is actually rarer in the Earth's crust than platinum, which is why it is classified as a critical mineral."
+      }
+    ]
+  },
+  {
+    "symbol": "Cs",
+    "original_name": null,
+    "atomic_mass": 132.91,
+    "electron_config": "2, 8, 18, 18, 8, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Cesium.jpg/960px-Cesium.jpg",
+    "image_caption": "Caesium metal sealed in a glass ampoule — it glows pale gold",
+    "compounds": [
+      {
+        "formula": "CsCl",
+        "name": "Caesium chloride",
+        "use": "Used in lab centrifuges to separate DNA by density"
+      },
+      {
+        "formula": "CsOH",
+        "name": "Caesium hydroxide",
+        "use": "One of the strongest known alkali bases"
+      },
+      {
+        "formula": "Cs2CO3",
+        "name": "Caesium carbonate",
+        "use": "Used in organic chemistry reactions as a mild base"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Caesium atomic clocks are the world's most precise timekeepers — the international definition of one second is based on exactly 9,192,631,770 vibrations of caesium-133 atoms."
+      },
+      {
+        "text": "GPS satellites, the internet, and global financial systems all depend on caesium atomic clocks to stay synchronised to within a few nanoseconds per day."
+      },
+      {
+        "text": "Caesium is one of only two metals that are liquid at room temperature on a warm day — it melts at 28.5°C, just above typical room temperature."
+      },
+      {
+        "text": "When caesium touches water it explodes with an impressive violet flash — it reacts far more violently than sodium or potassium."
+      }
+    ]
+  },
+  {
+    "symbol": "La",
+    "original_name": null,
+    "atomic_mass": 138.91,
+    "electron_config": "2, 8, 18, 18, 9, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Lanthanum-2.jpg/960px-Lanthanum-2.jpg",
+    "image_caption": "A sample of lanthanum metal",
+    "compounds": [
+      {
+        "formula": "La2O3",
+        "name": "Lanthanum oxide",
+        "use": "Added to special optical glass lenses to reduce light scattering"
+      },
+      {
+        "formula": "LaNi5",
+        "name": "Lanthanum nickel alloy",
+        "use": "Used in nickel-metal hydride rechargeable batteries"
+      },
+      {
+        "formula": "LaCl3",
+        "name": "Lanthanum chloride",
+        "use": "Used in research and as a phosphor activator"
+      }
+    ],
+    "facts": [
+      {
+        "text": "The rechargeable nickel-metal hydride battery in early hybrid cars like the Toyota Prius contained several kilograms of lanthanum — your family car may have run partly on rare earth metals."
+      },
+      {
+        "text": "Lanthanum is one of the most common rare earth elements — despite the name 'rare earth', it is more abundant in the Earth's crust than lead."
+      },
+      {
+        "text": "Adding lanthanum to glass greatly improves its optical quality, allowing camera and microscope lenses to focus light more precisely without distorting colours."
+      },
+      {
+        "text": "It was named from the Greek word 'lanthanein', meaning 'to lie hidden', because it hid undetected inside cerium oxide for decades before being isolated in 1839."
+      }
+    ]
+  },
+  {
+    "symbol": "Ce",
+    "original_name": null,
+    "atomic_mass": 140.12,
+    "electron_config": "2, 8, 18, 19, 9, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Cerium2.jpg/960px-Cerium2.jpg",
+    "image_caption": "A sample of cerium metal",
+    "compounds": [
+      {
+        "formula": "CeO2",
+        "name": "Cerium dioxide",
+        "use": "Used to polish glass, computer chips, and gemstones; also in catalytic converters"
+      },
+      {
+        "formula": "Ce2O3",
+        "name": "Cerium oxide",
+        "use": "Used in self-cleaning oven coatings"
+      },
+      {
+        "formula": "CeCl3",
+        "name": "Cerium chloride",
+        "use": "Used as a catalyst in organic chemistry reactions"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Cerium is the most abundant rare earth element — it is more common in the Earth's crust than copper, and it is the rare earth used most heavily by industry."
+      },
+      {
+        "text": "The flint in disposable cigarette lighters and camping firestarters is actually an alloy called 'mischmetal' that is 50% cerium — it produces sparks when scratched."
+      },
+      {
+        "text": "Cerium dioxide is used to polish the glass of smartphones, camera lenses, and silicon computer chips to an almost perfect mirror flatness measured in nanometres."
+      },
+      {
+        "text": "Cerium was discovered in 1803 and named after the dwarf planet Ceres, which had been discovered only two years earlier — naming elements after astronomical objects was fashionable at the time."
+      }
+    ]
+  },
+  {
+    "symbol": "Hf",
+    "original_name": null,
+    "atomic_mass": 178.49,
+    "electron_config": "2, 8, 18, 32, 10, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Hf-crystal_bar.jpg/960px-Hf-crystal_bar.jpg",
+    "image_caption": "A hafnium crystal bar",
+    "compounds": [
+      {
+        "formula": "HfO2",
+        "name": "Hafnium dioxide",
+        "use": "Used as insulating layer in modern computer microchips"
+      },
+      {
+        "formula": "HfC",
+        "name": "Hafnium carbide",
+        "use": "Has one of the highest melting points of any compound — used in extreme heat applications"
+      },
+      {
+        "formula": "HfCl4",
+        "name": "Hafnium chloride",
+        "use": "Used to deposit hafnium films in microchip manufacturing"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Hafnium was the last stable element to be discovered — in 1923, hidden in zirconium ore that chemists had been using for over a century without realising a second element was lurking inside."
+      },
+      {
+        "text": "Hafnium absorbs neutrons extremely well, making it the ideal control rod material in nuclear reactors — sliding hafnium rods into a reactor core slows or stops the chain reaction."
+      },
+      {
+        "text": "Modern Intel and AMD computer chips use hafnium dioxide as a key insulating layer — without it, transistors could not shrink further and smartphones would still be the size of bricks."
+      },
+      {
+        "text": "Hafnium was named after Hafnia, the Latin name for Copenhagen — it was discovered there by scientists Dirk Coster and Georg von Hevesy."
+      }
+    ]
+  },
+  {
+    "symbol": "Ta",
+    "original_name": "Tantalum",
+    "atomic_mass": 180.95,
+    "electron_config": "2, 8, 18, 32, 11, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Tantalum_single_crystal_and_1cm3_cube.jpg/960px-Tantalum_single_crystal_and_1cm3_cube.jpg",
+    "image_caption": "Tantalum single crystal and a 1 cm³ cube",
+    "compounds": [
+      {
+        "formula": "Ta2O5",
+        "name": "Tantalum pentoxide",
+        "use": "Used as a capacitor material in mobile phones and laptops"
+      },
+      {
+        "formula": "TaC",
+        "name": "Tantalum carbide",
+        "use": "Used in cutting tool tips that must withstand extreme heat"
+      },
+      {
+        "formula": "TaCl5",
+        "name": "Tantalum chloride",
+        "use": "Used in chemical vapour deposition to make thin tantalum films"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Tantalum capacitors are inside virtually every smartphone and laptop — a tiny amount of tantalum stores and releases electrical charge rapidly, helping electronics run smoothly."
+      },
+      {
+        "text": "Tantalum is almost completely inert inside the human body and does not corrode, making it ideal for surgical implants such as skull plates, hip joints, and jaw reconstruction."
+      },
+      {
+        "text": "The mineral coltan, found mainly in the Democratic Republic of Congo, contains tantalum — demand for smartphones has made it a valuable and at times conflict-fuelling resource."
+      },
+      {
+        "text": "It is named after Tantalus from Greek mythology, who was condemned to stand in a pool of water under fruit trees that retreated whenever he reached for them — tantalum was notoriously difficult to isolate from its ore."
+      }
+    ]
+  },
+  {
+    "symbol": "Re",
+    "original_name": null,
+    "atomic_mass": 186.21,
+    "electron_config": "2, 8, 18, 32, 13, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Rhenium_single_crystal_bar_and_1cm3_cube.jpg/960px-Rhenium_single_crystal_bar_and_1cm3_cube.jpg",
+    "image_caption": "Rhenium single crystal bar and a 1 cm³ cube",
+    "compounds": [
+      {
+        "formula": "Re2O7",
+        "name": "Rhenium heptoxide",
+        "use": "Used as a catalyst in the production of high-octane fuels"
+      },
+      {
+        "formula": "ReO3",
+        "name": "Rhenium trioxide",
+        "use": "One of the few non-metallic compounds that conducts electricity like a metal"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Rhenium has one of the highest melting points of all elements at 3,186°C — only tungsten melts at a higher temperature — making it indispensable in jet and rocket engines."
+      },
+      {
+        "text": "Rhenium was the last stable element to be discovered — in 1925, making it the final non-radioactive element to be found in nature."
+      },
+      {
+        "text": "Nickel superalloy blades inside modern jet turbines contain around 6% rhenium — this allows the blades to survive the searing 1,400°C gas temperatures inside a running engine."
+      },
+      {
+        "text": "Rhenium is one of the rarest elements in Earth's crust — it is mostly recovered as a by-product of roasting molybdenum ores, and the whole world produces only about 50 tonnes a year."
+      }
+    ]
+  },
+  {
+    "symbol": "Os",
+    "original_name": null,
+    "atomic_mass": 190.23,
+    "electron_config": "2, 8, 18, 32, 14, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Osmium_crystals.jpg/960px-Osmium_crystals.jpg",
+    "image_caption": "Crystalline osmium with its characteristic blue-white lustre",
+    "compounds": [
+      {
+        "formula": "OsO4",
+        "name": "Osmium tetroxide",
+        "use": "Used in electron microscopy to stain biological samples; extremely toxic"
+      },
+      {
+        "formula": "OsO2",
+        "name": "Osmium dioxide",
+        "use": "Used in some catalytic and research applications"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Osmium is the densest element on Earth — a cube of osmium the size of a tennis ball would weigh about 4 kg, nearly twice as heavy as the same sized cube of lead."
+      },
+      {
+        "text": "Osmium tetroxide has an unmistakable sharp smell — the name osmium comes from the Greek word 'osme' meaning 'smell', and even tiny amounts are detectable by nose."
+      },
+      {
+        "text": "Before tungsten took over, osmium was mixed with iridium to make the tips of fountain pen nibs — osmium-iridium alloy is extraordinarily hard and resists the wear of millions of writing strokes."
+      },
+      {
+        "text": "Osmium tetroxide is used in electron microscopy to stain the fatty membranes of cells so they show up clearly — it is one of the most powerful staining agents in biology, but also one of the most toxic."
+      }
+    ]
+  },
+  {
+    "symbol": "Ir",
+    "original_name": null,
+    "atomic_mass": 192.22,
+    "electron_config": "2, 8, 18, 32, 15, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Iridium_%2877_Ir%29_%28cropped%29.jpg/960px-Iridium_%2877_Ir%29_%28cropped%29.jpg",
+    "image_caption": "Pieces of pure iridium metal",
+    "compounds": [
+      {
+        "formula": "IrO2",
+        "name": "Iridium dioxide",
+        "use": "Used in electrodes for water splitting to produce hydrogen fuel"
+      },
+      {
+        "formula": "IrCl3",
+        "name": "Iridium chloride",
+        "use": "Starting material for making iridium catalysts and coatings"
+      }
+    ],
+    "facts": [
+      {
+        "text": "A thin layer of iridium-rich clay was found worldwide at the geological boundary 66 million years ago — evidence that a giant asteroid (which also contains high levels of iridium) wiped out the dinosaurs."
+      },
+      {
+        "text": "Iridium is the most corrosion-resistant element known — it barely reacts with any acid, even aqua regia (the mix that dissolves gold), and stays shiny for millions of years."
+      },
+      {
+        "text": "The international kilogram standard — the platinum cylinder kept in Paris that all scales worldwide were once calibrated against — contained 10% iridium to make it harder and more durable."
+      },
+      {
+        "text": "Iridium is named after Iris, the Greek goddess of the rainbow, because its dissolved salts form a striking range of brilliantly coloured compounds."
+      }
+    ]
+  },
+  {
+    "symbol": "Tl",
+    "original_name": null,
+    "atomic_mass": 204.38,
+    "electron_config": "2, 8, 18, 32, 18, 3",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Thallium_pieces_in_ampoule.jpg/960px-Thallium_pieces_in_ampoule.jpg",
+    "image_caption": "Thallium metal pieces in a sealed glass ampoule",
+    "compounds": [
+      {
+        "formula": "Tl2SO4",
+        "name": "Thallium sulfate",
+        "use": "Once used as a rodent and ant poison — now banned in most countries"
+      },
+      {
+        "formula": "TlBr",
+        "name": "Thallium bromide",
+        "use": "Used in infrared detectors and radiation sensors"
+      },
+      {
+        "formula": "Tl2O3",
+        "name": "Thallium oxide",
+        "use": "Used to make high-refractive-index glass for specialised lenses"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Thallium is extremely poisonous — it is odourless, tasteless, and colourless in solution, and for decades thallium sulfate was used as a secret murder weapon, earning it the nickname 'inheritance powder'."
+      },
+      {
+        "text": "Thallium poisoning causes hair to fall out — this was once used as a medical treatment for ringworm of the scalp before safer drugs were found, which seems unbelievably harsh today."
+      },
+      {
+        "text": "Thallium was discovered in 1861 by William Crookes using spectroscopy — he noticed a vivid green spectral line he had never seen before and named the element after the Greek word for a green shoot ('thallos')."
+      },
+      {
+        "text": "Despite its toxicity, thallium has a useful role in medicine — radioactive thallium-201 is injected into patients during cardiac stress tests to show how well blood is flowing through the heart muscle."
+      }
+    ]
+  },
+  {
+    "symbol": "Bi",
+    "original_name": null,
+    "atomic_mass": 208.98,
+    "electron_config": "2, 8, 18, 32, 18, 5",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Bismuth_crystals_and_1cm3_cube.jpg/960px-Bismuth_crystals_and_1cm3_cube.jpg",
+    "image_caption": "Bismuth crystals showing rainbow oxide colours, and a 1 cm³ cube",
+    "compounds": [
+      {
+        "formula": "Bi2O3",
+        "name": "Bismuth oxide",
+        "use": "Used in pigments, cosmetics, and as a catalyst"
+      },
+      {
+        "formula": "BiI3",
+        "name": "Bismuth iodide",
+        "use": "Investigated as a non-toxic semiconductor for solar cells"
+      },
+      {
+        "formula": "BiSNO",
+        "name": "Bismuth subsalicylate",
+        "use": "Active ingredient in stomach medicines like Pepto-Bismol"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Bismuth is one of the safest heavy metals — it is used in medicines like Pepto-Bismol to soothe upset stomachs, and as a non-toxic replacement for lead in shotgun pellets and fishing weights."
+      },
+      {
+        "text": "When bismuth cools slowly after melting, it forms spectacular staircase-shaped crystals with rainbow-coloured surfaces caused by an ultra-thin layer of iridescent oxide."
+      },
+      {
+        "text": "Bismuth expands very slightly when it solidifies, unlike most metals which shrink — this makes it useful in alloys for castings that need to fill a mould perfectly, such as sprinkler heads."
+      },
+      {
+        "text": "Bismuth-209 was long thought to be the heaviest stable element, but in 2003 scientists proved it is actually very slightly radioactive — its half-life is a billion times older than the universe."
+      }
+    ]
+  },
+  {
+    "symbol": "Po",
+    "original_name": null,
+    "atomic_mass": 209,
+    "electron_config": "2, 8, 18, 32, 18, 6",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Polonium_on_brass_sheet.jpg/960px-Polonium_on_brass_sheet.jpg",
+    "image_caption": "A sample of polonium on a brass sheet",
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Polonium was discovered in 1898 by Marie and Pierre Curie, and Marie named it after Poland — her homeland, which at the time was not recognised as an independent country."
+      },
+      {
+        "text": "Polonium is incredibly radioactive — just one gram emits as much radiation as 4,500 kg of radium and glows with a faint blue light from the air it ionises around it."
+      },
+      {
+        "text": "Marie Curie won two Nobel prizes — for Physics (1903, shared with Pierre) and for Chemistry (1911) — becoming the first person ever to win in two different sciences."
+      },
+      {
+        "text": "In 2006, former Russian spy Alexander Litvinenko was murdered with a tiny amount of polonium-210 slipped into his tea in London — it remains one of history's most dramatic uses of a radioactive element as a weapon."
+      }
+    ]
+  },
+  {
+    "symbol": "At",
+    "original_name": null,
+    "atomic_mass": 210,
+    "electron_config": "2, 8, 18, 32, 18, 7",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Glow_from_a_sample_of_astatine_%28cropped%29.jpg/960px-Glow_from_a_sample_of_astatine_%28cropped%29.jpg",
+    "image_caption": "Glow from a microscopic sample of astatine",
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Astatine is the rarest naturally occurring element on Earth — the entire planet contains only about 28 grams of astatine at any one time, all of it constantly decaying and being replaced."
+      },
+      {
+        "text": "The most stable form of astatine has a half-life of just 8.1 hours, meaning half of it disappears every eight hours — you could never see it with the naked eye because it decays far too fast."
+      },
+      {
+        "text": "Despite being so rare and radioactive, astatine is promising in cancer treatment — astatine-211 can be attached to molecules that seek out tumour cells and destroy them from the inside."
+      },
+      {
+        "text": "Its name comes from the Greek word 'astatos' meaning unstable — a fitting name for an element that barely exists long enough to study."
+      }
+    ]
+  },
+  {
+    "symbol": "Rn",
+    "original_name": null,
+    "atomic_mass": 222,
+    "electron_config": "2, 8, 18, 32, 18, 8",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Radon_spectrum.png/960px-Radon_spectrum.png",
+    "image_caption": "Emission spectrum of radon-222 gas",
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Radon is a colourless, odourless, radioactive gas that seeps up from uranium-containing rocks in the ground — it can accumulate in the basements of houses and is the second leading cause of lung cancer after smoking."
+      },
+      {
+        "text": "Radon is produced naturally as uranium and thorium decay underground, and it seeps up through cracks in soil and building foundations — areas built on granite rock often have higher radon levels."
+      },
+      {
+        "text": "In many countries, homes are tested for radon and fitted with simple ventilation systems to draw the gas away before it builds up to dangerous levels — a straightforward fix that saves thousands of lives."
+      },
+      {
+        "text": "Radon was discovered in 1900 as a mysterious emanation from radium — Ernest Rutherford and Frederick Soddy realised that radioactive elements spontaneously transform into other elements, a revolutionary idea at the time."
+      }
+    ]
+  },
+  {
+    "symbol": "Fr",
+    "original_name": null,
+    "atomic_mass": 223,
+    "electron_config": "2, 8, 18, 32, 18, 8, 1",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Francium is the rarest naturally occurring element on Earth — at any moment, the entire planet contains an estimated 20 to 30 grams of it, scattered in trace amounts across uranium ore deposits."
+      },
+      {
+        "text": "It was discovered in 1939 by French physicist Marguerite Perey, who named it after France — she was the last person to discover a naturally occurring element, and the first woman elected to the French Academy of Sciences."
+      },
+      {
+        "text": "The most stable isotope of francium has a half-life of just 22 minutes — it decays into radium or astatine so quickly that bulk francium metal has never been seen by any scientist."
+      },
+      {
+        "text": "Because francium sits directly below caesium in the periodic table, it should be even more violently reactive with water than caesium — but no one has ever had enough of it at once to find out."
+      }
+    ]
+  },
+  {
+    "symbol": "Ac",
+    "original_name": null,
+    "atomic_mass": 227,
+    "electron_config": "2, 8, 18, 32, 18, 9, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Actinium_sample_%2831481701837%29.png/960px-Actinium_sample_%2831481701837%29.png",
+    "image_caption": "Actinium sample glowing blue from its own radioactivity",
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Actinium glows with an eerie blue light in the dark, caused by the radioactive particles it fires off ionising the surrounding air — scientists can see it glowing when they work with it in a dark room."
+      },
+      {
+        "text": "Actinium gave its name to the 'actinides' — the bottom row of the periodic table containing all the heaviest elements from actinium to lawrencium."
+      },
+      {
+        "text": "Actinium-225 is one of the most promising materials in cancer medicine — it emits very short-range alpha radiation that can destroy tumour cells while causing minimal damage to healthy tissue."
+      },
+      {
+        "text": "It was discovered in 1899 by André-Louis Debierne, a close colleague of Marie Curie, just one year after she announced the discovery of polonium and radium."
+      }
+    ]
+  },
+  {
+    "symbol": "Th",
+    "original_name": null,
+    "atomic_mass": 232.04,
+    "electron_config": "2, 8, 18, 32, 18, 10, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Thorium_sample_0.1g.jpg/960px-Thorium_sample_0.1g.jpg",
+    "image_caption": "A 0.1 g sample of thorium metal in a glass ampoule",
+    "compounds": [
+      {
+        "formula": "ThO2",
+        "name": "Thorium dioxide",
+        "use": "Used to make gas mantles for camping lanterns — they glow brilliantly white when heated"
+      },
+      {
+        "formula": "Th(NO3)4",
+        "name": "Thorium nitrate",
+        "use": "Used in some optical glass formulations"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Thorium is a promising nuclear fuel — a tonne of thorium can produce as much energy as 200 tonnes of uranium or 3.5 million tonnes of coal, with much less long-lived radioactive waste."
+      },
+      {
+        "text": "The white glow of old-fashioned camping lanterns (the fabric sock part called a mantle) came from thorium oxide — when heated by a gas flame, it produced a brilliantly bright white light."
+      },
+      {
+        "text": "India has some of the world's largest thorium deposits and is actively developing thorium-fuelled nuclear reactors, hoping to power the country for centuries on domestic fuel."
+      },
+      {
+        "text": "Thorium was named after Thor, the Norse god of thunder — it was discovered in 1829 by Swedish chemist Jöns Jacob Berzelius, who also discovered several other elements."
+      }
+    ]
+  },
+  {
+    "symbol": "Pa",
+    "original_name": null,
+    "atomic_mass": 231.04,
+    "electron_config": "2, 8, 18, 32, 20, 9, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Protactinium_%28Element_-_91%29_2.jpg/960px-Protactinium_%28Element_-_91%29_2.jpg",
+    "image_caption": "A small sample of protactinium-231 in a glass vial",
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Protactinium means 'before actinium' — when it decays it turns into actinium, so it is literally the element that comes before actinium in a radioactive decay chain."
+      },
+      {
+        "text": "Protactinium-231 has a half-life of 32,760 years, meaning it accumulates slowly in uranium ores over geological time and can be extracted in tiny amounts."
+      },
+      {
+        "text": "Scientists use the ratio of protactinium-231 to thorium-230 in ocean sediment cores as a geological clock, measuring ocean circulation patterns thousands of years into the past."
+      },
+      {
+        "text": "Isolating the first significant sample — just 125 grams — required processing 60 tonnes of uranium ore, making it one of the most laborious element preparations in history."
+      }
+    ]
+  },
+  {
+    "symbol": "Np",
+    "original_name": null,
+    "atomic_mass": 237,
+    "electron_config": "2, 8, 18, 32, 22, 9, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Neptunium_%28Element_-_93%29_3.jpg/960px-Neptunium_%28Element_-_93%29_3.jpg",
+    "image_caption": "A sample of neptunium-237 in a glass vial",
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Neptunium was the first transuranium element ever made — in 1940, scientists at Berkeley bombarded uranium with neutrons and created something that had never existed before: an element heavier than uranium."
+      },
+      {
+        "text": "It is named after the planet Neptune, continuing the pattern set by uranium (Uranus) — each heavier element was named after the next planet out in the solar system."
+      },
+      {
+        "text": "Neptunium-237 is produced in small quantities inside every nuclear reactor, building up gradually as uranium absorbs neutrons."
+      },
+      {
+        "text": "Despite being man-made, neptunium-239 actually exists in vanishingly tiny amounts in uranium ore, formed when uranium atoms occasionally absorb neutrons from natural radioactive decay — making it technically a natural element."
+      }
+    ]
+  },
+  {
+    "symbol": "Pu",
+    "original_name": null,
+    "atomic_mass": 244,
+    "electron_config": "2, 8, 18, 32, 24, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Plutonium_ring.jpg/960px-Plutonium_ring.jpg",
+    "image_caption": "A ring of plutonium metal shaped to prevent nuclear criticality",
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Space probes like Voyager 1 and 2, New Horizons (which flew past Pluto), and the Mars Curiosity rover are powered by plutonium — they use the heat from its radioactive decay to generate electricity billions of kilometres from the Sun."
+      },
+      {
+        "text": "Plutonium-239 can sustain a nuclear chain reaction — the bomb dropped on Nagasaki in 1945 used about 6 kg of plutonium, releasing energy equivalent to 21,000 tonnes of TNT."
+      },
+      {
+        "text": "Plutonium is an extremely strange metal — it exists in six different crystal structures at ordinary pressures, and it actually shrinks when it melts, the opposite of almost every other element."
+      },
+      {
+        "text": "Named after Pluto (then still called a planet), plutonium was the third element in a row named after outer planets — uranium (Uranus), neptunium (Neptune), plutonium (Pluto)."
+      }
+    ]
+  },
+  {
+    "symbol": "Am",
+    "original_name": null,
+    "atomic_mass": 243,
+    "electron_config": "2, 8, 18, 32, 25, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Americium_microscope.jpg/960px-Americium_microscope.jpg",
+    "image_caption": "A small disc of americium-241 metal viewed under a microscope",
+    "compounds": [
+      {
+        "formula": "AmO2",
+        "name": "Americium dioxide",
+        "use": "The form of americium sealed inside household smoke detectors"
+      }
+    ],
+    "facts": [
+      {
+        "text": "There is a tiny amount of americium-241 inside almost every ionisation smoke detector in your home — it emits a small stream of particles that ionise the air, creating a tiny electrical current; smoke breaks that current and triggers the alarm."
+      },
+      {
+        "text": "Each smoke detector contains only about 0.3 micrograms of americium — so little that you could fit the americium from thousands of detectors onto a pinhead, yet it is enough to detect a house fire."
+      },
+      {
+        "text": "Americium was first made in 1944 during the Manhattan Project and named after the Americas — its discoverer Glenn Seaborg actually revealed its existence on a US radio quiz show for children before officially publishing the finding."
+      },
+      {
+        "text": "Americium is the only synthetic element that most people interact with regularly — every time you test your smoke alarm, you are in a very small way handling nuclear technology."
+      }
+    ]
+  },
+  {
+    "symbol": "Cm",
+    "original_name": null,
+    "atomic_mass": 247,
+    "electron_config": "2, 8, 18, 32, 25, 9, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/6/69/Curium.jpg/960px-Curium.jpg",
+    "image_caption": "A piece of curium metal in a quartz tube",
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Curium was named after Marie and Pierre Curie in honour of their pioneering research on radioactivity — it is one of the few elements named after a couple rather than a single scientist."
+      },
+      {
+        "text": "The Mars rovers Spirit and Opportunity carried a curium-244 source as part of an alpha particle X-ray spectrometer (APXS) that analysed the chemical composition of Martian rocks and soil."
+      },
+      {
+        "text": "Curium glows with a faint reddish light in the dark — not because of any chemical reaction, but because its intense radioactivity heats the metal itself, making it thermally luminescent."
+      },
+      {
+        "text": "Like americium, curium was first made at the University of Chicago Metallurgical Laboratory in 1944, but its discovery was kept classified for two years because of wartime secrecy around nuclear research."
+      }
+    ]
+  },
+  {
+    "symbol": "Pr",
+    "original_name": null,
+    "atomic_mass": 140.91,
+    "electron_config": "2, 8, 18, 21, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Praseodymium_%2859_Pr%29.jpg/800px-Praseodymium_%2859_Pr%29.jpg",
+    "image_caption": "Praseodymium metal — a soft, silvery-white rare earth element",
+    "compounds": [
+      {
+        "formula": "Pr2O3",
+        "name": "Praseodymium oxide",
+        "use": "Gives glass and ceramics a vivid yellow-green colour"
+      },
+      {
+        "formula": "PrF3",
+        "name": "Praseodymium fluoride",
+        "use": "Used in carbon arc lights for film studios and searchlights"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Praseodymium's name comes from Greek for 'leek-green twin' — its salts produce a distinctive green colour."
+      },
+      {
+        "text": "Praseodymium is used in high-powered magnets combined with neodymium, making motors in electric vehicles."
+      },
+      {
+        "text": "Welder's and glassblower's goggles often contain praseodymium to filter out harmful yellow sodium glare."
+      },
+      {
+        "text": "It was discovered in 1885 when a chemist split a substance thought to be a single element into two — praseodymium and neodymium."
+      }
+    ]
+  },
+  {
+    "symbol": "Nd",
+    "original_name": null,
+    "atomic_mass": 144.24,
+    "electron_config": "2, 8, 18, 22, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Neodymium_-_a_rare-earth_metal.jpg/800px-Neodymium_-_a_rare-earth_metal.jpg",
+    "image_caption": "A piece of neodymium metal — shiny when freshly cut but tarnishes quickly in air",
+    "compounds": [
+      {
+        "formula": "Nd2Fe14B",
+        "name": "Neodymium magnet alloy",
+        "use": "Strongest permanent magnets ever made — used in headphones, hard drives, and electric motors"
+      },
+      {
+        "formula": "Nd:YAG",
+        "name": "Neodymium-doped YAG crystal",
+        "use": "Powers the lasers used in laser pointers, eye surgery, and metal cutting"
+      },
+      {
+        "formula": "Nd2O3",
+        "name": "Neodymium oxide",
+        "use": "Gives glass a striking violet-purple colour"
+      }
+    ],
+    "facts": [
+      {
+        "text": "A neodymium magnet the size of a golf ball is strong enough to snap your fingers if you're not careful — they are by far the most powerful permanent magnets in the world."
+      },
+      {
+        "text": "Almost every electric car, wind turbine, and hard drive relies on neodymium magnets."
+      },
+      {
+        "text": "The name 'neodymium' means 'new twin' — it was separated from praseodymium in 1885."
+      },
+      {
+        "text": "Neodymium-doped glass filters out the yellow glare in glassblowers' safety glasses so they can see clearly while working."
+      }
+    ]
+  },
+  {
+    "symbol": "Pm",
+    "original_name": null,
+    "atomic_mass": 145,
+    "electron_config": "2, 8, 18, 23, 8, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [
+      {
+        "formula": "PmCl3",
+        "name": "Promethium chloride",
+        "use": "Used in research; no commercial applications due to radioactivity"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Promethium is the only lanthanide with no stable isotopes — every atom eventually decays, so there is almost none left in Earth's crust."
+      },
+      {
+        "text": "It is produced in nuclear reactors as a by-product of uranium splitting, which is the main source of the tiny amounts we use."
+      },
+      {
+        "text": "In the 1960s, promethium was used in luminous watch dials and tiny atomic batteries in pacemakers and satellites."
+      },
+      {
+        "text": "Promethium is named after Prometheus, the Greek Titan who stole fire from the gods — fitting for a radioactive element born in nuclear reactors."
+      }
+    ]
+  },
+  {
+    "symbol": "Sm",
+    "original_name": null,
+    "atomic_mass": 150.36,
+    "electron_config": "2, 8, 18, 24, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Samarium_layer.jpg/800px-Samarium_layer.jpg",
+    "image_caption": "Samarium metal — a bright silvery rare earth element",
+    "compounds": [
+      {
+        "formula": "SmCo5",
+        "name": "Samarium-cobalt magnet",
+        "use": "High-temperature permanent magnets used in jet engines and high-end headphones"
+      },
+      {
+        "formula": "Sm2O3",
+        "name": "Samarium oxide",
+        "use": "Used as a neutron absorber in nuclear reactor control rods"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Samarium-cobalt magnets were the strongest magnets in the world before neodymium magnets appeared — and they still win at high temperatures where neodymium fails."
+      },
+      {
+        "text": "Samarium is named after the mineral samarskite, which was itself named after a Russian mining official named Samarski."
+      },
+      {
+        "text": "Samarium-153 is a radioactive isotope used in medicine to relieve bone pain caused by cancer spreading to the skeleton."
+      },
+      {
+        "text": "Samarium absorbs neutrons so well that it is used in nuclear reactors to help control the chain reaction safely."
+      }
+    ]
+  },
+  {
+    "symbol": "Eu",
+    "original_name": null,
+    "atomic_mass": 151.96,
+    "electron_config": "2, 8, 18, 25, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/EuropiumUSGOV.jpg/800px-EuropiumUSGOV.jpg",
+    "image_caption": "Europium metal — it oxidises so quickly it must be stored under oil",
+    "compounds": [
+      {
+        "formula": "Eu2O3",
+        "name": "Europium oxide",
+        "use": "Produces the bright red colour in TV and computer screens"
+      },
+      {
+        "formula": "EuB6",
+        "name": "Europium hexaboride",
+        "use": "Used in specialised electron emitters"
+      }
+    ],
+    "facts": [
+      {
+        "text": "The red and blue pixels in old CRT televisions glowed because of europium compounds — without it, screens would look dull and yellowish."
+      },
+      {
+        "text": "Euro banknotes contain europium compounds that glow a distinctive red and blue under ultraviolet light, making them extremely hard to counterfeit."
+      },
+      {
+        "text": "Europium is the most reactive of all the rare earth metals — it tarnishes in seconds and reacts with water just like sodium does."
+      },
+      {
+        "text": "Europium was named after Europe in 1901, making it one of the few elements named after an entire continent."
+      }
+    ]
+  },
+  {
+    "symbol": "Gd",
+    "original_name": null,
+    "atomic_mass": 157.25,
+    "electron_config": "2, 8, 18, 25, 9, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Gadolinium-2.jpg/800px-Gadolinium-2.jpg",
+    "image_caption": "Gadolinium metal — a shiny, malleable silvery-white element",
+    "compounds": [
+      {
+        "formula": "Gd-DTPA",
+        "name": "Gadolinium chelate (contrast agent)",
+        "use": "Injected before MRI scans to make soft tissue and blood vessels visible"
+      },
+      {
+        "formula": "Gd2O3",
+        "name": "Gadolinium oxide",
+        "use": "Used in neutron radiography and X-ray screens"
+      },
+      {
+        "formula": "GdFeO3",
+        "name": "Gadolinium iron garnet",
+        "use": "Used in microwave components and data storage research"
+      }
+    ],
+    "facts": [
+      {
+        "text": "When you have an MRI scan with contrast dye, you are most likely being injected with a gadolinium compound — it makes soft tissues show up clearly on the scan."
+      },
+      {
+        "text": "Gadolinium absorbs more neutrons per atom than almost any other element, making it valuable in nuclear reactor shielding."
+      },
+      {
+        "text": "At room temperature, gadolinium is magnetic — one of only four elements (along with iron, nickel, and cobalt) that behave this way."
+      },
+      {
+        "text": "It is named after Johan Gadolin, the Finnish chemist who discovered the first rare earth element back in 1794."
+      }
+    ]
+  },
+  {
+    "symbol": "Tb",
+    "original_name": null,
+    "atomic_mass": 158.93,
+    "electron_config": "2, 8, 18, 27, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Terbium_sublimed_dendritic_and_1cm3_cube.jpg/800px-Terbium_sublimed_dendritic_and_1cm3_cube.jpg",
+    "image_caption": "Terbium metal — a soft, silvery-grey rare earth element",
+    "compounds": [
+      {
+        "formula": "Tb4O7",
+        "name": "Terbium oxide",
+        "use": "Produces bright green phosphorescence in energy-saving light bulbs and TV screens"
+      },
+      {
+        "formula": "TbFe2",
+        "name": "Terfenol-D alloy",
+        "use": "Changes shape in a magnetic field — used in sonar and precision actuators"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Terbium produces the green colour in fluorescent lamps and LED phosphors — that crisp white light from energy-saving bulbs partly comes from terbium."
+      },
+      {
+        "text": "A terbium alloy called Terfenol-D changes its shape when placed in a magnetic field, a property used in sonar systems on submarines."
+      },
+      {
+        "text": "Terbium is one of four elements (along with yttrium, erbium, and ytterbium) all named after the same village — Ytterby, Sweden, where a remarkable mineral was found."
+      },
+      {
+        "text": "Terbium is so rare that global production amounts to only a few hundred tonnes per year, nearly all from China."
+      }
+    ]
+  },
+  {
+    "symbol": "Dy",
+    "original_name": null,
+    "atomic_mass": 162.5,
+    "electron_config": "2, 8, 18, 28, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Dy_chips.jpg/800px-Dy_chips.jpg",
+    "image_caption": "Dysprosium metal chips — a soft, silvery rare earth element",
+    "compounds": [
+      {
+        "formula": "Dy2O3",
+        "name": "Dysprosium oxide",
+        "use": "Added to neodymium magnets to make them withstand higher temperatures in electric vehicle motors"
+      },
+      {
+        "formula": "DyI3",
+        "name": "Dysprosium iodide",
+        "use": "Used in high-intensity metal halide lamps"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Dysprosium's name comes from the Greek word 'dysprositos', meaning 'hard to get' — it took years of painstaking chemistry to isolate it."
+      },
+      {
+        "text": "Adding a tiny amount of dysprosium to neodymium magnets stops them from losing their magnetism in hot electric motor environments."
+      },
+      {
+        "text": "Dysprosium has the highest magnetic strength of any element, which is why it boosts the performance of already powerful neodymium magnets."
+      },
+      {
+        "text": "Because electric cars need dysprosium-enhanced magnets, demand for this rare element has soared as EV production has grown."
+      }
+    ]
+  },
+  {
+    "symbol": "Ho",
+    "original_name": null,
+    "atomic_mass": 164.93,
+    "electron_config": "2, 8, 18, 29, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Holmium_element.jpg/800px-Holmium_element.jpg",
+    "image_caption": "Holmium metal — a soft, malleable, silvery-white rare earth element",
+    "compounds": [
+      {
+        "formula": "Ho:YAG",
+        "name": "Holmium-doped YAG laser crystal",
+        "use": "Powers surgical lasers used in kidney stone removal and eye surgery"
+      },
+      {
+        "formula": "Ho2O3",
+        "name": "Holmium oxide",
+        "use": "Creates a yellow-orange colour in glass and cubic zirconia gemstones"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Holmium has the highest magnetic moment of any element — a single holmium atom on a surface can store one bit of data, making it a research target for ultimate-density data storage."
+      },
+      {
+        "text": "Holmium lasers are used by surgeons to break up kidney stones without any cutting — the laser is passed through a thin tube."
+      },
+      {
+        "text": "Holmium is named after Holmia, the Latin name for Stockholm, Sweden."
+      },
+      {
+        "text": "In 2017, scientists demonstrated that a single holmium atom on a magnesium oxide surface could hold a stable magnetic state — the world's smallest magnet."
+      }
+    ]
+  },
+  {
+    "symbol": "Er",
+    "original_name": null,
+    "atomic_mass": 167.26,
+    "electron_config": "2, 8, 18, 30, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Erbium_element.jpg/800px-Erbium_element.jpg",
+    "image_caption": "Erbium metal — a silvery, soft rare earth that gives glass a pink colour when dissolved",
+    "compounds": [
+      {
+        "formula": "Er3+",
+        "name": "Erbium ion in silica glass",
+        "use": "Amplifies light signals in fibre optic cables — essential for the internet"
+      },
+      {
+        "formula": "Er2O3",
+        "name": "Erbium oxide",
+        "use": "Gives glass and ceramics a distinctive pink or rose colour"
+      },
+      {
+        "formula": "Er:YAG",
+        "name": "Erbium YAG laser",
+        "use": "Used in skin resurfacing, dental drills, and eye surgery"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Almost every long-distance internet cable uses erbium-doped amplifiers — erbium ions in a tiny glass fibre boost the light signal every 80 km or so without converting it to electricity."
+      },
+      {
+        "text": "Erbium gives glass a delicate pink colour, which is why some decorative glasses and ceramics have a rosy tint."
+      },
+      {
+        "text": "Like terbium, erbium was named after the Swedish village of Ytterby where it was first found mixed with other rare earth minerals."
+      },
+      {
+        "text": "Erbium-doped fibre amplifiers (EDFAs) were the breakthrough that made the modern high-speed internet possible in the 1990s."
+      }
+    ]
+  },
+  {
+    "symbol": "Tm",
+    "original_name": null,
+    "atomic_mass": 168.93,
+    "electron_config": "2, 8, 18, 31, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Thulium_sublimed_dendritic_and_1cm3_cube.jpg/800px-Thulium_sublimed_dendritic_and_1cm3_cube.jpg",
+    "image_caption": "Thulium metal — one of the rarest and most expensive of the rare earth elements",
+    "compounds": [
+      {
+        "formula": "Tm:YAG",
+        "name": "Thulium YAG laser",
+        "use": "Used in medical lasers for prostate treatment and kidney stone removal"
+      },
+      {
+        "formula": "Tm2O3",
+        "name": "Thulium oxide",
+        "use": "Used in high-refractive-index glass for camera lenses"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Thulium is the second rarest naturally occurring element after promethium — global production is only a few tonnes per year."
+      },
+      {
+        "text": "Thulium is named after Thule, the ancient name for the far north of the world, probably referring to Scandinavia or Iceland."
+      },
+      {
+        "text": "Radioactive thulium-170 was once used in portable X-ray machines that required no electricity — useful in remote locations."
+      },
+      {
+        "text": "Thulium lasers operating around 2 micrometres are used in minimally invasive urology procedures because they cut tissue very precisely with minimal bleeding."
+      }
+    ]
+  },
+  {
+    "symbol": "Yb",
+    "original_name": null,
+    "atomic_mass": 173.04,
+    "electron_config": "2, 8, 18, 32, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Ytterbium-3.jpg/800px-Ytterbium-3.jpg",
+    "image_caption": "Ytterbium metal — a soft, malleable silvery rare earth element",
+    "compounds": [
+      {
+        "formula": "Yb:YAG",
+        "name": "Ytterbium YAG laser",
+        "use": "Powerful industrial lasers used for cutting and welding metal"
+      },
+      {
+        "formula": "Yb2O3",
+        "name": "Ytterbium oxide",
+        "use": "Used in speciality glass and as a dopant in fibre lasers"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Ytterbium atoms are the heart of some of the most accurate clocks ever built — optical lattice clocks using ytterbium are so precise they would lose less than one second over the age of the universe."
+      },
+      {
+        "text": "Ytterbium is the fourth element named after Ytterby, Sweden — the same tiny village gave its name to yttrium, terbium, erbium, and ytterbium."
+      },
+      {
+        "text": "High-power ytterbium fibre lasers are used in factories to cut and weld steel, and are gradually replacing older carbon dioxide lasers."
+      },
+      {
+        "text": "Ytterbium's energy levels are so stable and narrow that atomic clocks based on it could detect tiny differences in gravity between floors of a building."
+      }
+    ]
+  },
+  {
+    "symbol": "Lu",
+    "original_name": null,
+    "atomic_mass": 174.97,
+    "electron_config": "2, 8, 18, 32, 9, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Lutetium_sublimed_dendritic_and_1cm3_cube.jpg/800px-Lutetium_sublimed_dendritic_and_1cm3_cube.jpg",
+    "image_caption": "Lutetium metal — the last and hardest of the lanthanide elements",
+    "compounds": [
+      {
+        "formula": "Lu2SiO5",
+        "name": "Lutetium oxyorthosilicate (LSO)",
+        "use": "Scintillator crystals in PET scanners used to detect cancer"
+      },
+      {
+        "formula": "177Lu-DOTATATE",
+        "name": "Lutetium-177 peptide",
+        "use": "Targeted radiation therapy for neuroendocrine tumours"
+      }
+    ],
+    "facts": [
+      {
+        "text": "Lutetium-177 is one of the newest cancer treatments — it locks onto tumour cells and delivers radiation directly, sparing healthy tissue around them."
+      },
+      {
+        "text": "Lutetium is named after Lutetia, the Roman name for Paris — it was discovered by a French chemist in 1907."
+      },
+      {
+        "text": "Lutetium is the densest and hardest of all the lanthanide elements, and it has the highest melting point in the group."
+      },
+      {
+        "text": "PET scanners — the machines that create 3D images to find cancer — use lutetium silicate crystals to detect the gamma rays produced inside your body."
+      }
+    ]
+  },
+  {
+    "symbol": "Bk",
+    "original_name": null,
+    "atomic_mass": 247,
+    "electron_config": "2, 8, 18, 32, 27, 8, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Berkelium was first made in 1949 at the University of California, Berkeley, by bombarding americium-241 with alpha particles in a cyclotron."
+      },
+      {
+        "text": "It is named after Berkeley, California, just as its lighter cousin californium is named after the state itself."
+      },
+      {
+        "text": "Only microgram quantities of berkelium have ever been produced — it is so rare that a few millionths of a gram counts as a large sample."
+      },
+      {
+        "text": "Berkelium has no uses outside of scientific research, but it is used as a target material to synthesise even heavier elements higher up the periodic table."
+      }
+    ]
+  },
+  {
+    "symbol": "Cf",
+    "original_name": null,
+    "atomic_mass": 251,
+    "electron_config": "2, 8, 18, 32, 28, 8, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Californium was first synthesised in 1950 at Berkeley by bombarding curium with alpha particles — making it the sixth transuranic element discovered."
+      },
+      {
+        "text": "Californium-252 is the most practical isotope: it spontaneously releases neutrons at an extraordinary rate, making a pellet the size of a pinhead a portable neutron source."
+      },
+      {
+        "text": "Tiny sources of californium-252 are used by oil companies to scan rock layers underground, and by airport security to detect explosives in luggage."
+      },
+      {
+        "text": "Californium is the heaviest element with a real-world application — all heavier elements are purely research curiosities made atom by atom."
+      }
+    ]
+  },
+  {
+    "symbol": "Es",
+    "original_name": null,
+    "atomic_mass": 252,
+    "electron_config": "2, 8, 18, 32, 29, 8, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Einsteinium was discovered in the radioactive debris of the first hydrogen bomb test — 'Ivy Mike' — in 1952. Its discovery was kept secret for years."
+      },
+      {
+        "text": "It is named after Albert Einstein, one of the greatest scientists in history and the author of E=mc², which describes how mass and energy are related."
+      },
+      {
+        "text": "Einsteinium is so intensely radioactive that a visible speck of it would glow in the dark and rapidly self-destruct from its own radiation."
+      },
+      {
+        "text": "In 2021, scientists finally measured some basic chemical properties of einsteinium for the first time, using samples containing just 200 billionths of a gram."
+      }
+    ]
+  },
+  {
+    "symbol": "Fm",
+    "original_name": null,
+    "atomic_mass": 257,
+    "electron_config": "2, 8, 18, 32, 30, 8, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Fermium was also found in the fallout of the 1952 'Ivy Mike' hydrogen bomb test, discovered alongside einsteinium in the same classified investigation."
+      },
+      {
+        "text": "It is named after Enrico Fermi, the Italian-American physicist who built the world's first nuclear reactor under a sports stadium in Chicago in 1942."
+      },
+      {
+        "text": "Fermium is the heaviest element that can be produced by bombarding uranium with neutrons in a nuclear reactor — making heavier elements requires even more exotic methods."
+      },
+      {
+        "text": "Only tiny amounts of fermium have ever been made, and they exist for just days before decaying — it has no practical uses."
+      }
+    ]
+  },
+  {
+    "symbol": "Md",
+    "original_name": null,
+    "atomic_mass": 258,
+    "electron_config": "2, 8, 18, 32, 31, 8, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Mendelevium is named after Dmitri Mendeleev, the Russian chemist who created the periodic table in 1869 — without his work, we might never have known that elements like mendelevium should exist."
+      },
+      {
+        "text": "It was first made in 1955 by bombarding einsteinium with alpha particles in a cyclotron at Berkeley — only 17 atoms were produced in the first experiment."
+      },
+      {
+        "text": "Being able to make just 17 atoms and still identify a new element was a triumph of nuclear chemistry and physics."
+      },
+      {
+        "text": "Mendelevium has no uses outside research; all its isotopes are radioactive and decay within weeks or months."
+      }
+    ]
+  },
+  {
+    "symbol": "No",
+    "original_name": null,
+    "atomic_mass": 259,
+    "electron_config": "2, 8, 18, 32, 32, 8, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Nobelium is named after Alfred Nobel, the Swedish chemist who invented dynamite and founded the Nobel Prizes — the most famous science awards in the world."
+      },
+      {
+        "text": "Its discovery in 1958–1966 was disputed for years between American and Soviet teams during the Cold War, each claiming to have made it first."
+      },
+      {
+        "text": "Nobelium was the first element to be discovered in the Soviet Union (at Dubna), though credit was eventually shared."
+      },
+      {
+        "text": "Nobelium's most stable isotope lasts only 58 minutes before decaying, and only a few atoms at a time have ever been produced."
+      }
+    ]
+  },
+  {
+    "symbol": "Lr",
+    "original_name": null,
+    "atomic_mass": 266,
+    "electron_config": "2, 8, 18, 32, 32, 8, 3",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Lawrencium is named after Ernest Lawrence, who invented the cyclotron particle accelerator — the type of machine used to create almost all synthetic elements."
+      },
+      {
+        "text": "It is the last actinide element, sitting directly below lutetium in the periodic table and completing the bottom row of the f-block."
+      },
+      {
+        "text": "Lawrencium was first made in 1961 at the Lawrence Berkeley National Laboratory by bombarding californium with boron ions."
+      },
+      {
+        "text": "Only a few atoms of lawrencium are ever made at a time, and the longest-lived isotope decays in about 11 hours."
+      }
+    ]
+  },
+  {
+    "symbol": "Rf",
+    "original_name": null,
+    "atomic_mass": 267,
+    "electron_config": "2, 8, 18, 32, 32, 10, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Rutherfordium is named after Ernest Rutherford, the New Zealand physicist who discovered the atomic nucleus in 1911 by shooting alpha particles at gold foil."
+      },
+      {
+        "text": "It is the first transactinide element — meaning it sits just after the actinides and begins a new section of the periodic table."
+      },
+      {
+        "text": "Rutherfordium is made by firing calcium ions at californium or plutonium targets in a particle accelerator; only a few atoms are produced per experiment."
+      },
+      {
+        "text": "Its most stable isotope, Rf-267, has a half-life of about 1.3 hours — long enough for scientists to study some of its basic chemistry before it vanishes."
+      }
+    ]
+  },
+  {
+    "symbol": "Db",
+    "original_name": null,
+    "atomic_mass": 268,
+    "electron_config": "2, 8, 18, 32, 32, 11, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Dubnium is named after Dubna, the Russian city that is home to the Joint Institute for Nuclear Research (JINR), where much of the early work on superheavy elements was done."
+      },
+      {
+        "text": "It was independently discovered by both American and Soviet scientists in the 1960s and 1970s, and the naming dispute lasted for decades during the Cold War."
+      },
+      {
+        "text": "Dubnium is created by colliding lighter nuclei together in a particle accelerator — for example, firing nitrogen ions at californium targets."
+      },
+      {
+        "text": "The longest-lived dubnium isotope has a half-life of about 28 hours — among the longest of any element this heavy."
+      }
+    ]
+  },
+  {
+    "symbol": "Sg",
+    "original_name": null,
+    "atomic_mass": 269,
+    "electron_config": "2, 8, 18, 32, 32, 12, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Seaborgium is named after Glenn T. Seaborg, the American chemist who co-discovered ten elements — more than anyone else in history."
+      },
+      {
+        "text": "Seaborg was alive when element 106 was named after him in 1994, making him one of the only people honoured with an element name during their lifetime."
+      },
+      {
+        "text": "Seaborgium was first synthesised at Berkeley in 1974 by bombarding californium with oxygen ions in a heavy-ion linear accelerator."
+      },
+      {
+        "text": "Scientists have performed a few experiments showing seaborgium behaves chemically like tungsten, its lighter analogue in the periodic table — confirming the table's predictions even at extreme atomic numbers."
+      }
+    ]
+  },
+  {
+    "symbol": "Bh",
+    "original_name": null,
+    "atomic_mass": 270,
+    "electron_config": "2, 8, 18, 32, 32, 13, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Bohrium is named after Niels Bohr, the Danish physicist who developed the first quantum model of the atom in 1913 and won the Nobel Prize in 1922."
+      },
+      {
+        "text": "It was first created in 1981 at the GSI laboratory in Darmstadt, Germany, by bombarding bismuth-209 with chromium-54 ions."
+      },
+      {
+        "text": "Only a few dozen atoms of bohrium have ever been made; it decays in seconds to minutes depending on the isotope."
+      },
+      {
+        "text": "Despite its extreme rarity and short lifetime, chemists have managed to study bohrium's chemistry and confirmed it behaves like rhenium, as the periodic table predicts."
+      }
+    ]
+  },
+  {
+    "symbol": "Hs",
+    "original_name": null,
+    "atomic_mass": 269,
+    "electron_config": "2, 8, 18, 32, 32, 14, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Hassium is named after Hassia, the Latin name for the German state of Hesse, where the GSI Helmholtz Centre for Heavy Ion Research (the lab that made it) is located."
+      },
+      {
+        "text": "It was first synthesised in 1984 at GSI by Peter Armbruster and Gottfried Münzenberg, who also discovered several other superheavy elements."
+      },
+      {
+        "text": "Hassium-270 has a half-life of about 9 seconds — remarkably long for an element this heavy, which allows scientists to study its chemistry."
+      },
+      {
+        "text": "Experiments show that hassium forms oxides that behave like osmium tetroxide, perfectly matching what the periodic table predicts for element 108."
+      }
+    ]
+  },
+  {
+    "symbol": "Mt",
+    "original_name": null,
+    "atomic_mass": 278,
+    "electron_config": "2, 8, 18, 32, 32, 15, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Meitnerium is named after Lise Meitner, the Austrian-Swedish physicist who co-discovered nuclear fission in 1938 but was denied the Nobel Prize that her male collaborator received."
+      },
+      {
+        "text": "Meitnerium was first made in 1982 at GSI Darmstadt by fusing bismuth and iron nuclei together in an accelerator."
+      },
+      {
+        "text": "Only a handful of meitnerium atoms have ever existed; the most stable isotope decays in about 8 seconds."
+      },
+      {
+        "text": "Albert Einstein called Lise Meitner 'the most significant woman scientist of the 20th century' — naming element 109 after her is considered a long-overdue recognition."
+      }
+    ]
+  },
+  {
+    "symbol": "Ds",
+    "original_name": null,
+    "atomic_mass": 281,
+    "electron_config": "2, 8, 18, 32, 32, 17, 1",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Darmstadtium is named after Darmstadt, Germany — the city where GSI, the heavy-ion research centre that first created it in 1994, is located."
+      },
+      {
+        "text": "It was first made by firing nickel-62 ions at lead-208 targets; only a few atoms were produced in the initial experiment."
+      },
+      {
+        "text": "Darmstadtium's most stable known isotope has a half-life of about 11 seconds."
+      },
+      {
+        "text": "Elements this heavy sit in the periodic table's 6d transition metals, and scientists predict darmstadtium should behave somewhat like platinum — though almost no chemistry has been done on it."
+      }
+    ]
+  },
+  {
+    "symbol": "Rg",
+    "original_name": null,
+    "atomic_mass": 282,
+    "electron_config": "2, 8, 18, 32, 32, 17, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Roentgenium is named after Wilhelm Röntgen, the German physicist who discovered X-rays in 1895 and received the very first Nobel Prize in Physics in 1901."
+      },
+      {
+        "text": "It was first synthesised at GSI Darmstadt in 1994 by bombarding bismuth-209 with nickel-64 ions — only three atoms were detected."
+      },
+      {
+        "text": "Roentgenium's most stable known isotope lasts about 26 seconds before decaying."
+      },
+      {
+        "text": "Just as Röntgen's X-rays transformed medicine, roentgenium sits in a region of the periodic table where scientists hope to find exceptionally stable 'island of stability' isotopes in future experiments."
+      }
+    ]
+  },
+  {
+    "symbol": "Cn",
+    "original_name": null,
+    "atomic_mass": 285,
+    "electron_config": "2, 8, 18, 32, 32, 18, 2",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Copernicium is named after Nicolaus Copernicus, the Polish astronomer who first proposed that the Earth orbits the Sun rather than the other way around."
+      },
+      {
+        "text": "It was first created at GSI Darmstadt in 1996 by bombarding lead with zinc ions; only a handful of atoms have ever been made."
+      },
+      {
+        "text": "Scientists predict that copernicium may behave more like a noble gas than a metal at room temperature, because its electrons move so fast that relativistic effects become significant."
+      },
+      {
+        "text": "Some experiments suggest copernicium atoms interact very weakly with gold surfaces, hinting at noble-gas-like behaviour — though far fewer than a billion atoms of it have ever existed."
+      }
+    ]
+  },
+  {
+    "symbol": "Nh",
+    "original_name": null,
+    "atomic_mass": 286,
+    "electron_config": "2, 8, 18, 32, 32, 18, 3",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Nihonium's name comes from 'Nihon', which means 'Japan' in Japanese — it is the first element discovered in Asia and the first named in Japanese."
+      },
+      {
+        "text": "It was first created in 2004 at RIKEN, Japan's national research institute, by firing zinc ions at bismuth targets — it took nine years of experiments to confirm the discovery."
+      },
+      {
+        "text": "Nihonium was officially named in 2016, and the discovery was a source of enormous national pride in Japan."
+      },
+      {
+        "text": "Its most stable known isotope has a half-life of about 20 seconds; only around 100 atoms of nihonium have ever been observed."
+      }
+    ]
+  },
+  {
+    "symbol": "Fl",
+    "original_name": null,
+    "atomic_mass": 289,
+    "electron_config": "2, 8, 18, 32, 32, 18, 4",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Flerovium is named after Flerov Laboratory of Nuclear Reactions in Dubna, Russia, which was itself named after Georgy Flyorov — the Soviet physicist who sent a famous letter to Stalin arguing that Germany must be building an atomic bomb."
+      },
+      {
+        "text": "It was first synthesised in 1999 at Dubna by bombarding plutonium-244 with calcium-48 ions in a technique that has also produced several other superheavy elements."
+      },
+      {
+        "text": "Flerovium sits directly below lead in the periodic table, but relativistic quantum effects may make it behave more like a noble gas than a metal."
+      },
+      {
+        "text": "The most stable known isotope of flerovium has a half-life of about 2.1 seconds — one of the shorter-lived confirmed elements."
+      }
+    ]
+  },
+  {
+    "symbol": "Mc",
+    "original_name": null,
+    "atomic_mass": 290,
+    "electron_config": "2, 8, 18, 32, 32, 18, 5",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Moscovium is named after Moscow Oblast, the region in Russia that contains the Joint Institute for Nuclear Research at Dubna where it was created."
+      },
+      {
+        "text": "It was first synthesised in 2003 by a Russian-American collaboration, bombarding americium-243 with calcium-48 ions."
+      },
+      {
+        "text": "Only about 100 atoms of moscovium have ever been detected, and the most stable known isotope has a half-life of about 220 milliseconds."
+      },
+      {
+        "text": "Moscovium decays into nihonium (element 113), which was actually how nihonium was first discovered — as a decay product of moscovium."
+      }
+    ]
+  },
+  {
+    "symbol": "Lv",
+    "original_name": null,
+    "atomic_mass": 293,
+    "electron_config": "2, 8, 18, 32, 32, 18, 6",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Livermorium is named after Lawrence Livermore National Laboratory in Livermore, California — one of the two institutions (along with Dubna) that co-discovered it."
+      },
+      {
+        "text": "It was first made in 2000 by bombarding curium-248 with calcium-48 ions at the Dubna accelerator facility."
+      },
+      {
+        "text": "Livermorium sits below polonium in the periodic table, and scientists predict it may behave somewhat like a very heavy version of polonium — though far more unstable."
+      },
+      {
+        "text": "The most stable known isotope of livermorium decays in about 61 milliseconds — less than a tenth of a second after it is born."
+      }
+    ]
+  },
+  {
+    "symbol": "Ts",
+    "original_name": null,
+    "atomic_mass": 294,
+    "electron_config": "2, 8, 18, 32, 32, 18, 7",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Tennessine is named after Tennessee, USA — honouring Vanderbilt University, the University of Tennessee, and Oak Ridge National Laboratory, all of which contributed to its discovery."
+      },
+      {
+        "text": "It was first created in 2010 at Dubna by a Russian-American team, bombarding berkelium-249 with calcium-48 ions."
+      },
+      {
+        "text": "Tennessine is the second-heaviest element ever confirmed; only a few dozen atoms of it have ever been detected, each surviving for only milliseconds."
+      },
+      {
+        "text": "Despite being placed in the halogen column of the periodic table (below astatine), tennessine is predicted to behave very differently from fluorine or chlorine due to extreme relativistic effects."
+      }
+    ]
+  },
+  {
+    "symbol": "Og",
+    "original_name": null,
+    "atomic_mass": 294,
+    "electron_config": "2, 8, 18, 32, 32, 18, 8",
+    "image_url": null,
+    "image_caption": null,
+    "compounds": [],
+    "facts": [
+      {
+        "text": "Oganesson is the heaviest element on the periodic table — element 118 — and it sits in the noble gas column, though scientists think it may actually be a solid at room temperature rather than a gas."
+      },
+      {
+        "text": "It is named after Yuri Oganessian, a Russian nuclear physicist who pioneered the technique of using calcium-48 beams to create superheavy elements — he is one of the very few living people to have an element named after them."
+      },
+      {
+        "text": "Only five atoms of oganesson have ever been detected, each surviving for less than a millisecond before decaying."
+      },
+      {
+        "text": "Oganesson was first synthesised in 2002 at Dubna by bombarding californium-249 with calcium-48 ions, and its discovery was confirmed in 2006."
+      }
     ]
   }
 ]
