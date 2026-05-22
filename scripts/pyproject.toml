@@ -1,0 +1,9 @@
+[project]
+name = "element-quest-scripts"
+version = "0.1.0"
+description = "Data pipeline scripts for Element Quest"
+requires-python = ">=3.11"
+dependencies = [
+    "supabase>=2.0.0",
+    "python-dotenv>=1.0.0",
+]

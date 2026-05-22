@@ -65,7 +65,14 @@ alter table eq_element_facts enable row level security;
 create policy "public read" on eq_element_facts for select using (true);
 ```
 
-Then generate `scripts/element_facts.json` via Claude Code and run `python scripts/import_element_facts.py` to populate it.
+Then generate `scripts/element_facts.json` via Claude Code, then import it:
+
+```bash
+cd scripts
+cp .env.example .env   # fill in SUPABASE_URL and SUPABASE_SERVICE_KEY
+uv sync                # installs dependencies (requires uv: https://docs.astral.sh/uv/)
+uv run python import_element_facts.py
+```
 
 Then go to **Project Settings → API** and copy your Project URL and `anon public` key into a `.env.local` file in the project root:
 

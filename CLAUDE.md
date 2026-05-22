@@ -312,3 +312,17 @@ Tables in use: `eq_players` (players + scores + auth + progress), `eq_element_fa
 - Node.js: 18+ recommended
 - Supabase env vars required: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
 - Works fully offline after first load (fonts + Supabase require network)
+
+## Python scripts (`scripts/`)
+
+Managed with **`uv`** — do not use `pip` or `python -m venv` directly.
+
+```bash
+# First-time setup (creates .venv automatically)
+cd scripts && uv sync
+
+# Run a script
+uv run python import_element_facts.py
+```
+
+Add a `scripts/.env` file (not committed) with `SUPABASE_URL` and `SUPABASE_SERVICE_KEY` before running. See `scripts/.env.example`.

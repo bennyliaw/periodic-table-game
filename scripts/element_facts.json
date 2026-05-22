@@ -1,0 +1,310 @@
+[
+  {
+    "symbol": "H",
+    "original_name": null,
+    "atomic_mass": 1.01,
+    "electron_config": "1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Hydrogen_discharge_tube.jpg/960px-Hydrogen_discharge_tube.jpg",
+    "image_caption": "Hydrogen glowing purple in a discharge tube",
+    "compounds": [
+      { "formula": "H2O",  "name": "Water",               "use": "Essential for all life on Earth" },
+      { "formula": "H2O2", "name": "Hydrogen peroxide",   "use": "Disinfects wounds and bleaches hair" },
+      { "formula": "HCl",  "name": "Hydrochloric acid",   "use": "Found in your stomach to digest food" },
+      { "formula": "NH3",  "name": "Ammonia",             "use": "Used in fertilisers to grow crops" },
+      { "formula": "CH4",  "name": "Methane",             "use": "Natural gas used for cooking and heating" }
+    ],
+    "facts": [
+      { "text": "Hydrogen is the lightest element and makes up about 75% of all matter in the universe — stars like our Sun are mostly hydrogen." },
+      { "text": "When hydrogen burns, the only thing it produces is water, making it one of the cleanest fuels possible." },
+      { "text": "There is more hydrogen in a glass of water than in a glass of pure hydrogen gas!" },
+      { "text": "The Hindenburg airship was filled with hydrogen, which caused it to catch fire spectacularly in 1937." }
+    ]
+  },
+  {
+    "symbol": "He",
+    "original_name": null,
+    "atomic_mass": 4.00,
+    "electron_config": "2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Helium_discharge_tube.jpg/960px-Helium_discharge_tube.jpg",
+    "image_caption": "Helium glowing orange-red in a discharge tube",
+    "compounds": [],
+    "facts": [
+      { "text": "Helium was discovered in the Sun before it was found on Earth — its name comes from 'Helios', the Greek god of the Sun." },
+      { "text": "Helium is so light that if you release a helium balloon, it flies into space and is gone forever." },
+      { "text": "Unlike every other substance, liquid helium never freezes solid — it stays liquid all the way down to absolute zero." },
+      { "text": "Breathing helium makes your voice squeaky because sound travels faster through it than through regular air." }
+    ]
+  },
+  {
+    "symbol": "C",
+    "original_name": null,
+    "atomic_mass": 12.01,
+    "electron_config": "2, 4",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Graphite-and-diamond-with-scale.jpg/960px-Graphite-and-diamond-with-scale.jpg",
+    "image_caption": "Graphite (left) and diamond (right) — both are pure carbon",
+    "compounds": [
+      { "formula": "CO2",     "name": "Carbon dioxide",  "use": "What you breathe out; plants absorb it to grow" },
+      { "formula": "CH4",     "name": "Methane",         "use": "Natural gas used for cooking and heating" },
+      { "formula": "C6H12O6", "name": "Glucose",         "use": "The sugar your body burns for energy" },
+      { "formula": "CaCO3",   "name": "Limestone",       "use": "Makes up seashells, chalk, and entire cliffs" },
+      { "formula": "CO",      "name": "Carbon monoxide", "use": "Deadly gas from car exhausts and faulty heaters" }
+    ],
+    "facts": [
+      { "text": "Carbon is the basis of all life — every living thing on Earth is built from carbon chains." },
+      { "text": "Diamond and graphite (pencil 'lead') are both made of pure carbon, just arranged differently." },
+      { "text": "Scientists use radioactive carbon-14 to calculate the age of ancient bones and fossils — a technique called carbon dating." },
+      { "text": "A single carbon atom can bond to four other atoms at once, which is why carbon can build millions of different molecules." }
+    ]
+  },
+  {
+    "symbol": "O",
+    "original_name": null,
+    "atomic_mass": 16.00,
+    "electron_config": "2, 6",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Liquid_oxygen_in_a_beaker_%28cropped_and_retouched%29.jpg/960px-Liquid_oxygen_in_a_beaker_%28cropped_and_retouched%29.jpg",
+    "image_caption": "Liquid oxygen glowing pale blue in a beaker",
+    "compounds": [
+      { "formula": "H2O",  "name": "Water",          "use": "Essential for all life" },
+      { "formula": "CO2",  "name": "Carbon dioxide", "use": "Breathed out; used by plants" },
+      { "formula": "Fe2O3","name": "Rust",            "use": "Formed when iron meets oxygen and water" },
+      { "formula": "SiO2", "name": "Silicon dioxide", "use": "Makes up sand and glass" },
+      { "formula": "O3",   "name": "Ozone",           "use": "Layer in the atmosphere that shields us from UV rays" }
+    ],
+    "facts": [
+      { "text": "Oxygen makes up 21% of the air we breathe, and liquid oxygen is a beautiful pale blue colour." },
+      { "text": "Without oxygen, fire cannot burn — it needs oxygen to keep going." },
+      { "text": "Your blood looks red because the iron in haemoglobin carries oxygen molecules around your body." },
+      { "text": "Oxygen was discovered in 1774 and was first called 'dephlogisticated air' — a name that thankfully did not stick." }
+    ]
+  },
+  {
+    "symbol": "N",
+    "original_name": null,
+    "atomic_mass": 14.01,
+    "electron_config": "2, 5",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Fluessiger_Stickstoff.jpg/960px-Fluessiger_Stickstoff.jpg",
+    "image_caption": "Liquid nitrogen pouring at −196°C",
+    "compounds": [
+      { "formula": "NH3",  "name": "Ammonia",          "use": "Fertilisers that feed most of the world's crops" },
+      { "formula": "NO2",  "name": "Nitrogen dioxide", "use": "Causes city smog and acid rain" },
+      { "formula": "N2O",  "name": "Laughing gas",     "use": "Used at the dentist as a mild anaesthetic" },
+      { "formula": "HNO3", "name": "Nitric acid",      "use": "Used to manufacture fertilisers and explosives" },
+      { "formula": "NaN3", "name": "Sodium azide",     "use": "Inflates car airbags in a crash" }
+    ],
+    "facts": [
+      { "text": "Nitrogen makes up 78% of the air around you, but your body cannot use it directly from the air." },
+      { "text": "Liquid nitrogen is so cold (−196°C) that it instantly freezes anything it touches." },
+      { "text": "Plants need nitrogen to grow, which is why farmers spread nitrogen-rich fertilisers on their fields." },
+      { "text": "Lightning bolts convert nitrogen gas into a form that dissolves in rain, giving plants a natural fertiliser from the sky." }
+    ]
+  },
+  {
+    "symbol": "Au",
+    "original_name": "Aurum",
+    "atomic_mass": 196.97,
+    "electron_config": "2, 8, 18, 32, 18, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Gold-crystals.jpg/960px-Gold-crystals.jpg",
+    "image_caption": "Pure gold crystals",
+    "compounds": [
+      { "formula": "AuCl3",  "name": "Gold chloride",    "use": "Used to stain glass red and in photography" },
+      { "formula": "AuCN",   "name": "Gold cyanide",     "use": "Used in gold plating jewellery and electronics" },
+      { "formula": "HAuCl4", "name": "Chloroauric acid", "use": "Used to test the purity of acids" },
+      { "formula": "Au2S3",  "name": "Gold sulfide",     "use": "Found in some gold ore deposits" }
+    ],
+    "facts": [
+      { "text": "Gold never rusts or tarnishes — a gold coin buried 3,000 years ago still shines as brightly as the day it was made." },
+      { "text": "All the gold ever mined in human history would fit inside about 3.5 Olympic swimming pools." },
+      { "text": "Gold is so stretchy that 1 gram can be hammered into a sheet 1 square metre wide, thinner than a human hair." },
+      { "text": "Your smartphone contains tiny amounts of gold in its circuit board because gold conducts electricity reliably without corroding." }
+    ]
+  },
+  {
+    "symbol": "Ag",
+    "original_name": "Argentum",
+    "atomic_mass": 107.87,
+    "electron_config": "2, 8, 18, 18, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Silver_crystal.jpg/960px-Silver_crystal.jpg",
+    "image_caption": "Pure silver crystal",
+    "compounds": [
+      { "formula": "AgCl",  "name": "Silver chloride",  "use": "Light-sensitive compound used in old photography" },
+      { "formula": "AgNO3", "name": "Silver nitrate",   "use": "Used in medicine and to make mirrors" },
+      { "formula": "Ag2S",  "name": "Silver sulfide",   "use": "The black tarnish that forms on silverware" },
+      { "formula": "AgI",   "name": "Silver iodide",    "use": "Sprayed into clouds to help make rain" },
+      { "formula": "AgBr",  "name": "Silver bromide",   "use": "Used in X-ray film to capture images" }
+    ],
+    "facts": [
+      { "text": "Silver conducts electricity better than any other metal, though gold is more commonly used in electronics because silver tarnishes." },
+      { "text": "Before refrigerators, people put silver coins in milk to keep it fresh — silver ions kill bacteria." },
+      { "text": "Film photography worked by exposing silver compounds to light, which turned dark where light hit them — creating the image." },
+      { "text": "The country Argentina is named after silver — early Spanish explorers believed the region was filled with silver deposits." }
+    ]
+  },
+  {
+    "symbol": "Fe",
+    "original_name": "Ferrum",
+    "atomic_mass": 55.85,
+    "electron_config": "2, 8, 14, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Iron_electrolytic_and_1cm3_cube.jpg/960px-Iron_electrolytic_and_1cm3_cube.jpg",
+    "image_caption": "Electrolytic iron and a 1cm³ iron cube",
+    "compounds": [
+      { "formula": "Fe2O3", "name": "Iron oxide (rust)", "use": "The red pigment in rust and some paints" },
+      { "formula": "Fe3O4", "name": "Magnetite",         "use": "A natural magnet found in rocks" },
+      { "formula": "FeSO4", "name": "Iron sulfate",      "use": "Used in iron supplements and fertilisers" },
+      { "formula": "FeCl3", "name": "Iron chloride",     "use": "Used to purify drinking water" },
+      { "formula": "FeS2",  "name": "Pyrite",            "use": "Known as 'fool's gold' for its golden shine" }
+    ],
+    "facts": [
+      { "text": "Iron is the most common element in the entire Earth by mass — the core of our planet is a giant ball of solid and liquid iron." },
+      { "text": "Your blood is red because of iron — the iron in haemoglobin grabs oxygen in your lungs and carries it to every cell in your body." },
+      { "text": "The Iron Age began around 1200 BC when humans discovered how to smelt iron, allowing them to make far stronger tools than bronze." },
+      { "text": "Iron is the only everyday element you can pick up with a magnet." }
+    ]
+  },
+  {
+    "symbol": "Cu",
+    "original_name": "Cuprum",
+    "atomic_mass": 63.55,
+    "electron_config": "2, 8, 18, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/NatCopper.jpg/960px-NatCopper.jpg",
+    "image_caption": "Native copper specimen",
+    "compounds": [
+      { "formula": "CuSO4",  "name": "Copper sulfate",    "use": "Vivid blue crystals used to treat fungal diseases in crops" },
+      { "formula": "CuO",    "name": "Copper oxide",      "use": "Black powder used in ceramics and as a pigment" },
+      { "formula": "CuCO3",  "name": "Copper carbonate",  "use": "The green patina that forms on old copper roofs and statues" },
+      { "formula": "CuCl2",  "name": "Copper chloride",   "use": "Used in fireworks to create green flames" },
+      { "formula": "Cu2O",   "name": "Cuprite",           "use": "Red copper ore found in mines" }
+    ],
+    "facts": [
+      { "text": "The Statue of Liberty is made of copper — its famous green colour developed slowly as the copper reacted with air and rain over decades." },
+      { "text": "Copper was one of the first metals ever used by humans, more than 10,000 years ago." },
+      { "text": "Copper kills bacteria — that is why door handles and railings in many hospitals are made of copper to reduce germ spreading." },
+      { "text": "Almost all the electric wires in your home are made of copper because it conducts electricity nearly as well as silver but costs far less." }
+    ]
+  },
+  {
+    "symbol": "Pb",
+    "original_name": "Plumbum",
+    "atomic_mass": 207.20,
+    "electron_config": "2, 8, 18, 32, 18, 4",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Lead_electrolytic_and_1cm3_cube.jpg/960px-Lead_electrolytic_and_1cm3_cube.jpg",
+    "image_caption": "Electrolytic lead and a 1cm³ lead cube",
+    "compounds": [
+      { "formula": "PbO2",  "name": "Lead dioxide",   "use": "Key component inside car batteries" },
+      { "formula": "PbSO4", "name": "Lead sulfate",   "use": "Also found in rechargeable car batteries" },
+      { "formula": "Pb3O4", "name": "Red lead",       "use": "Historic bright-red paint used on iron bridges" },
+      { "formula": "PbS",   "name": "Galena",         "use": "The main natural lead ore, mined for thousands of years" },
+      { "formula": "PbCl2", "name": "Lead chloride",  "use": "Used to make certain types of glass" }
+    ],
+    "facts": [
+      { "text": "The word 'plumber' comes from plumbum — the Romans used lead pipes to carry water across their cities." },
+      { "text": "Lead is so soft and dense that you can scratch it with your fingernail, yet it blocks X-rays and radiation." },
+      { "text": "Lead was once added to paint and petrol, but was banned when scientists discovered it causes serious brain damage." },
+      { "text": "A typical car battery contains about 8 kg of lead — cars still use lead-acid batteries to start the engine." }
+    ]
+  },
+  {
+    "symbol": "Na",
+    "original_name": "Natrium",
+    "atomic_mass": 22.99,
+    "electron_config": "2, 8, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Na_%28Sodium%29.jpg/960px-Na_%28Sodium%29.jpg",
+    "image_caption": "Pure sodium metal stored under mineral oil",
+    "compounds": [
+      { "formula": "NaCl",   "name": "Table salt",    "use": "Flavours and preserves food worldwide" },
+      { "formula": "NaOH",   "name": "Caustic soda",  "use": "Makes soap and unclog drains" },
+      { "formula": "NaHCO3", "name": "Baking soda",   "use": "Makes cakes and bread rise when heated" },
+      { "formula": "Na2CO3", "name": "Washing soda",  "use": "Used in glass-making and laundry detergent" },
+      { "formula": "NaF",    "name": "Sodium fluoride","use": "Added to toothpaste to protect teeth" }
+    ],
+    "facts": [
+      { "text": "Pure sodium explodes violently when it touches water, releasing hydrogen gas and a huge burst of heat." },
+      { "text": "Your nerves use sodium ions to send electrical signals — without sodium you could not feel, move, or think." },
+      { "text": "Salt was so valuable in ancient Rome that soldiers were sometimes paid in it — that is where the word 'salary' comes from." },
+      { "text": "The orange glow of old street lamps comes from sodium — sodium atoms produce a brilliant orange-yellow light when heated." }
+    ]
+  },
+  {
+    "symbol": "K",
+    "original_name": "Kalium",
+    "atomic_mass": 39.10,
+    "electron_config": "2, 8, 8, 1",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Potassium-2.jpg",
+    "image_caption": "Potassium metal pearls stored in paraffin oil",
+    "compounds": [
+      { "formula": "KCl",  "name": "Potassium chloride", "use": "Used as a salt substitute for people on low-sodium diets" },
+      { "formula": "KOH",  "name": "Potassium hydroxide","use": "Makes liquid soap and biodiesel" },
+      { "formula": "KNO3", "name": "Potassium nitrate",  "use": "Key ingredient in gunpowder and fireworks" },
+      { "formula": "K2CO3","name": "Potash",             "use": "Used in making glass and soap for centuries" },
+      { "formula": "KI",   "name": "Potassium iodide",   "use": "Added to table salt to prevent iodine deficiency" }
+    ],
+    "facts": [
+      { "text": "Bananas contain potassium, which helps your muscles work properly — including the most important one, your heart." },
+      { "text": "Potassium reacts even more violently with water than sodium, skidding across the surface while burning with a lilac flame." },
+      { "text": "Your body needs potassium and sodium together to control the balance of fluids inside and outside every cell." },
+      { "text": "Gunpowder contains potassium nitrate — it has been used in weapons and fireworks for over a thousand years." }
+    ]
+  },
+  {
+    "symbol": "Ca",
+    "original_name": null,
+    "atomic_mass": 40.08,
+    "electron_config": "2, 8, 8, 2",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Calcium_unter_Argon_Schutzgasatmosph%C3%A4re.jpg/960px-Calcium_unter_Argon_Schutzgasatmosph%C3%A4re.jpg",
+    "image_caption": "Calcium crystals stored under argon gas",
+    "compounds": [
+      { "formula": "CaCO3",   "name": "Calcium carbonate", "use": "Makes up limestone, chalk, marble, and seashells" },
+      { "formula": "CaO",     "name": "Quicklime",         "use": "Used in cement, steel-making, and water treatment" },
+      { "formula": "Ca(OH)2", "name": "Slaked lime",       "use": "Added to soil to reduce acidity for farming" },
+      { "formula": "CaSO4",   "name": "Gypsum",            "use": "Used to make plaster of Paris and drywall" },
+      { "formula": "CaF2",    "name": "Fluorite",          "use": "Used in making glass and as a flux in steel production" }
+    ],
+    "facts": [
+      { "text": "Calcium is the most abundant mineral in your body — 99% of it lives in your bones and teeth, making them hard." },
+      { "text": "Seashells, chalk, marble, and limestone cliffs are all made of exactly the same compound: calcium carbonate." },
+      { "text": "Milk is rich in calcium because baby animals need it to build strong bones quickly while they are growing." },
+      { "text": "Calcium fizzes slowly when you drop it in water, releasing hydrogen gas bubbles — similar to sodium but much calmer." }
+    ]
+  },
+  {
+    "symbol": "Cl",
+    "original_name": null,
+    "atomic_mass": 35.45,
+    "electron_config": "2, 8, 7",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/49/Chlorine_in_bottle.jpg",
+    "image_caption": "Chlorine gas — a yellow-green toxic gas",
+    "compounds": [
+      { "formula": "NaCl",  "name": "Table salt",         "use": "Flavours food — completely safe in this form" },
+      { "formula": "HCl",   "name": "Hydrochloric acid",  "use": "In your stomach to digest food and kill bacteria" },
+      { "formula": "NaOCl", "name": "Bleach",             "use": "Disinfects swimming pools and water supplies" },
+      { "formula": "PVC",   "name": "Polyvinyl chloride", "use": "Common plastic used in pipes, flooring, and clothing" },
+      { "formula": "CHCl3", "name": "Chloroform",         "use": "Once used as an anaesthetic in 19th-century surgery" }
+    ],
+    "facts": [
+      { "text": "Swimming pools smell of chlorine because it is added to kill harmful bacteria — without it, pools would be dangerous to swim in." },
+      { "text": "The chlorine in table salt is completely harmless — chlorine is only dangerous as a pure gas." },
+      { "text": "Chlorine gas was used as a chemical weapon in World War I — soldiers described its smell as a mix of pineapple and pepper." },
+      { "text": "Your stomach produces hydrochloric acid to digest food — the same type of acid used to dissolve metals in chemistry labs." }
+    ]
+  },
+  {
+    "symbol": "F",
+    "original_name": null,
+    "atomic_mass": 19.00,
+    "electron_config": "2, 7",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Fluoro_liquido_a_-196%C2%B0C_1.jpg/960px-Fluoro_liquido_a_-196%C2%B0C_1.jpg",
+    "image_caption": "Liquid fluorine at extremely low temperature",
+    "compounds": [
+      { "formula": "HF",    "name": "Hydrofluoric acid", "use": "Etches glass and is used to make microchips" },
+      { "formula": "NaF",   "name": "Sodium fluoride",   "use": "Added to toothpaste to harden tooth enamel" },
+      { "formula": "CaF2",  "name": "Fluorite",          "use": "Natural mineral used in making steel and glass" },
+      { "formula": "PTFE",  "name": "Teflon",            "use": "Non-stick coating on frying pans" },
+      { "formula": "SF6",   "name": "Sulphur hexafluoride", "use": "Makes your voice extremely deep — the opposite of helium!" }
+    ],
+    "facts": [
+      { "text": "Fluorine is the most reactive element on the periodic table — it attacks almost every substance, including glass and most metals." },
+      { "text": "Fluoride is added to toothpaste and tap water in many countries because it makes tooth enamel much harder and more resistant to decay." },
+      { "text": "Teflon, the non-stick coating on frying pans, contains fluorine — it is one of the very few materials that fluorine cannot destroy." },
+      { "text": "Fluorine gas is so dangerous that even a tiny leak can be fatal — it is one of the most carefully handled substances in chemistry." }
+    ]
+  }
+]
