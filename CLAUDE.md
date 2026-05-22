@@ -301,30 +301,9 @@ When the task involves:
 
 ## Supabase SQL migrations
 
-Run these in Supabase → SQL Editor when setting up or adding features.
+All DDL lives in **README.md** (Supabase setup section) — read that for the full SQL to run.
 
-### `eq_element_facts` table (enriched flashcards)
-
-```sql
-CREATE TABLE eq_element_facts (
-  symbol          TEXT PRIMARY KEY,
-  original_name   TEXT,
-  atomic_mass     NUMERIC,
-  electron_config TEXT,
-  image_url       TEXT,
-  image_caption   TEXT,
-  compounds       JSONB,
-  facts           JSONB,
-  generated_at    TIMESTAMPTZ DEFAULT NOW()
-);
-
-ALTER TABLE eq_element_facts ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "public read" ON eq_element_facts FOR SELECT USING (true);
-```
-
-After creating the table:
-1. Generate `scripts/element_facts.json` via Claude Code (10–15 elements per prompt, append each batch)
-2. `cd scripts && pip install -r requirements.txt && python import_element_facts.py`
+Tables in use: `eq_players` (players + scores + auth + progress), `eq_element_facts` (enriched flashcard data).
 
 ---
 
