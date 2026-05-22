@@ -261,7 +261,7 @@ App (screen router + shared state)
 - [x] **All 118 elements** — tiers 1–5, 6 difficulty levels (lv1 Cadet → lv6 Commodore), One Piece Marine rank system
 - [x] **Rank badge on player chip** — 🧹 Chore Boy → 🥉🥈🥇🏆👑⚛️ based on `highest_level` field
 - [x] **Supabase migration** — `highest_level text` and `last_active timestamptz` columns added to `eq_players`
-- [ ] **Enriched flashcards** — `eq_element_facts` table needed (see SQL below); `scripts/element_facts.json` to be generated via Claude Code then imported with `scripts/import_element_facts.py`
+- [x] **Enriched flashcards** — `eq_element_facts` populated for all 118 elements; flashcard back shows fun facts, ℹ️ info (mass in amu + per-atom g, protons, neutrons, electron config), ⚛️ shell diagram, 📷 photo, 🧪 compounds; first overlay tap per card earns +฿1
 - [ ] **Consider: lv3 Warrant Officer pool** — currently tier 3 only (16 elements, specialist track); consider whether it should be cumulative tiers 1–3 like Lieutenant. Revisit after kids play it.
 - [x] **Level unlock system** — lv3–lv6 locked; unlock via Promotion Trial (30 questions, 60s). Training badges (🔵💜💫) tracked per mode per level. Supabase columns: `unlocked_levels`, `training_passes`, `trial_grades` (jsonb). Unlock bonuses: lv3=+10k, lv4=+25k, lv5=+50k, lv6=+100k Berry. Berry (฿) replaces "pts" in all UI. Speed Blast 30s; Scramble 10 questions. Prereqs: 75% pool mastery + Pass in all 4 modes at previous level.
 - [ ] **Atomic number quiz** — third game axis beyond name↔symbol

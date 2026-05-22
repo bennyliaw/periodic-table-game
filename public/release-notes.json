@@ -1,15 +1,20 @@
 {
   "heading": "What's new in v0.8",
   "notes": [
-    "Enriched flashcards — fun facts, element info, electron shells, photo & compounds",
-    "Level unlock system — lv3–lv6 locked; earn your way up with Promotion Trials",
-    "Training badges — earn 🔵 Pass, 💜 Merit or 💫 Distinction in each mode",
-    "Berry currency ฿ replaces pts, with unlock bonuses up to ฿ 100,000",
-    "Rank badge now updates immediately after passing a Promotion Trial"
+    "Element facts for all 118 elements — fun facts, photos, compounds & more",
+    "Enriched info overlay — protons, neutrons, atomic mass in amu & grams",
+    "Level unlock system, Promotion Trials, training badges & Berry currency"
   ],
   "sections": [
     {
-      "heading": "What's new in v0.8",
+      "heading": "Latest — flashcard upgrades",
+      "notes": [
+        "Fun facts, photos & element info for all 118 elements — from Cadet to Commodore",
+        "Info overlay: protons, neutrons, atomic mass in amu + per-atom grams (e.g. 3.271 × 10⁻²² g)"
+      ]
+    },
+    {
+      "heading": "v0.8",
       "notes": [
         "Enriched flashcards — tap ℹ️ ⚛️ 📷 🧪 on any flipped card to explore element info, electron shells, photos and compounds",
         "First time you open each overlay earns +฿1 Berry with a kaching sound",

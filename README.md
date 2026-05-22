@@ -211,7 +211,7 @@ Any INSERT (new player) or UPDATE (score change) in that room is broadcast to al
 - [x] All 118 elements across 6 difficulty levels (One Piece Marine ranks: Cadet → Commodore)
 - [x] Rank badge on player chip based on highest level completed
 - [x] Level unlock system — lv3–lv6 locked; earn training badges then attempt Promotion Trial to unlock
-- [ ] Enriched flashcards — fun facts, element info, electron shell diagram, photo & compounds (table ready; awaiting data population)
+- [x] Enriched flashcards — fun facts, element info, electron shell diagram, photo & compounds for all 118 elements
 - [ ] Atomic number quiz mode
 - [ ] Multiplayer — real-time head-to-head
 
