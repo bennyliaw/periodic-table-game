@@ -2227,13 +2227,13 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onQuit,
                 <div style={{ width: "100%" }}>
                   <div style={{ height: 1, background: "#1e293b", margin: "8px 0 7px" }} />
                   {factsRow.facts && factsRow.facts.length > 0 && (
-                    <div style={{ display: "flex", alignItems: "flex-start", gap: 4, marginBottom: 6 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                       <div style={{ flex: 1, color: "#94a3b8", fontSize: 14, fontStyle: "italic", lineHeight: 1.4 }}>
                         💡 {factsRow.facts[factIdx % factsRow.facts.length]?.text}
                       </div>
                       {factsRow.facts.length > 1 && (
                         <button onClick={e => { e.stopPropagation(); setFactIdx(i => (i + 1) % factsRow.facts.length); }}
-                          style={{ background: "none", border: "none", color: "#64748b", fontSize: 22, cursor: "pointer", padding: "0 4px", flexShrink: 0, lineHeight: 1 }}>›</button>
+                          style={{ background: "#1e293b", border: "1.5px solid #334155", borderRadius: "50%", color: "#94a3b8", fontSize: 20, cursor: "pointer", width: 36, height: 36, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}>›</button>
                       )}
                     </div>
                   )}
