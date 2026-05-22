@@ -2271,6 +2271,8 @@ function FlashcardMode({ difficulty, masteredElements, onMastery, onEnd, onQuit,
                         ["Number",    el.number],
                         ["Group",     el.group.replace(/-/g, " ")],
                         ["Mass",      factsRow.atomic_mass ? formatAtomMass(factsRow.atomic_mass) : "—"],
+                        ["Protons",   el.number],
+                        ["Neutrons",  factsRow.atomic_mass ? `${Math.round(factsRow.atomic_mass) - el.number}  (${el.symbol}-${Math.round(factsRow.atomic_mass)})` : "—"],
                         ["Electrons", factsRow.electron_config || "—"],
                       ].map(([k, v]) => (
                         <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "5px 0", borderBottom: "1px solid #1e293b" }}>
