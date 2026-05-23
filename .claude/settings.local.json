@@ -16,7 +16,29 @@
       "Bash(sort -t: -k4)",
       "Read(/private/tmp/**)",
       "Bash(cat /tmp/*)",
-      "Bash(cat /private/tmp/**)"
+      "Bash(cat /private/tmp/**)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5174)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "Bash(uv --version)",
+      "Bash(uv init *)",
+      "Bash(uv add *)",
+      "Bash(node *)",
+      "Bash(awk '{ gsub\\(/[{}\",]/, \"\"\\); for\\(i=1;i<=NF;i++\\) if\\($i==\"name:\"\\) {n=$\\(i+1\\)} if\\($i==\"symbol:\"\\) {s=$\\(i+1\\)} if\\($i==\"number:\"\\) {num=$\\(i+1\\)} if\\($i==\"tier:\"\\) {t=$\\(i+1\\); printf \"%d,%s,%s,%d\\\\n\", num, s, n, t} }')",
+      "Bash(sort -t, -k4,4n -k1,1n)",
+      "WebFetch(domain:commons.wikimedia.org)",
+      "WebFetch(domain:upload.wikimedia.org)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L --max-time 10 \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Be-140g.jpg/960px-Be-140g.jpg\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L --max-time 10 \"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Arsen_1a.jpg/960px-Arsen_1a.jpg\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L --max-time 10 \"https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Barium_unter_Argon_Schutzgas_Atmosph%C3%A4re.jpg/960px-Barium_unter_Argon_Schutzgas_Atmosph%C3%A4re.jpg\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L --max-time 10 \"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Radium226.jpg/960px-Radium226.jpg\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L --max-time 15 \"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Radium226.jpg/960px-Radium226.jpg\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L --max-time 10 \"https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Titan-crystal_bar.JPG/960px-Titan-crystal_bar.JPG\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L --max-time 10 \"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/HEUraniumC.jpg/960px-HEUraniumC.jpg\")",
+      "Bash(python3 *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L --max-time 10 \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Kobalt_electrolytic_and_1cm3_cube.jpg/960px-Kobalt_electrolytic_and_1cm3_cube.jpg\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L --max-time 10 \"https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Strontium_destilled_crystals.jpg/960px-Strontium_destilled_crystals.jpg\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -L --max-time 10 \"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Wolfram_evaporated_crystals_and_1cm3_cube.jpg/960px-Wolfram_evaporated_crystals_and_1cm3_cube.jpg\")",
+      "Bash(uv run *)"
     ]
   }
 }
