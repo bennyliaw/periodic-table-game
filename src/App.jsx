@@ -3,6 +3,10 @@ import { supabase } from "./supabase.js";
 import { useRegisterSW } from 'virtual:pwa-register/react';
 
 const APP_VERSION = import.meta.env.VITE_APP_VERSION || "dev";
+const [APP_V_MAIN, APP_V_BUILD] = (() => {
+  const m = APP_VERSION.match(/^(\d+\.\d+)(\..+)?$/);
+  return m ? [m[1], m[2] || ""] : [APP_VERSION, ""];
+})();
 
 async function hashConstellation(indices) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(indices)));
@@ -1686,7 +1690,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
         )}
         <div style={{ color: "#475569", fontSize: 11, letterSpacing: 4, textTransform: "uppercase", fontFamily: "'Exo 2'", marginBottom: 6 }}>
           Periodic Table Challenge
-          <span style={{ letterSpacing: 1, color: "#334155", marginLeft: 8 }}>· v{APP_VERSION}</span>
+          <span style={{ letterSpacing: 1, color: "#334155", marginLeft: 8 }}>· v{APP_V_MAIN}<span style={{ color: "#1e293b", fontSize: 9 }}>{APP_V_BUILD}</span></span>
         </div>
         <div style={{ fontSize: 36, fontFamily: "'Exo 2'", fontWeight: 900,
           background: "linear-gradient(135deg, #22d3ee 0%, #a78bfa 55%, #f472b6 100%)",
@@ -3107,7 +3111,7 @@ function UpdateBanner({ sections, onUpdate, onDismiss }) {
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
           <span style={{ fontSize: 20 }}>⬆️</span>
           <span style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 16 }}>Update Ready</span>
-          <span style={{ color: "#475569", fontSize: 12, marginLeft: 4 }}>running v{APP_VERSION}</span>
+          <span style={{ color: "#475569", fontSize: 11, marginLeft: 4 }}>v{APP_V_MAIN}<span style={{ color: "#334155", fontSize: 9 }}>{APP_V_BUILD}</span></span>
         </div>
         {sections?.map((s, idx) => s.notes?.length > 0 && (
           <div key={idx} style={{ marginBottom: idx < sections.length - 1 ? 14 : 20 }}>
