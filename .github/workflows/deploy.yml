@@ -4,22 +4,70 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    env:
+      VERCEL_ORG_ID: team_sviToOpeS3UeZWYQOeBzY48M
+      VERCEL_PROJECT_ID: prj_ecBhED5yZCrcMIhS2wiCGa2dp67y
+
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - run: npm install --global vercel@latest
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Deploy
+      - name: Read current version
+        id: version
         run: |
-          BASE=$(node -p "require('./package.json').version.split('.').slice(0,2).join('.')")
-          vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --build-env VITE_APP_VERSION="${BASE}.${{ github.run_number }}"
+          CURRENT=$(node -e "const v=require('./public/release-notes.json').version; console.log(v)")
+          echo "current=$CURRENT" >> $GITHUB_OUTPUT
+          echo "Current version: $CURRENT"
+
+      - name: Increment build number
+        id: bump
+        run: |
+          CURRENT="${{ steps.version.outputs.current }}"
+          # Split into major.minor and build (e.g. 1.2.088 -> [1.2], [088])
+          BASE=$(echo "$CURRENT" | grep -oP '^\d+\.\d+')
+          BUILD=$(echo "$CURRENT" | grep -oP '\d+$')
+          NEW_BUILD=$(printf "%03d" $((10#$BUILD + 1)))
+          NEW_VERSION="${BASE}.${NEW_BUILD}"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION"
+
+      - name: Update release-notes.json with new version
+        run: |
+          NEW_VERSION="${{ steps.bump.outputs.new_version }}"
+          node -e "
+            const fs = require('fs');
+            const data = JSON.parse(fs.readFileSync('./public/release-notes.json', 'utf8'));
+            data.version = '$NEW_VERSION';
+            fs.writeFileSync('./public/release-notes.json', JSON.stringify(data, null, 2) + '\n');
+          "
+          echo "Updated release-notes.json version to $NEW_VERSION"
+
+      - name: Build
+        run: npm run build
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VITE_APP_VERSION: ${{ steps.bump.outputs.new_version }}
+
+      - name: Deploy to Vercel
+        run: npx vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
+
+      - name: Commit version bump back
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/release-notes.json
+          git commit -m "bump version to ${{ steps.bump.outputs.new_version }} [skip ci]" || echo "No changes to commit"
+          git push

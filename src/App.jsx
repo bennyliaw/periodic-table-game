@@ -3104,14 +3104,18 @@ function ResultsScreen({ activePlayer, players, scores, lastRoundScore, grade, o
 // ═══════════════════════════════════════════
 // APP ROOT
 // ═══════════════════════════════════════════
-function UpdateBanner({ sections, onUpdate, onDismiss }) {
+function UpdateBanner({ sections, onUpdate, onDismiss, newVersion }) {
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", background: "rgba(7,11,20,0.75)" }}>
       <div style={{ width: "100%", maxWidth: 380, background: "#0a0f1a", border: "2px solid #22d3ee", borderRadius: 20, padding: "24px 22px", fontFamily: "'Nunito'", boxShadow: "0 0 60px rgba(34,211,238,0.18)", maxHeight: "80vh", overflowY: "auto" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
           <span style={{ fontSize: 20 }}>⬆️</span>
           <span style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 16 }}>Update Ready</span>
-          <span style={{ color: "#475569", fontSize: 11, marginLeft: 4 }}>v{APP_V_MAIN}<span style={{ color: "#04060a", fontSize: 8, opacity: 0.2 }}>{APP_V_BUILD}</span></span>
+          {newVersion ? (
+            <span style={{ color: "#475569", fontSize: 11, marginLeft: 4 }}>v{APP_V_MAIN}{APP_V_BUILD} → <span style={{ color: "#22d3ee" }}>v{newVersion}</span></span>
+          ) : (
+            <span style={{ color: "#475569", fontSize: 11, marginLeft: 4 }}>v{APP_V_MAIN}<span style={{ color: "#04060a", fontSize: 8, opacity: 0.2 }}>{APP_V_BUILD}</span></span>
+          )}
         </div>
         {sections?.map((s, idx) => s.notes?.length > 0 && (
           <div key={idx} style={{ marginBottom: idx < sections.length - 1 ? 14 : 20 }}>
@@ -3148,12 +3152,14 @@ export default function ElementQuest() {
   const [showLanding, setShowLanding]     = useState(() => !localStorage.getItem("eq_visited"));
   const { play, toggleMute, muted } = useSound();
   const [updateSections, setUpdateSections] = useState(null);
+  const [updateVersion, setUpdateVersion] = useState(null);
   const [pendingUpdate, setPendingUpdate] = useState(false);
 
   async function fetchNotesAndShowBanner() {
     try {
       const res = await fetch('/release-notes.json', { cache: 'no-store' });
       const data = await res.json();
+      if (data.version) setUpdateVersion(data.version);
       if (data.sections) {
         setUpdateSections(data.sections);
       } else {
@@ -3251,8 +3257,9 @@ export default function ElementQuest() {
       {updateSections !== null && (
         <UpdateBanner
           sections={updateSections}
+          newVersion={updateVersion}
           onUpdate={() => updateServiceWorker(true)}
-          onDismiss={() => setUpdateSections(null)}
+          onDismiss={() => { setUpdateSections(null); setUpdateVersion(null); }}
         />
       )}
       <GlobalStyles />
