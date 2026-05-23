@@ -37,7 +37,6 @@ jobs:
         id: bump
         run: |
           CURRENT="${{ steps.version.outputs.current }}"
-          # Split into major.minor and build (e.g. 1.2.088 -> [1.2], [088])
           BASE=$(echo "$CURRENT" | grep -oP '^\d+\.\d+')
           BUILD=$(echo "$CURRENT" | grep -oP '\d+$')
           NEW_BUILD=$(printf "%03d" $((10#$BUILD + 1)))
@@ -56,13 +55,8 @@ jobs:
           "
           echo "Updated release-notes.json version to $NEW_VERSION"
 
-      - name: Build
-        run: npm run build
-        env:
-          VITE_APP_VERSION: ${{ steps.bump.outputs.new_version }}
-
       - name: Deploy to Vercel
-        run: npx vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }} --yes
+        run: npx vercel deploy --prod --build-env VITE_APP_VERSION=${{ steps.bump.outputs.new_version }} --token=${{ secrets.VERCEL_TOKEN }} --yes
 
       - name: Commit version bump back
         run: |
