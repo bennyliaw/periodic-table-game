@@ -62,7 +62,7 @@ jobs:
           VITE_APP_VERSION: ${{ steps.bump.outputs.new_version }}
 
       - name: Deploy to Vercel
-        run: npx vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
+        run: npx vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }} --yes
 
       - name: Commit version bump back
         run: |
