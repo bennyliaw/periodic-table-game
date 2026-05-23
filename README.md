@@ -44,6 +44,9 @@ alter table eq_players add column last_active timestamptz;
 alter table eq_players add column unlocked_levels jsonb default '["lv1","lv2"]'::jsonb;
 alter table eq_players add column training_passes  jsonb default '{}'::jsonb;
 alter table eq_players add column trial_grades     jsonb default '{}'::jsonb;
+
+-- Gender (controls Chore Boy / Chore Girl label)
+alter table eq_players add column gender text default 'male';
 ```
 
 For enriched flashcards (fun facts, electron diagrams, photos, compounds), also run:
@@ -168,7 +171,7 @@ Returning visitors (with a prior room code in localStorage) skip straight to the
 
 ## Players
 
-Multiple players are supported. Each player has a name, optional age, and a custom or preset icon. Players are grouped by a **room code** — anyone who opens the app with the same room code sees the same player list and scores.
+Multiple players are supported. Each player has a name, optional age, gender (male/female — controls whether the unranked label reads "Chore Boy" or "Chore Girl"), and a custom or preset icon. Players are grouped by a **room code** — anyone who opens the app with the same room code sees the same player list and scores. Tap a player chip to switch to that player; long-press your own chip (or use Edit Profile) to update name, age, icon, or gender.
 
 ### Constellation Auth
 

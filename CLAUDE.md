@@ -156,9 +156,9 @@ App (screen router + shared state)
 - `scoreRef` (useRef) used inside async callbacks to avoid stale closure bugs
 - `key={gameKey}` on game components forces full remount between rounds
 - `usePlayers()` hook manages player list + scores via Supabase (`eq_players` table)
-- Player objects: `{ id, name, age, icon, color, score, mastered_elements, is_admin, constellation_hash, auth_reset, highest_level, unlocked_levels, training_passes, trial_grades }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`
+- Player objects: `{ id, name, age, gender, icon, color, score, mastered_elements, is_admin, constellation_hash, auth_reset, highest_level, unlocked_levels, training_passes, trial_grades }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`; `gender` is `"male"` / `"female"` (default `"male"`) and controls the Chore Boy / Chore Girl label when `highest_level` is null
 - `mastered_elements` is a `jsonb` array of element symbols (e.g. `["H","O","Fe"]`) stored on the player row
-- `highest_level` is a difficulty ID string (`"lv1"`–`"lv6"`) — the highest level ever completed/quit by this player; shown as rank badge on their chip; `null` = 🧹 Chore Boy (never played)
+- `highest_level` is a difficulty ID string (`"lv1"`–`"lv6"`) — the highest level ever completed/quit by this player; shown as rank badge on their chip; `null` = 🧹 Chore Boy/Girl (never played)
 
 **HomeScreen floating background animation:**
 - 30 fixed slots, each with `{ el, phase, cycleKey, tx, ty }` — phase state machine: `"idle"` | `"out"` | `"in"` | `"wiggle"`
@@ -179,7 +179,9 @@ App (screen router + shared state)
 - **Standalone (installed PWA):** shows `UpdateBanner` (full-screen blocking modal with backdrop blur); "Update Now" calls `updateServiceWorker(true)` → reloads; "Later" dismisses
 - **Browser (non-installed):** `setPendingUpdate(true)` → `useEffect` → `updateServiceWorker(true)` auto-applies silently
 - `onRegistered` sets up 5-minute poll (`r.update()`) and a `visibilitychange` listener to check for updates when the app is brought back to the foreground (Android PWA resume)
-- Before each deploy: update `public/release-notes.json` — always include BOTH top-level `heading`/`notes` (for old SW still running during update) AND a `sections` array (for new code); old SW reads flat fields, new SW reads `sections`
+- Before each deploy: update the `sections` array in `public/release-notes.json` — **do not** hand-edit the `version` field; CI reads it, increments the build number (e.g. `0.8.001 → 0.8.002`), and injects it as `VITE_APP_VERSION` at build time via `--build-env`, then commits the bump back with `[skip ci]`
+- `APP_V_MAIN`/`APP_V_BUILD` (derived from `VITE_APP_VERSION` at module load) split the version for display — `v0.8` clearly shown, `.002` rendered at 8px / `opacity: 0.2` so the build suffix is barely visible
+- The update banner fetches `release-notes.json` at runtime; `data.version` becomes `newVersion` and the banner shows `v{current} → v{new}` when a newer build is available
 
 **ScrambleMode drag (works on mobile + desktop):**
 - Uses `onPointerMove` on the tile container + `document.elementFromPoint` to detect which tile the pointer is over — do NOT use `onPointerEnter` on tiles
