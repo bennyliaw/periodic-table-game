@@ -145,6 +145,7 @@ Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in **Netlify → Site Setti
 | 🔤 Name Scramble | Given the symbol, drag tiles to unscramble (or type) the element name — works on mobile touch and desktop. Score multiplied by difficulty. |
 | 🚀 Speed Blast | 30-second rapid-fire quiz with streak bonuses. Score multiplied by difficulty. |
 | ⚔️ Promotion Trial | 60-second, 30-question gauntlet (MC + type-in) that unlocks the next rank on pass. |
+| 🔍 Element Lookup | Reference feature (no score). Tap any floating symbol on the home screen, or use the search pill below the title, to open the full info overlay (facts, electron shell, photo, compounds) for any of the 118 elements. |
 
 Quitting a round mid-way still awards the accumulated score to the player's total.
 

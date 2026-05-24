@@ -142,7 +142,7 @@ element-quest/
 ```
 App (screen router + shared state)
 ├── LandingScreen    — first-visit only (eq_visited localStorage flag); "Join a Room" or "Start Fresh"
-├── HomeScreen       — player select, difficulty, mode select
+├── HomeScreen       — player select, difficulty, mode select, element lookup
 ├── FlashcardMode    — 15-card sessions, "Mark done" / "Show again later", mastery tracked per player
 ├── QuizMode         — 10 questions, 4-choice symbol pick, streak bonus
 ├── ScrambleMode        — 10 questions, drag tiles to unscramble element name (or type it)
@@ -171,6 +171,15 @@ App (screen router + shared state)
 - `dly = 0` on wild animation — all elements start dancing immediately on mount; no stagger delay
 - `slotsRef` / `difficultyRef` (useRef synced via useEffect) avoid stale closures in setInterval callbacks
 - Opacity: `0.25` when visible, `0` when fading out
+- Inner symbol div has `pointerEvents: "auto"` + `onClick` → opens element lookup overlay for that element (outer wrapper stays `pointerEvents: "none"`)
+
+**Element lookup (HomeScreen):**
+- `lookupEl` / `lookupOverlay` state — drives the info overlay; `lookupOverlay` is `"info"` | `"electron"` | `"photo"` | `"compound"`
+- `searchOpen` / `searchQuery` — bottom-sheet search state; filter uses `.startsWith()` on name or symbol (case-insensitive)
+- `tapPulse` — slot index for brief scale + glow feedback on tap (300ms timeout)
+- 🔍 "Look up an element" pill sits below the title gradient, above the RoomCodeBar
+- Info overlay reuses the verbatim tab-content JSX from `FlashcardMode`; `factsRow = elementFacts.get(el.symbol)`
+- `elementFacts` (from `useElementFacts()` at App level) is passed down to `HomeScreen` as a prop
 
 **PWA update prompt:**
 - `registerType: 'prompt'` in `vite.config.js` — new SW waits instead of auto-applying
