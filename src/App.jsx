@@ -1450,7 +1450,8 @@ function RoomCodeBar({ roomId, onJoin }) {
 
 function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onAddPlayer, roomId, joinRoom,
                       difficulty, setDifficulty, onStart, onStartTrial, activePlayer,
-                      updateProfile, setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation }) {
+                      updateProfile, setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
+                      elementFacts }) {
   const [adminUnlocked, setAdminUnlocked]     = useState(false);
   const [adminUnlockTime, setAdminUnlockTime] = useState(0);
   const [constellationModal, setConstellationModal] = useState(null);
@@ -1462,6 +1463,11 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   const [hintLevel, setHintLevel]             = useState(null); // level id to show tooltip for
   const hintTimerRef = useRef(null);
   const rankScrollRef = useRef(null);
+  const [lookupEl,      setLookupEl]      = useState(null);
+  const [lookupOverlay, setLookupOverlay] = useState(null);
+  const [searchOpen,    setSearchOpen]    = useState(false);
+  const [searchQuery,   setSearchQuery]   = useState("");
+  const [tapPulse,      setTapPulse]      = useState(null);
   const [canScrollL, setCanScrollL] = useState(false);
   const [canScrollR, setCanScrollR] = useState(false);
 
@@ -1667,10 +1673,22 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
               transform: `translate(${slot.tx}px, ${slot.ty}px)`,
               transition: frozen ? "none" : "transform 8s ease-in-out",
             }}>
-              <div key={slot.cycleKey} style={{
-                color: GC[slot.el.group] || "#22d3ee",
-                fontSize: 32, fontFamily: "'Exo 2'", fontWeight: 900,
-                animation: innerAnim,
+              <div key={slot.cycleKey}
+                onClick={() => {
+                  setTapPulse(i);
+                  setTimeout(() => setTapPulse(null), 300);
+                  setLookupEl(slot.el);
+                  setLookupOverlay("info");
+                }}
+                style={{
+                  color: GC[slot.el.group] || "#22d3ee",
+                  fontSize: 32, fontFamily: "'Exo 2'", fontWeight: 900,
+                  animation: innerAnim,
+                  pointerEvents: "auto",
+                  cursor: "pointer",
+                  transform: tapPulse === i ? "scale(1.5)" : "scale(1)",
+                  transition: "transform 0.15s ease-out",
+                  filter: tapPulse === i ? `drop-shadow(0 0 8px ${GC[slot.el.group] || "#22d3ee"})` : "none",
               }}>{slot.el.symbol}</div>
             </div>
           </div>
@@ -1696,6 +1714,19 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
           background: "linear-gradient(135deg, #22d3ee 0%, #a78bfa 55%, #f472b6 100%)",
           WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 1.1 }}>
           ⚗️ Element Quest
+        </div>
+        <div style={{ marginTop: 10 }}>
+          <button
+            onClick={() => { setSearchQuery(""); setSearchOpen(true); }}
+            style={{
+              background: "none", border: "1px solid #1e293b",
+              borderRadius: 20, color: "#475569", fontSize: 14,
+              padding: "5px 16px", cursor: "pointer",
+              display: "inline-flex", alignItems: "center", gap: 6,
+            }}
+          >
+            🔍 <span style={{ fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 12, letterSpacing: 0.5 }}>Look up an element</span>
+          </button>
         </div>
         <div style={{ marginTop: 12 }}>
           <RoomCodeBar roomId={roomId} onJoin={joinRoom} />
@@ -2015,6 +2046,180 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
           </div>
         </div>
       )}
+
+      {/* Element search bottom-sheet */}
+      {searchOpen && (() => {
+        const q = searchQuery.trim().toLowerCase();
+        const results = q.length === 0
+          ? ELEMENTS
+          : ELEMENTS.filter(e =>
+              e.name.toLowerCase().startsWith(q) ||
+              e.symbol.toLowerCase().startsWith(q)
+            );
+        return (
+          <div
+            onClick={() => setSearchOpen(false)}
+            style={{ position: "fixed", inset: 0, zIndex: 500, background: "rgba(7,11,20,0.92)",
+                     display: "flex", flexDirection: "column", padding: "0 0 env(safe-area-inset-bottom,0)" }}
+          >
+            <div onClick={e => e.stopPropagation()}
+              style={{ marginTop: "auto", background: "#0a0f1a", border: "1px solid #1e293b",
+                       borderRadius: "22px 22px 0 0", padding: "20px 18px 28px",
+                       maxHeight: "75vh", display: "flex", flexDirection: "column" }}
+            >
+              <div style={{ width: 40, height: 4, background: "#1e293b", borderRadius: 2, margin: "0 auto 14px" }} />
+              <div style={{ color: "#94a3b8", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 12,
+                            letterSpacing: 2, textTransform: "uppercase", marginBottom: 12 }}>
+                Element Lookup
+              </div>
+              <input
+                autoFocus
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Name or symbol…"
+                style={{ width: "100%", padding: "10px 14px", background: "#111827",
+                         border: "1.5px solid #1e293b", borderRadius: 12, color: "#e2e8f0",
+                         fontSize: 15, fontFamily: "'Nunito'", outline: "none", marginBottom: 12,
+                         boxSizing: "border-box" }}
+              />
+              <div style={{ overflowY: "auto", flex: 1 }}>
+                {results.length === 0 ? (
+                  <div style={{ color: "#334155", fontSize: 13, textAlign: "center", padding: "16px 0" }}>No elements found</div>
+                ) : results.map(e => {
+                  const c = GC[e.group] || "#60a5fa";
+                  return (
+                    <button key={e.symbol}
+                      onClick={() => { setSearchOpen(false); setSearchQuery(""); setLookupEl(e); setLookupOverlay("info"); }}
+                      style={{ width: "100%", display: "flex", alignItems: "center", gap: 12,
+                               padding: "9px 4px", background: "none", border: "none",
+                               borderBottom: "1px solid #0f172a", cursor: "pointer", textAlign: "left" }}
+                    >
+                      <span style={{ color: c, fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 20, minWidth: 36 }}>{e.symbol}</span>
+                      <span style={{ color: "#e2e8f0", fontFamily: "'Nunito'", fontSize: 14 }}>{e.name}</span>
+                      <span style={{ color: "#334155", fontSize: 11, marginLeft: "auto", textTransform: "capitalize" }}>{e.group.replace(/-/g, " ")}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Element info overlay (from lookup) */}
+      {lookupEl && lookupOverlay && (() => {
+        const el       = lookupEl;
+        const color    = GC[el.group] || "#60a5fa";
+        const factsRow = elementFacts ? (elementFacts.get(el.symbol) ?? null) : null;
+        const overlayTitles = { info: "Element Info", electron: "Electron Shells", photo: "Photo", compound: "Compounds" };
+        const iconRow = [
+          { key: "info",     icon: "ℹ️" },
+          { key: "electron", icon: "⚛️" },
+          { key: "photo",    icon: "📷" },
+          { key: "compound", icon: "🧪" },
+        ];
+        return (
+          <div onClick={() => { setLookupEl(null); setLookupOverlay(null); }}
+            style={{ position: "fixed", inset: 0, zIndex: 600, background: "rgba(7,11,20,0.88)" }}
+          >
+            <div onClick={e => e.stopPropagation()}
+              style={{ position: "absolute", top: "50%", left: "50%",
+                       transform: "translate(-50%,-50%)",
+                       width: "calc(100% - 40px)", maxWidth: 380, maxHeight: "80vh",
+                       background: "#0a1322", border: `2px solid ${color}40`,
+                       borderRadius: 26, padding: "14px 16px",
+                       display: "flex", flexDirection: "column" }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <div>
+                  <span style={{ color, fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 22, marginRight: 8 }}>{el.symbol}</span>
+                  <span style={{ color: "#94a3b8", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 14 }}>{el.name}</span>
+                </div>
+                <button onClick={() => { setLookupEl(null); setLookupOverlay(null); }}
+                  style={{ background: "none", border: "none", color: "#475569", fontSize: 20, cursor: "pointer", lineHeight: 1, padding: 0 }}
+                >✕</button>
+              </div>
+              <div style={{ display: "flex", gap: 4, marginBottom: 10 }}>
+                {iconRow.map(({ key, icon }) => (
+                  <button key={key} onClick={() => setLookupOverlay(key)}
+                    style={{ background: lookupOverlay === key ? `${color}22` : "none",
+                             border: lookupOverlay === key ? `1.5px solid ${color}` : "1.5px solid #1e293b",
+                             borderRadius: 8, cursor: "pointer", fontSize: 18, padding: "4px 8px",
+                             transition: "all 0.15s" }}
+                  >{icon}</button>
+                ))}
+              </div>
+              <div style={{ color: "#94a3b8", fontSize: 11, fontFamily: "'Exo 2'", fontWeight: 700,
+                            letterSpacing: 1, textTransform: "uppercase", marginBottom: 8 }}>
+                {overlayTitles[lookupOverlay]}
+              </div>
+              <div style={{ flex: 1, overflowY: "auto" }}>
+                {!factsRow ? (
+                  <div style={{ color: "#334155", fontSize: 13, textAlign: "center", padding: "20px 0" }}>
+                    {elementFacts === null ? "Loading…" : "No data available"}
+                  </div>
+                ) : (
+                  <>
+                    {lookupOverlay === "info" && (
+                      <div style={{ flex: 1, overflowY: "auto" }}>
+                        {[
+                          ["Name",      el.name],
+                          ["Original",  factsRow.original_name || el.name],
+                          ["Symbol",    el.symbol],
+                          ["Number",    el.number],
+                          ["Group",     el.group.replace(/-/g, " ")],
+                          ["Mass",      factsRow.atomic_mass ? formatAtomMass(factsRow.atomic_mass) : "—"],
+                          ["Protons",   el.number],
+                          ["Neutrons",  factsRow.atomic_mass ? `${Math.round(factsRow.atomic_mass) - el.number}  (${el.symbol}-${Math.round(factsRow.atomic_mass)})` : "—"],
+                          ["Electrons", factsRow.electron_config || "—"],
+                        ].map(([k, v]) => (
+                          <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "5px 0", borderBottom: "1px solid #1e293b" }}>
+                            <span style={{ color: "#475569", fontSize: 12 }}>{k}</span>
+                            <span style={{ color: "#e2e8f0", fontSize: 12, textTransform: k === "Group" ? "capitalize" : "none" }}>{v}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {lookupOverlay === "electron" && (
+                      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                        <ElectronShell config={factsRow.electron_config} symbol={el.symbol} color={color} />
+                        <div style={{ color: "#64748b", fontSize: 11 }}>{factsRow.electron_config}</div>
+                      </div>
+                    )}
+                    {lookupOverlay === "photo" && (
+                      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                        {factsRow.image_url ? (
+                          <>
+                            <img src={factsRow.image_url} alt={el.name}
+                              style={{ maxWidth: "100%", maxHeight: 180, borderRadius: 10, objectFit: "cover" }}
+                              onError={e => { e.target.style.display = "none"; }} />
+                            {factsRow.image_caption && (
+                              <div style={{ color: "#64748b", fontSize: 11, textAlign: "center", fontStyle: "italic" }}>{factsRow.image_caption}</div>
+                            )}
+                          </>
+                        ) : (
+                          <div style={{ color: "#475569", fontSize: 13 }}>No image available</div>
+                        )}
+                      </div>
+                    )}
+                    {lookupOverlay === "compound" && (
+                      <div style={{ flex: 1, overflowY: "auto" }}>
+                        {(factsRow.compounds || []).map((c, ci) => (
+                          <div key={ci} style={{ display: "flex", gap: 8, padding: "6px 0", borderBottom: "1px solid #1e293b", alignItems: "baseline" }}>
+                            <span style={{ color, fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13, minWidth: 58 }}>{toSubscript(c.formula)}</span>
+                            <span style={{ color: "#e2e8f0", fontSize: 12, minWidth: 70 }}>{c.name}</span>
+                            <span style={{ color: "#64748b", fontSize: 11, flex: 1 }}>{c.use}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
@@ -3299,6 +3504,7 @@ export default function ElementQuest() {
           deletePlayer={deletePlayer}
           resetPlayerAuth={resetPlayerAuth}
           saveConstellation={saveConstellation}
+          elementFacts={elementFacts}
         />
       )}
       {screen === "game" && mode === "flashcard" && (
