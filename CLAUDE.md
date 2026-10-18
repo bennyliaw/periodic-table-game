@@ -141,7 +141,7 @@ element-quest/
 
 ```
 App (screen router + shared state)
-├── LandingScreen    — first-visit only (eq_visited localStorage flag); "Join a Room" or "Start Fresh"
+├── LandingScreen    — shown when not signed in and not a guest; "Play as guest" or "Family sign in" (6-digit email code)
 ├── HomeScreen       — player select, difficulty, mode select, element lookup
 ├── FlashcardMode    — 15-card sessions, "Mark done" / "Show again later", mastery tracked per player
 ├── QuizMode         — 10 questions, 4-choice symbol pick, streak bonus
@@ -155,8 +155,9 @@ App (screen router + shared state)
 **Key state patterns:**
 - `scoreRef` (useRef) used inside async callbacks to avoid stale closure bugs
 - `key={gameKey}` on game components forces full remount between rounds
-- `usePlayers()` hook manages player list + scores via Supabase (`eq_players` table)
-- Player objects: `{ id, name, age, gender, icon, color, score, mastered_elements, is_admin, constellation_hash, auth_reset, highest_level, unlocked_levels, training_passes, trial_grades }` — icon from `PLAYER_ICONS[]`, color from `PLAYER_COLORS[]`; `gender` is `"male"` / `"female"` (default `"male"`) and controls the Chore Boy / Chore Girl label when `highest_level` is null
+- `usePlayers(mode, session)` — `mode` is `"guest"` (players in localStorage `eq_guest_players`, never touches Supabase) or `"family"` (Supabase `eq_players`, RLS scopes rows to the signed-in family via `owner_id`); all writes go through `patch()`; `dbError` drives the "can't reach the game server" banner
+- `useSession()` — Supabase auth session; signups are off, families are created by the owner (see `supabase/restore.sql`)
+- Player objects: `{ id, owner_id, name (a nickname), is_adult, icon, color, score, mastered_elements, is_admin, constellation_hash, auth_reset, highest_level, unlocked_levels, training_passes, trial_grades }` — no age or gender is stored; `is_adult` drives "hide adults"; the never-played rank is 🧹 Chore Champ
 - `mastered_elements` is a `jsonb` array of element symbols (e.g. `["H","O","Fe"]`) stored on the player row
 - `highest_level` is a difficulty ID string (`"lv1"`–`"lv6"`) — the highest level ever completed/quit by this player; shown as rank badge on their chip; `null` = 🧹 Chore Boy/Girl (never played)
 
@@ -207,7 +208,7 @@ App (screen router + shared state)
 
 **Constellation auth:**
 - `DOTS` — 12 fixed star positions (% coordinates) shared by all players; security comes from sequence, not position
-- `hashConstellation(indices)` — SHA-256 of `JSON.stringify(indices)` via Web Crypto API; stored in `constellation_hash`
+- `hashConstellation(indices)` — salted SHA-256, stored as `"salt:hash"` in `constellation_hash`; `checkConstellation()` verifies. A lock between siblings, not a security boundary (the family login is)
 - `ConstellationPad` — drag-based SVG component; pointer events hit-test dot proximity (26px radius); trailing dashed line follows cursor while dragging
 - **Auto-confirm on drag release:** `hasDraggedRef` tracks whether `pointerMove` reached a new dot; if `true` and ≥3 stars selected, `handlePointerUp` calls `submitDots(selectedRef.current)` automatically — no confirm button needed. Tap-by-tap mode still requires the Confirm button.
 - `auth_reset: true` means the player skips verification on next tap and is prompted to set a new pattern
@@ -312,7 +313,7 @@ When the task involves:
 
 ## Supabase SQL migrations
 
-All DDL lives in **README.md** (Supabase setup section) — read that for the full SQL to run.
+Access rules and the restore/migration live in **`supabase/restore.sql`**. The old open policy in earlier README versions must never be used.
 
 Tables in use: `eq_players` (players + scores + auth + progress), `eq_element_facts` (enriched flashcard data).
 
@@ -321,8 +322,8 @@ Tables in use: `eq_players` (players + scores + auth + progress), `eq_element_fa
 ## Environment
 
 - Node.js: 18+ recommended
-- Supabase env vars required: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
-- Works fully offline after first load (fonts + Supabase require network)
+- Supabase env vars (family accounts only): `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (the public key)
+- Guest mode needs no backend; element facts are a static file (`public/element_facts.json`)
 
 ## Python scripts (`scripts/`)
 

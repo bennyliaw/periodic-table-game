@@ -2,6 +2,15 @@
   "version": "0.8.005",
   "sections": [
     {
+      "heading": "Latest — back online",
+      "notes": [
+        "Play as a guest: no account needed, progress stays on this device",
+        "Family sign-in with a 6-digit email code, so progress is saved across devices",
+        "Nicknames, a Grown-up switch, and the new 🧹 Chore Champ rank",
+        "A clear message if the game server can't be reached"
+      ]
+    },
+    {
       "heading": "Latest — flashcard upgrades",
       "notes": [
         "Fun facts, photos & element info for all 118 elements — from Cadet to Commodore",

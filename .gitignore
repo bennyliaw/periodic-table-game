@@ -6,3 +6,5 @@ dist/
 public/voice-preview.html
 scripts/.venv
 scripts/.env
+.env
+.claude/settings.local.json

@@ -7,81 +7,17 @@ A periodic table memory game for kids and parents — built with React + Vite.
 
 ## Quick Start (Local)
 
-### 1. Supabase (required for player sync)
+### 1. Supabase (optional: only for family accounts)
 
-Create a free project at [supabase.com](https://supabase.com), then run this in the **SQL Editor**:
+**Guest mode needs no backend:** players and progress stay in the browser, and element facts load from `public/element_facts.json`.
 
-```sql
-create table eq_players (
-  id text primary key,
-  room_id text not null,
-  name text not null,
-  age integer,
-  icon text not null,
-  color text not null,
-  score integer default 0,
-  created_at timestamptz default now()
-);
+Family accounts (progress saved across devices) use Supabase auth with one login per family and row-level security, so each family sees only its own players. The schema changes and access rules are in [`supabase/restore.sql`](supabase/restore.sql). In Supabase, turn off sign-ups and anonymous sign-ins; family accounts are created by the owner, and sign-in uses a 6-digit email code (email template uses `{{ .Token }}`).
 
-alter table eq_players enable row level security;
-create policy "Public access" on eq_players for all using (true) with check (true);
-
-alter publication supabase_realtime add table eq_players;
-
--- Flashcard mastery tracking
-alter table eq_players add column mastered_elements jsonb default '[]'::jsonb;
-
--- Constellation auth + admin role
-alter table eq_players add column is_admin boolean default false;
-alter table eq_players add column constellation_hash text;
-alter table eq_players add column auth_reset boolean default true;
-
--- Rank badge + activity tracking
-alter table eq_players add column highest_level text;
-alter table eq_players add column last_active timestamptz;
-
--- Level unlock system
-alter table eq_players add column unlocked_levels jsonb default '["lv1","lv2"]'::jsonb;
-alter table eq_players add column training_passes  jsonb default '{}'::jsonb;
-alter table eq_players add column trial_grades     jsonb default '{}'::jsonb;
-
--- Gender (controls Chore Boy / Chore Girl label)
-alter table eq_players add column gender text default 'male';
-```
-
-For enriched flashcards (fun facts, electron diagrams, photos, compounds), also run:
-
-```sql
-create table eq_element_facts (
-  symbol          text primary key,
-  original_name   text,
-  atomic_mass     numeric,
-  electron_config text,
-  image_url       text,
-  image_caption   text,
-  compounds       jsonb,
-  facts           jsonb,
-  generated_at    timestamptz default now()
-);
-
-alter table eq_element_facts enable row level security;
-create policy "public read" on eq_element_facts for select using (true);
-```
-
-Then generate `scripts/element_facts.json` via Claude Code, then import it:
-
-```bash
-cd scripts
-cp .env.example .env   # fill in SUPABASE_URL and SUPABASE_SERVICE_KEY
-uv sync                # installs dependencies (requires uv: https://docs.astral.sh/uv/)
-uv run python import_element_facts.py
-```
-
-Then go to **Project Settings → API** and copy your Project URL and `anon public` key into a `.env.local` file in the project root:
+Copy your Project URL and public (anon/publishable) key into a `.env.local` file in the project root:
 
 ```
 VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJh...
+VITE_SUPABASE_ANON_KEY=your-public-key
 ```
 
 ### 2. Install and run
