@@ -8,9 +8,22 @@ const [APP_V_MAIN, APP_V_BUILD] = (() => {
   return m ? [m[1], m[2] || ""] : [APP_VERSION, ""];
 })();
 
-async function hashConstellation(indices) {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(indices)));
+async function sha256Hex(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+// Stored as "salt:hash". A lock between siblings, not a security boundary:
+// only the signed-in family (or this browser, for guests) can read it.
+async function hashConstellation(indices) {
+  const salt = Array.from(crypto.getRandomValues(new Uint8Array(8))).map(b => b.toString(16).padStart(2, "0")).join("");
+  return `${salt}:${await sha256Hex(salt + JSON.stringify(indices))}`;
+}
+
+async function checkConstellation(indices, stored) {
+  if (!stored || !stored.includes(":")) return false;
+  const [salt, hash] = stored.split(":");
+  return (await sha256Hex(salt + JSON.stringify(indices))) === hash;
 }
 
 const DOTS = [
@@ -279,113 +292,140 @@ function useSound() {
 // ═══════════════════════════════════════════
 // PLAYERS
 // ═══════════════════════════════════════════
-function genRoomId() {
-  return Math.random().toString(36).slice(2, 8).toUpperCase();
+const GUEST_KEY = "eq_guest_players";
+
+function loadGuestPlayers() {
+  try { return JSON.parse(localStorage.getItem(GUEST_KEY)) || []; } catch { return []; }
 }
 
-function usePlayers() {
-  const [roomId, setRoomIdState] = useState(() => {
-    let id = localStorage.getItem("eq_room_id");
-    if (!id) { id = genRoomId(); localStorage.setItem("eq_room_id", id); }
-    return id;
-  });
+// mode: "guest" (this browser only, never touches Supabase) or "family" (signed in; RLS scopes rows to the family).
+function usePlayers(mode, session) {
   const [players, setPlayers] = useState([]);
   const [loaded, setLoaded]   = useState(false);
   const [activeId, setActiveId] = useState(null);
+  const [dbError, setDbError] = useState(null);
+  const uid = session?.user?.id;
+
+  function report(error) {
+    if (error) { console.error(error); setDbError("Can't reach the game server. Your progress isn't being saved right now."); }
+    else setDbError(null);
+    return !error;
+  }
 
   useEffect(() => {
     setPlayers([]);
     setLoaded(false);
+    setActiveId(null);
+    if (mode === "guest") {
+      setPlayers(loadGuestPlayers());
+      setLoaded(true);
+      return;
+    }
+    if (mode !== "family" || !uid) return;
     supabase
       .from("eq_players")
       .select("*")
-      .eq("room_id", roomId)
       .order("created_at")
-      .then(({ data }) => { if (data) setPlayers(data); setLoaded(true); });
+      .then(({ data, error }) => { if (report(error) && data) setPlayers(data); setLoaded(true); });
 
     const channel = supabase
-      .channel(`room:${roomId}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "eq_players", filter: `room_id=eq.${roomId}` },
+      .channel(`family:${uid}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "eq_players", filter: `owner_id=eq.${uid}` },
         ({ eventType, new: next, old }) => {
-          if (eventType === "INSERT")      setPlayers(prev => [...prev, next]);
+          if (eventType === "INSERT")      setPlayers(prev => prev.some(p => p.id === next.id) ? prev : [...prev, next]);
           else if (eventType === "UPDATE") setPlayers(prev => prev.map(p => p.id === next.id ? next : p));
           else if (eventType === "DELETE") setPlayers(prev => prev.filter(p => p.id !== old.id));
         })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [roomId]);
+  }, [mode, uid]);
 
-  function joinRoom(code) {
-    const id = code.trim().toUpperCase().slice(0, 6);
-    localStorage.setItem("eq_room_id", id);
-    setRoomIdState(id);
-    setActiveId(null);
+  useEffect(() => {
+    if (mode === "guest" && loaded) localStorage.setItem(GUEST_KEY, JSON.stringify(players));
+  }, [mode, loaded, players]);
+
+  async function patch(id, fields) {
+    if (mode === "guest") {
+      setPlayers(prev => prev.map(p => p.id === id ? { ...p, ...fields } : p));
+      return;
+    }
+    const { error } = await supabase.from("eq_players").update(fields).eq("id", id);
+    if (report(error)) setPlayers(prev => prev.map(p => p.id === id ? { ...p, ...fields } : p));
   }
 
-  async function addPlayer({ name, age, icon, color, gender, constellationHash }, roomIdOverride) {
-    const id         = Date.now().toString();
-    const targetRoom = roomIdOverride || roomId;
-    const isFirst    = players.filter(p => p.room_id === targetRoom).length === 0;
-    setActiveId(id);
-    await supabase.from("eq_players").insert({
-      id, room_id: targetRoom, name, age: age || null, icon, color, score: 0,
-      gender: gender || "male",
+  async function addPlayer({ name, isAdult, icon, color, constellationHash }) {
+    const isFirst = players.length === 0;
+    const row = {
+      name, is_adult: !!isAdult, icon, color, score: 0,
       is_admin: isFirst,
       constellation_hash: constellationHash || null,
       auth_reset: !constellationHash,
-    });
+    };
+    if (mode === "guest") {
+      const local = { ...row, id: crypto.randomUUID(), created_at: new Date().toISOString(),
+                      mastered_elements: [], unlocked_levels: ["lv1", "lv2"], training_passes: {}, trial_grades: {} };
+      setPlayers(prev => [...prev, local]);
+      setActiveId(local.id);
+      return;
+    }
+    const { data, error } = await supabase.from("eq_players").insert(row).select().single();
+    if (report(error) && data) {
+      setPlayers(prev => prev.some(p => p.id === data.id) ? prev : [...prev, data]);
+      setActiveId(data.id);
+    }
   }
 
-  async function updateProfile(id, { name, age, icon, gender }) {
-    await supabase.from("eq_players").update({
-      name, age: age || null, icon, gender: gender || "male",
-    }).eq("id", id);
+  async function updateProfile(id, { name, isAdult, icon }) {
+    await patch(id, { name, is_adult: !!isAdult, icon });
   }
 
   async function updateScore(id, earned, newHighestLevel) {
     const player = players.find(p => p.id === id);
     if (!player) return;
-    const update = { score: player.score + earned, last_active: new Date().toISOString() };
+    const update = { score: (player.score ?? 0) + earned, last_active: new Date().toISOString() };
     if (newHighestLevel) {
       const curr = LEVELS.findIndex(l => l.id === player.highest_level);
       const next = LEVELS.findIndex(l => l.id === newHighestLevel);
       if (next > curr) update.highest_level = newHighestLevel;
     }
-    await supabase.from("eq_players").update(update).eq("id", id);
+    await patch(id, update);
   }
 
   async function updateMastery(id, symbols) {
-    await supabase.from("eq_players").update({ mastered_elements: symbols }).eq("id", id);
+    await patch(id, { mastered_elements: symbols });
   }
 
   async function setAdminStatus(id, isAdmin) {
-    await supabase.from("eq_players").update({ is_admin: isAdmin }).eq("id", id);
+    await patch(id, { is_admin: isAdmin });
   }
 
   async function deletePlayer(id) {
+    if (mode === "family") {
+      const { error } = await supabase.from("eq_players").delete().eq("id", id);
+      if (!report(error)) return;
+    }
     if (id === activeId) setActiveId(null);
     setPlayers(prev => prev.filter(p => p.id !== id));
-    await supabase.from("eq_players").delete().eq("id", id);
   }
 
   async function resetPlayerAuth(id) {
-    await supabase.from("eq_players").update({ constellation_hash: null, auth_reset: true }).eq("id", id);
+    await patch(id, { constellation_hash: null, auth_reset: true });
   }
 
   async function saveConstellation(id, hash) {
-    await supabase.from("eq_players").update({ constellation_hash: hash, auth_reset: false }).eq("id", id);
+    await patch(id, { constellation_hash: hash, auth_reset: false });
   }
 
-  async function saveTrainingPass(id, levelId, mode, grade) {
+  async function saveTrainingPass(id, levelId, gameMode, grade) {
     if (!grade) return;
     const player = players.find(p => p.id === id);
     if (!player) return;
     const current = player.training_passes ?? {};
-    const existing = current[levelId]?.[mode];
+    const existing = current[levelId]?.[gameMode];
     if (existing && GRADE_ORDER[existing] >= GRADE_ORDER[grade]) return;
-    const updated = { ...current, [levelId]: { ...(current[levelId] ?? {}), [mode]: grade } };
-    await supabase.from("eq_players").update({ training_passes: updated }).eq("id", id);
+    const updated = { ...current, [levelId]: { ...(current[levelId] ?? {}), [gameMode]: grade } };
+    await patch(id, { training_passes: updated });
   }
 
   async function saveTrialGrade(id, levelId, grade) {
@@ -394,7 +434,7 @@ function usePlayers() {
     if (!player) return;
     const current = player.trial_grades ?? {};
     if (current[levelId] && GRADE_ORDER[current[levelId]] >= GRADE_ORDER[grade]) return;
-    await supabase.from("eq_players").update({ trial_grades: { ...current, [levelId]: grade } }).eq("id", id);
+    await patch(id, { trial_grades: { ...current, [levelId]: grade } });
   }
 
   async function unlockLevel(id, levelId) {
@@ -411,7 +451,7 @@ function usePlayers() {
     const curr = LEVELS.findIndex(l => l.id === player.highest_level);
     const next = LEVELS.findIndex(l => l.id === levelId);
     if (next > curr) update.highest_level = levelId;
-    await supabase.from("eq_players").update(update).eq("id", id);
+    await patch(id, update);
   }
 
   const scores = Object.fromEntries(players.map(p => [p.id, p.score]));
@@ -419,16 +459,29 @@ function usePlayers() {
   return { players, scores, activePlayer, setActiveId, addPlayer, updateProfile, updateScore, updateMastery,
            setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
            saveTrainingPass, saveTrialGrade, unlockLevel,
-           roomId, joinRoom, loaded };
+           loaded, dbError };
+}
+
+// Signed-in family session (6-digit email code; signups are off, so only families Ben created can sign in).
+function useSession() {
+  const [session, setSession] = useState(null);
+  const [ready, setReady]     = useState(false);
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => { setSession(data.session); setReady(true); });
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
+    return () => sub.subscription.unsubscribe();
+  }, []);
+  return { session, ready };
 }
 
 function useElementFacts() {
   const [facts, setFacts] = useState(null);
   useEffect(() => {
-    supabase.from("eq_element_facts").select("*")
-      .then(({ data }) => {
-        if (data) setFacts(new Map(data.map(r => [r.symbol, r])));
-      });
+    // Static file, not the database: works for guests and while the database is asleep.
+    fetch("/element_facts.json")
+      .then(r => r.json())
+      .then(data => setFacts(new Map(data.map(r => [r.symbol, r]))))
+      .catch(() => {});
   }, []);
   return facts;
 }
@@ -702,11 +755,10 @@ function ConstellationPad({ mode, storedHash, color, onSuccess, onCancel }) {
   }
 
   async function submitDots(dots) {
-    const hash = await hashConstellation(dots);
     if (mode === "setup") {
-      onSuccess(hash);
+      onSuccess(await hashConstellation(dots));
     } else {
-      if (hash === storedHash) { onSuccess(); }
+      if (await checkConstellation(dots, storedHash)) { onSuccess(); }
       else { setError(true); setSelected([]); selectedRef.current = []; }
     }
   }
@@ -849,7 +901,7 @@ function PlayerProfileCard({ p, score, isActive, onLogin, onSignOut, onEditSave,
   const level   = p.highest_level || null;
   const info    = level ? getLevelInfo(level) : null;
   const rankIcon = info ? info.icon : "🧹";
-  const rankName = info ? info.rank : (p.gender === "female" ? "Chore Girl" : "Chore Boy");
+  const rankName = info ? info.rank : "Chore Champ";
   const blurb    = RANK_BLURB[level];
 
   return (
@@ -991,8 +1043,7 @@ function PlayerChip({ p, isActive, score, rank, onTap, onLongPress }) {
 function EditProfileModal({ player, onSave, onCancel }) {
   const color = player.color;
   const [name, setName]         = useState(player.name || "");
-  const [age, setAge]           = useState(player.age != null ? String(player.age) : "");
-  const [gender, setGender]     = useState(player.gender || "male");
+  const [isAdult, setIsAdult]   = useState(!!player.is_adult);
   const [iconIdx, setIconIdx]   = useState(() => {
     const i = PLAYER_ICONS.indexOf(player.icon);
     return i >= 0 ? i : 0;
@@ -1053,43 +1104,29 @@ function EditProfileModal({ player, onSave, onCancel }) {
 
         {/* Name */}
         <div style={{ marginBottom: 12 }}>
-          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Name</div>
+          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Nickname</div>
           <input value={name} onChange={e => setName(e.target.value)}
-            placeholder="Enter name…"
+            placeholder="A nickname, not a full name…"
             style={{ width: "100%", padding: "13px 16px", background: "#111827", border: `2px solid ${name.trim() ? color : "#1e293b"}`, borderRadius: 14, color: "#e2e8f0", fontSize: 16, outline: "none", transition: "border-color 0.2s" }} />
         </div>
 
-        {/* Age */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, fontFamily: "'Exo 2'", whiteSpace: "nowrap" }}>Age <span style={{ textTransform: "none", letterSpacing: 0, opacity: 0.6 }}>(opt)</span></div>
-          <input value={age} onChange={e => setAge(e.target.value.replace(/\D/g, "").slice(0, 2))}
-            placeholder="—"
-            style={{ width: 64, padding: "10px 12px", background: "#111827", border: "2px solid #1e293b", borderRadius: 12, color: "#e2e8f0", fontSize: 15, outline: "none", textAlign: "center" }} />
-        </div>
-
-        {/* Gender */}
+        {/* Grown-up (drives "hide adults"); no age or gender is stored */}
         <div style={{ marginBottom: 24 }}>
-          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Gender</div>
-          <div style={{ display: "flex", gap: 8 }}>
-            {[["male", "♂ Male"], ["female", "♀ Female"]].map(([g, label]) => (
-              <button key={g} onClick={() => setGender(g)} style={{
-                flex: 1, padding: "10px 0",
-                background: gender === g ? `${color}18` : "#111827",
-                border: `2px solid ${gender === g ? color : "#1e293b"}`,
-                borderRadius: 12, color: gender === g ? color : "#475569",
-                fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 13, cursor: "pointer",
-                transition: "all 0.15s",
-              }}>{label}</button>
-            ))}
-          </div>
+          <button onClick={() => setIsAdult(a => !a)} style={{
+            width: "100%", padding: "10px 0",
+            background: isAdult ? `${color}18` : "#111827",
+            border: `2px solid ${isAdult ? color : "#1e293b"}`,
+            borderRadius: 12, color: isAdult ? color : "#475569",
+            fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 13, cursor: "pointer",
+            transition: "all 0.15s",
+          }}>{isAdult ? "✓ Grown-up" : "Grown-up?"}</button>
         </div>
-
         <div style={{ display: "flex", gap: 10 }}>
           <button onClick={onCancel} style={{
             flex: 1, padding: 14, background: "none", border: "2px solid #1e293b",
             borderRadius: 14, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 14, cursor: "pointer",
           }}>Cancel</button>
-          <button onClick={() => canSave && onSave({ name: name.trim(), age: age ? parseInt(age) : null, icon: selectedIcon, gender })}
+          <button onClick={() => canSave && onSave({ name: name.trim(), isAdult, icon: selectedIcon })}
             disabled={!canSave}
             style={{
               flex: 2, padding: 14,
@@ -1105,11 +1142,10 @@ function EditProfileModal({ player, onSave, onCancel }) {
   );
 }
 
-function AddPlayerModal({ players, roomId, onAdd, onCancel }) {
+function AddPlayerModal({ players, onAdd, onCancel }) {
   const [step, setStep]                   = useState(1);
   const [name, setName]                   = useState("");
-  const [age, setAge]                     = useState("");
-  const [gender, setGender]               = useState("male");
+  const [isAdult, setIsAdult]             = useState(false);
   const [iconIdx, setIconIdx]             = useState(0);
   const [isCustom, setIsCustom]           = useState(false);
   const [customIcon, setCustomIcon]       = useState("");
@@ -1121,7 +1157,7 @@ function AddPlayerModal({ players, roomId, onAdd, onCancel }) {
 
   function handleAdd() {
     if (!canAdd) return;
-    onAdd({ name: name.trim(), age: age ? parseInt(age) : null, icon: selectedIcon, color, gender, constellationHash });
+    onAdd({ name: name.trim(), isAdult, icon: selectedIcon, color, constellationHash });
   }
 
   function handleCustomChange(e) {
@@ -1172,36 +1208,23 @@ function AddPlayerModal({ players, roomId, onAdd, onCancel }) {
 
           {/* Name */}
           <div style={{ marginBottom: 12 }}>
-            <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Name</div>
+            <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Nickname</div>
             <input value={name} onChange={e => setName(e.target.value)}
               onKeyDown={e => e.key === "Enter" && canStep1 && setStep(2)}
-              placeholder="Enter name…" autoFocus={!isCustom}
+              placeholder="A nickname, not a full name…" autoFocus={!isCustom}
               style={{ width: "100%", padding: "13px 16px", background: "#111827", border: `2px solid ${name.trim() ? color : "#1e293b"}`, borderRadius: 14, color: "#e2e8f0", fontSize: 16, outline: "none", transition: "border-color 0.2s" }} />
           </div>
 
-          {/* Age + Gender — inline row */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-            <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, fontFamily: "'Exo 2'", whiteSpace: "nowrap" }}>Age <span style={{ textTransform: "none", letterSpacing: 0, opacity: 0.6 }}>(opt)</span></div>
-            <input value={age} onChange={e => setAge(e.target.value.replace(/\D/g, "").slice(0, 2))}
-              placeholder="—"
-              style={{ width: 64, padding: "10px 12px", background: "#111827", border: "2px solid #1e293b", borderRadius: 12, color: "#e2e8f0", fontSize: 15, outline: "none", textAlign: "center" }} />
-          </div>
-
-          {/* Gender */}
+          {/* Grown-up (drives "hide adults"); no age or gender is stored */}
           <div style={{ marginBottom: 20 }}>
-            <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3, marginBottom: 8, fontFamily: "'Exo 2'" }}>Gender</div>
-            <div style={{ display: "flex", gap: 8 }}>
-              {[["male", "♂ Male"], ["female", "♀ Female"]].map(([g, label]) => (
-                <button key={g} onClick={() => setGender(g)} style={{
-                  flex: 1, padding: "10px 0",
-                  background: gender === g ? `${color}18` : "#111827",
-                  border: `2px solid ${gender === g ? color : "#1e293b"}`,
-                  borderRadius: 12, color: gender === g ? color : "#475569",
-                  fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 13, cursor: "pointer",
-                  transition: "all 0.15s",
-                }}>{label}</button>
-              ))}
-            </div>
+            <button onClick={() => setIsAdult(a => !a)} style={{
+              width: "100%", padding: "10px 0",
+              background: isAdult ? `${color}18` : "#111827",
+              border: `2px solid ${isAdult ? color : "#1e293b"}`,
+              borderRadius: 12, color: isAdult ? color : "#475569",
+              fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 13, cursor: "pointer",
+              transition: "all 0.15s",
+            }}>{isAdult ? "✓ Grown-up" : "Grown-up?"}</button>
           </div>
 
           {/* Buttons */}
@@ -1259,25 +1282,27 @@ function AddPlayerModal({ players, roomId, onAdd, onCancel }) {
 // ═══════════════════════════════════════════
 // LANDING SCREEN
 // ═══════════════════════════════════════════
-function LandingScreen({ onJoinRoom, onStartFresh }) {
-  const [view, setView]           = useState("main");
-  const [roomInput, setRoomInput] = useState("");
-  const [inputError, setInputError] = useState(false);
-  const [errorMsg, setErrorMsg]   = useState("");
-  const [checking, setChecking]   = useState(false);
+function LandingScreen({ onPlayAsGuest, roomMoved }) {
+  const [view, setView]       = useState(roomMoved ? "email" : "main");
+  const [email, setEmail]     = useState("");
+  const [code, setCode]       = useState("");
+  const [busy, setBusy]       = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  async function handleJoin() {
-    const code = roomInput.trim().toUpperCase();
-    if (code.length < 3) { setErrorMsg("Room code must be at least 3 characters"); setInputError(true); return; }
-    setChecking(true);
-    const { data } = await supabase.from("eq_players").select("id").eq("room_id", code).limit(1);
-    setChecking(false);
-    if (!data || data.length === 0) {
-      setErrorMsg("Room not found — check the code and try again");
-      setInputError(true);
-      return;
-    }
-    onJoinRoom(code);
+  async function sendCode() {
+    setBusy(true); setErrorMsg("");
+    // shouldCreateUser: false — only families Ben has created can sign in.
+    const { error } = await supabase.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: false } });
+    setBusy(false);
+    if (error) { setErrorMsg("Couldn't send a code to that email. Family accounts only."); return; }
+    setView("code");
+  }
+
+  async function verifyCode() {
+    setBusy(true); setErrorMsg("");
+    const { error } = await supabase.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: "email" });
+    setBusy(false);
+    if (error) setErrorMsg("That code didn't work. Check it, or send a new one.");
   }
 
   const FEATURES = [
@@ -1286,6 +1311,18 @@ function LandingScreen({ onJoinRoom, onStartFresh }) {
     { icon: "🔤", label: "Name Scramble", desc: "spell from the symbol" },
     { icon: "🚀", label: "Speed Blast", desc: "30-second frenzy" },
   ];
+
+  const inputStyle = { width: "100%", padding: "14px 16px", marginBottom: 10, background: "#111827",
+                       border: "2px solid #1e293b", borderRadius: 14, color: "#e2e8f0", fontSize: 16,
+                       outline: "none", boxSizing: "border-box" };
+  const primary = { width: "100%", padding: "15px 20px", marginBottom: 10,
+                    background: "linear-gradient(135deg, #22d3ee, #a78bfa)", border: "none", borderRadius: 16,
+                    color: "#070b14", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 16, cursor: "pointer" };
+  const secondary = { width: "100%", padding: "15px 20px", marginBottom: 10,
+                      background: "#081a2a", border: "2px solid #22d3ee", borderRadius: 16,
+                      color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 16, cursor: "pointer" };
+  const back = { background: "none", border: "none", color: "#475569", fontSize: 13, cursor: "pointer",
+                 fontFamily: "'Exo 2'", width: "100%", padding: 8 };
 
   return (
     <div style={{ minHeight: "100vh", background: "#070b14", fontFamily: "'Nunito'",
@@ -1318,128 +1355,66 @@ function LandingScreen({ onJoinRoom, onStartFresh }) {
 
       {/* Actions */}
       <div style={{ width: "100%", maxWidth: 340 }}>
-        {view === "main" ? (<>
-          <button onClick={() => { setView("joining"); setRoomInput(""); setInputError(false); }}
-            style={{ width: "100%", padding: "15px 20px", marginBottom: 10,
-                     background: "#081a2a", border: "2px solid #22d3ee", borderRadius: 16,
-                     color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 16, cursor: "pointer" }}>
-            Join a Room
-          </button>
-          <button onClick={onStartFresh}
-            style={{ width: "100%", padding: "15px 20px",
-                     background: "linear-gradient(135deg, #22d3ee, #a78bfa)",
-                     border: "none", borderRadius: 16,
-                     color: "#070b14", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 16, cursor: "pointer" }}>
-            Start Fresh
-          </button>
-        </>) : (<>
-          <div style={{ color: "#334155", fontSize: 11, textTransform: "uppercase", letterSpacing: 3,
-                        marginBottom: 8, fontFamily: "'Exo 2'", textAlign: "center" }}>
-            Enter Room Code
+        {roomMoved && (
+          <div style={{ color: "#fbbf24", fontSize: 13, textAlign: "center", marginBottom: 14 }}>
+            Your room has moved. Please sign in with your family's email.
           </div>
-          <input
-            value={roomInput} autoFocus
-            onChange={e => { setRoomInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6)); setInputError(false); }}
-            onKeyDown={e => e.key === "Enter" && handleJoin()}
-            placeholder="e.g. ABC123"
-            style={{ width: "100%", padding: "14px 16px", marginBottom: 10,
-                     background: "#111827", border: `2px solid ${inputError ? "#ef4444" : roomInput.length >= 3 ? "#22d3ee" : "#1e293b"}`,
-                     borderRadius: 14, color: "#22d3ee", fontSize: 22, fontFamily: "'Exo 2'",
-                     fontWeight: 700, letterSpacing: 6, outline: "none", textAlign: "center",
-                     transition: "border-color 0.2s", boxSizing: "border-box" }} />
-          {inputError && <div style={{ color: "#ef4444", fontSize: 12, textAlign: "center", marginBottom: 8 }}>
-            {errorMsg}
-          </div>}
-          <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={() => { setView("main"); setInputError(false); setErrorMsg(""); }}
-              style={{ flex: 1, padding: 14, background: "none", border: "2px solid #1e293b",
-                       borderRadius: 14, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>
-              Cancel
-            </button>
-            <button onClick={handleJoin} disabled={roomInput.length < 3 || checking}
-              style={{ flex: 2, padding: 14,
-                       background: roomInput.length >= 3 && !checking ? "#081a2a" : "#111827",
-                       border: `2px solid ${roomInput.length >= 3 && !checking ? "#22d3ee" : "#1e293b"}`,
-                       borderRadius: 14, color: roomInput.length >= 3 && !checking ? "#22d3ee" : "#334155",
-                       fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15,
-                       cursor: roomInput.length >= 3 && !checking ? "pointer" : "not-allowed", transition: "all 0.2s" }}>
-              {checking ? "Checking…" : "Join →"}
-            </button>
+        )}
+        {view === "main" && (<>
+          <button onClick={onPlayAsGuest} style={primary}>Play as guest</button>
+          <button onClick={() => setView("email")} style={secondary}>Family sign in</button>
+          <div style={{ color: "#334155", fontSize: 11, textAlign: "center", marginTop: 4 }}>
+            Guests: progress stays on this device only.
           </div>
         </>)}
+        {view === "email" && (<>
+          <input value={email} autoFocus type="email" placeholder="Family email"
+            onChange={e => { setEmail(e.target.value); setErrorMsg(""); }}
+            onKeyDown={e => e.key === "Enter" && email.includes("@") && !busy && sendCode()}
+            style={inputStyle} />
+          <button onClick={sendCode} disabled={!email.includes("@") || busy} style={secondary}>
+            {busy ? "Sending…" : "Send me a code"}
+          </button>
+          <button onClick={() => { setView("main"); setErrorMsg(""); }} style={back}>← Back</button>
+        </>)}
+        {view === "code" && (<>
+          <div style={{ color: "#64748b", fontSize: 12, textAlign: "center", marginBottom: 8 }}>
+            Enter the 6-digit code sent to {email.trim()}
+          </div>
+          <input value={code} autoFocus inputMode="numeric" placeholder="123456"
+            onChange={e => { setCode(e.target.value.replace(/\D/g, "").slice(0, 6)); setErrorMsg(""); }}
+            onKeyDown={e => e.key === "Enter" && code.length === 6 && !busy && verifyCode()}
+            style={{ ...inputStyle, fontSize: 22, letterSpacing: 6, textAlign: "center" }} />
+          <button onClick={verifyCode} disabled={code.length !== 6 || busy} style={secondary}>
+            {busy ? "Checking…" : "Sign in →"}
+          </button>
+          <button onClick={() => { setView("email"); setCode(""); setErrorMsg(""); }} style={back}>← Use a different email</button>
+        </>)}
+        {errorMsg && <div style={{ color: "#ef4444", fontSize: 12, textAlign: "center", marginTop: 6 }}>{errorMsg}</div>}
+        {view !== "main" && (
+          <div style={{ color: "#334155", fontSize: 11, textAlign: "center", marginTop: 8 }}>
+            Guest progress on this device isn't moved into a family account.
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 // ═══════════════════════════════════════════
-// ROOM CODE BAR
+// ACCOUNT BAR
 // ═══════════════════════════════════════════
-function RoomCodeBar({ roomId, onJoin }) {
-  const [joining, setJoining]     = useState(false);
-  const [input, setInput]         = useState("");
-  const [copied, setCopied]       = useState(false);
-  const [checking, setChecking]   = useState(false);
-  const [inputError, setInputError] = useState(false);
-  const [errorMsg, setErrorMsg]   = useState("");
-
-  function copy() {
-    navigator.clipboard.writeText(roomId);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  }
-
-  async function handleJoin() {
-    const code = input.trim().toUpperCase();
-    if (code.length < 3) {
-      setErrorMsg("At least 3 characters");
-      setInputError(true);
-      return;
-    }
-    setChecking(true);
-    const { data } = await supabase.from("eq_players").select("id").eq("room_id", code).limit(1);
-    setChecking(false);
-    if (!data || data.length === 0) {
-      setErrorMsg("Room not found");
-      setInputError(true);
-      return;
-    }
-    onJoin(code);
-    setJoining(false);
-    setInput("");
-    setInputError(false);
-  }
-
+function AccountBar({ mode, email, onSignIn, onSignOut }) {
+  const link = { background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 11,
+                 fontFamily: "'Exo 2'", padding: 0, textDecoration: "underline" };
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ color: "#475569", fontSize: 11, fontFamily: "'Exo 2'", letterSpacing: 2 }}>ROOM</span>
-        <span style={{ color: "#22d3ee", fontFamily: "'Exo 2'", fontWeight: 900, fontSize: 15, letterSpacing: 4 }}>{roomId}</span>
-        <button onClick={copy} title="Copy room code" style={{ background: "none", border: "none", color: copied ? "#4ade80" : "#64748b", cursor: "pointer", fontSize: 13, padding: 0, lineHeight: 1 }}>
-          {copied ? "✓" : "⎘"}
-        </button>
-        <button onClick={() => { setJoining(j => !j); setInputError(false); setInput(""); }} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 11, fontFamily: "'Exo 2'", padding: 0, textDecoration: "underline" }}>
-          {joining ? "cancel" : "join room"}
-        </button>
-      </div>
-      {joining && (
-        <>
-          <div style={{ display: "flex", gap: 6 }}>
-            <input
-              value={input}
-              onChange={e => { setInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6)); setInputError(false); }}
-              onKeyDown={e => e.key === "Enter" && handleJoin()}
-              placeholder="XXXXXX" autoFocus
-              style={{ width: 110, padding: "8px 12px", background: "#111827", border: `2px solid ${inputError ? "#ef4444" : input.length >= 3 ? "#22d3ee" : "#1e293b"}`, borderRadius: 10, color: "#22d3ee", fontSize: 15, fontFamily: "'Exo 2'", fontWeight: 700, outline: "none", letterSpacing: 4, textAlign: "center" }}
-            />
-            <button onClick={handleJoin} disabled={input.length < 3 || checking}
-              style={{ padding: "8px 14px", background: "#081a2a", border: `2px solid ${input.length >= 3 && !checking ? "#22d3ee" : "#1e293b"}`, borderRadius: 10, color: input.length >= 3 && !checking ? "#22d3ee" : "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 13, cursor: input.length >= 3 && !checking ? "pointer" : "not-allowed" }}>
-              {checking ? "…" : "Join"}
-            </button>
-          </div>
-          {inputError && <div style={{ color: "#ef4444", fontSize: 11, textAlign: "center" }}>{errorMsg}</div>}
-        </>
-      )}
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+      <span style={{ color: "#475569", fontSize: 11, fontFamily: "'Exo 2'", letterSpacing: 1 }}>
+        {mode === "guest" ? "GUEST · saved on this device" : `FAMILY · ${email}`}
+      </span>
+      <button onClick={mode === "guest" ? onSignIn : onSignOut} style={link}>
+        {mode === "guest" ? "family sign in" : "sign out"}
+      </button>
     </div>
   );
 }
@@ -1448,7 +1423,7 @@ function RoomCodeBar({ roomId, onJoin }) {
 // HOME SCREEN
 // ═══════════════════════════════════════════
 
-function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onAddPlayer, roomId, joinRoom,
+function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onAddPlayer, accountBar,
                       difficulty, setDifficulty, onStart, onStartTrial, activePlayer,
                       updateProfile, setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
                       elementFacts }) {
@@ -1458,7 +1433,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
   const [actionTarget, setActionTarget]       = useState(null);
   const [profileTargetId, setProfileTargetId] = useState(null);
   const [hideAdults, setHideAdults]           = useState(false);
-  const displayedPlayers = hideAdults ? players.filter(p => !p.age || p.age < 18) : players;
+  const displayedPlayers = hideAdults ? players.filter(p => !p.is_adult) : players;
   const profileTarget = players.find(p => p.id === profileTargetId) ?? null;
   const [hintLevel, setHintLevel]             = useState(null); // level id to show tooltip for
   const hintTimerRef = useRef(null);
@@ -1729,7 +1704,7 @@ function HomeScreen({ players, scores, activeId, setActiveId, onSetActiveId, onA
           </button>
         </div>
         <div style={{ marginTop: 12 }}>
-          <RoomCodeBar roomId={roomId} onJoin={joinRoom} />
+          {accountBar}
         </div>
       </div>
 
@@ -3354,7 +3329,12 @@ export default function ElementQuest() {
   const [promotionTarget, setPromotionTarget] = useState(null);
   const [gameKey, setGameKey] = useState(0);
   const [showAddPlayer, setShowAddPlayer] = useState(false);
-  const [showLanding, setShowLanding]     = useState(() => !localStorage.getItem("eq_visited"));
+  const { session, ready: sessionReady } = useSession();
+  const [guest, setGuest] = useState(() => localStorage.getItem("eq_guest") === "1");
+  // A browser holding the old app's room code belonged to a family: ask it to sign in, never start a guest copy.
+  const [roomMoved] = useState(() => !!localStorage.getItem("eq_room_id"));
+  const playMode = session ? "family" : guest ? "guest" : null;
+  const showLanding = sessionReady && !playMode;
   const { play, toggleMute, muted } = useSound();
   const [updateSections, setUpdateSections] = useState(null);
   const [updateVersion, setUpdateVersion] = useState(null);
@@ -3404,19 +3384,32 @@ export default function ElementQuest() {
   const { players, scores, activePlayer, setActiveId, addPlayer, updateProfile, updateScore, updateMastery,
           setAdminStatus, deletePlayer, resetPlayerAuth, saveConstellation,
           saveTrainingPass, saveTrialGrade, unlockLevel,
-          roomId, joinRoom, loaded } = usePlayers();
+          loaded, dbError } = usePlayers(playMode, session);
   const elementFacts = useElementFacts();
 
-  function handleJoinRoom(code) {
-    joinRoom(code);
-    localStorage.setItem("eq_visited", "1");
-    setShowLanding(false);
+  useEffect(() => {
+    // Signed in: the old app's room code is no longer needed.
+    if (session) { localStorage.removeItem("eq_room_id"); localStorage.removeItem("eq_visited"); }
+  }, [session]);
+
+  useEffect(() => {
+    // First visit as a guest, or a family with no players yet: go straight to "add player".
+    if (playMode && loaded && players.length === 0) setShowAddPlayer(true);
+  }, [playMode, loaded]);
+
+  function handlePlayAsGuest() {
+    localStorage.setItem("eq_guest", "1");
+    setGuest(true);
   }
 
-  function handleStartFresh() {
-    localStorage.setItem("eq_visited", "1");
-    setShowLanding(false);
-    setShowAddPlayer(true);
+  function showSignIn() {
+    localStorage.removeItem("eq_guest");
+    setGuest(false);
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    setScreen("home");
   }
 
   function startGame(m) {
@@ -3469,12 +3462,17 @@ export default function ElementQuest() {
       )}
       <GlobalStyles />
       {showLanding && (
-        <LandingScreen onJoinRoom={handleJoinRoom} onStartFresh={handleStartFresh} />
+        <LandingScreen onPlayAsGuest={handlePlayAsGuest} roomMoved={roomMoved} />
       )}
-      {!showLanding && showAddPlayer && (
+      {dbError && playMode === "family" && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 600, background: "#7f1d1d",
+                      color: "#fecaca", fontSize: 13, textAlign: "center", padding: "8px 40px", fontFamily: "'Nunito'" }}>
+          {dbError}
+        </div>
+      )}
+      {playMode && showAddPlayer && (
         <AddPlayerModal
           players={players}
-          roomId={roomId}
           onAdd={async ({ constellationHash, ...playerData }) => {
             await addPlayer({ ...playerData, constellationHash });
             setShowAddPlayer(false);
@@ -3490,13 +3488,13 @@ export default function ElementQuest() {
       }} onMouseEnter={e => e.target.style.opacity = 1} onMouseLeave={e => e.target.style.opacity = 0.5}>
         {muted ? "🔇" : "🔊"}
       </button>
-      {screen === "home" && (
+      {playMode && screen === "home" && (
         <HomeScreen
           players={players} scores={scores}
           activeId={activePlayer?.id} setActiveId={setActiveId} onSetActiveId={setActiveId}
           activePlayer={activePlayer}
           onAddPlayer={() => setShowAddPlayer(true)}
-          roomId={roomId} joinRoom={joinRoom}
+          accountBar={<AccountBar mode={playMode} email={session?.user?.email} onSignIn={showSignIn} onSignOut={signOut} />}
           difficulty={difficulty} setDifficulty={setDifficulty}
           onStart={startGame} onStartTrial={startTrial}
           updateProfile={updateProfile}
