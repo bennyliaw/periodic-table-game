@@ -1229,9 +1229,7 @@ function AddPlayerModal({ players, onAdd, onCancel }) {
 
           {/* Buttons */}
           <div style={{ display: "flex", gap: 10 }}>
-            {players.length > 0 && (
-              <button onClick={onCancel} style={{ flex: 1, padding: 14, background: "none", border: "2px solid #1e293b", borderRadius: 14, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Cancel</button>
-            )}
+            <button onClick={onCancel} style={{ flex: 1, padding: 14, background: "none", border: "2px solid #1e293b", borderRadius: 14, color: "#475569", fontFamily: "'Exo 2'", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>{players.length > 0 ? "Cancel" : "Back"}</button>
             <button onClick={() => setStep(2)} disabled={!canStep1}
               style={{ flex: 2, padding: 14, background: canStep1 ? `${color}18` : "#111827", border: `2px solid ${canStep1 ? color : "#1e293b"}`, borderRadius: 14, color: canStep1 ? color : "#334155", fontFamily: "'Exo 2'", fontWeight: 700, fontSize: 15, cursor: canStep1 ? "pointer" : "not-allowed", transition: "all 0.2s" }}>
               Next →
@@ -3477,7 +3475,7 @@ export default function ElementQuest() {
             await addPlayer({ ...playerData, constellationHash });
             setShowAddPlayer(false);
           }}
-          onCancel={() => setShowAddPlayer(false)}
+          onCancel={() => { setShowAddPlayer(false); if (playMode === "guest" && players.length === 0) showSignIn(); }}
         />
       )}
       {/* Mute toggle — fixed top-right, always visible */}
