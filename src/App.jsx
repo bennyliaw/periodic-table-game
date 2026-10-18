@@ -3394,7 +3394,7 @@ export default function ElementQuest() {
 
   useEffect(() => {
     // First visit as a guest, or a family with no players yet: go straight to "add player".
-    if (playMode && loaded && players.length === 0) setShowAddPlayer(true);
+    if (playMode && loaded && players.length === 0 && !dbError) setShowAddPlayer(true);
   }, [playMode, loaded]);
 
   function handlePlayAsGuest() {
