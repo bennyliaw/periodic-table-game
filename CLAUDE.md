@@ -159,7 +159,7 @@ App (screen router + shared state)
 - `useSession()` — Supabase auth session; signups are off, families are created by the owner (see `supabase/restore.sql`)
 - Player objects: `{ id, owner_id, name (a nickname), is_adult, icon, color, score, mastered_elements, is_admin, constellation_hash, auth_reset, highest_level, unlocked_levels, training_passes, trial_grades }` — no age or gender is stored; `is_adult` drives "hide adults"; the never-played rank is 🧹 Chore Champ
 - `mastered_elements` is a `jsonb` array of element symbols (e.g. `["H","O","Fe"]`) stored on the player row
-- `highest_level` is a difficulty ID string (`"lv1"`–`"lv6"`) — the highest level ever completed/quit by this player; shown as rank badge on their chip; `null` = 🧹 Chore Boy/Girl (never played)
+- `highest_level` is a difficulty ID string (`"lv1"`–`"lv6"`) — the highest level ever completed/quit by this player; shown as rank badge on their chip; `null` = 🧹 Chore Champ (never played)
 
 **HomeScreen floating background animation:**
 - 30 fixed slots, each with `{ el, phase, cycleKey, tx, ty }` — phase state machine: `"idle"` | `"out"` | `"in"` | `"wiggle"`
@@ -201,10 +201,9 @@ App (screen router + shared state)
 - `lastModeRef` tracks last interaction: `"drag"` (set on `pointerDown`) or `"type"` (set on input `onChange`); new card only auto-focuses the text input when `lastModeRef.current === "type"` — prevents keyboard reopening on mobile when user is in drag mode
 
 **Onboarding:**
-- `eq_visited` localStorage key gates the `LandingScreen` — absent = first visit, present = skip to HomeScreen
-- `AddPlayerModal` is now 2-step: step 1 (icon + name + age), step 2 (constellation pad)
-- Room code field removed from modal — handled by LandingScreen ("Join a Room" sets room before entering)
-- Room codes are 3–6 chars; new auto-generated codes are always 6 chars
+- `eq_guest` localStorage flag = this browser plays as a guest; a Supabase session = family mode; neither = `LandingScreen`
+- A browser still holding the old app's `eq_room_id` is treated as a family device: the landing shows "Your room has moved, please sign in" (never a silent guest copy); signing in clears the old keys
+- `AddPlayerModal` is 2-step: step 1 (icon + nickname + Grown-up switch), step 2 (constellation pad); it opens automatically when there are no players yet
 
 **Constellation auth:**
 - `DOTS` — 12 fixed star positions (% coordinates) shared by all players; security comes from sequence, not position
