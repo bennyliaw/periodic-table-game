@@ -1379,13 +1379,13 @@ function LandingScreen({ onPlayAsGuest, roomMoved }) {
         </>)}
         {view === "code" && (<>
           <div style={{ color: "#64748b", fontSize: 12, textAlign: "center", marginBottom: 8 }}>
-            Enter the 6-digit code sent to {email.trim()}
+            Enter the code sent to {email.trim()}
           </div>
-          <input value={code} autoFocus inputMode="numeric" placeholder="123456"
-            onChange={e => { setCode(e.target.value.replace(/\D/g, "").slice(0, 6)); setErrorMsg(""); }}
-            onKeyDown={e => e.key === "Enter" && code.length === 6 && !busy && verifyCode()}
+          <input value={code} autoFocus inputMode="numeric" placeholder="12345678"
+            onChange={e => { setCode(e.target.value.replace(/\D/g, "").slice(0, 8)); setErrorMsg(""); }}
+            onKeyDown={e => e.key === "Enter" && code.length >= 6 && !busy && verifyCode()}
             style={{ ...inputStyle, fontSize: 22, letterSpacing: 6, textAlign: "center" }} />
-          <button onClick={verifyCode} disabled={code.length !== 6 || busy} style={secondary}>
+          <button onClick={verifyCode} disabled={code.length < 6 || busy} style={secondary}>
             {busy ? "Checking…" : "Sign in →"}
           </button>
           <button onClick={() => { setView("email"); setCode(""); setErrorMsg(""); }} style={back}>← Use a different email</button>
